@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forms of &ldquo;Redistributive&rdquo; Policy</title>
+<style>
+  :root{
+    --eq:#0d9488;            /* equality line  */
+    --net:#ea580c;           /* zero-net line  */
+    --s:#0f172a;             /* status quo     */
+    --pt:#334155;            /* point default  */
+    --hot:#e11d48;           /* point active   */
+    --ink:#0f172a;
+    --muted:#64748b;
+    --line:#e2e8f0;
+    --axis:#94a3b8;
+    --bg:#f1f5f9;
+    --card:#ffffff;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink); background:var(--bg); line-height:1.5;
+    padding:clamp(12px,3vw,30px);
+  }
+  .wrap{max-width:1080px;margin:0 auto}
+
+  header{margin-bottom:6px}
+  h1{font-size:clamp(1.5rem,3.6vw,2.3rem);margin:0 0 .25em;letter-spacing:-.01em}
+  .sub{margin:0;color:var(--muted);font-size:clamp(.93rem,2vw,1.03rem);max-width:64ch}
+  .sub b,.sub i{color:var(--ink)}
+
+  .board{
+    display:grid;grid-template-columns:minmax(0,1fr) 306px;
+    gap:clamp(14px,2.5vw,26px);align-items:start;margin-top:20px;
+  }
+  .diagram{
+    position:relative;background:var(--card);border:1px solid var(--line);
+    border-radius:14px;padding:8px;box-shadow:0 1px 3px rgba(15,23,42,.07);
+  }
+  svg{display:block;width:100%;height:auto;touch-action:manipulation}
+
+  /* ---- svg text ---- */
+  .axis-title{font-family:Georgia,"Times New Roman",serif;font-size:21px;fill:var(--ink)}
+  .lab{font-family:Georgia,"Times New Roman",serif;font-style:italic;font-size:21px;fill:var(--ink);pointer-events:none}
+  .s-lab{font-size:19px}
+
+  .frame{stroke:#334155;stroke-width:1.8;stroke-linecap:square}
+  .guide{stroke:#cbd5e1;stroke-width:1.2}
+  .diag{fill:none;stroke-width:2.2;stroke-linecap:round;transition:stroke-width .15s,filter .15s}
+  .line-eq{stroke:var(--eq);color:var(--eq)}
+  .line-iso{stroke:var(--eq);color:var(--eq);stroke-dasharray:2 6;stroke-width:2.4}
+  .line-net{stroke:var(--net);color:var(--net);stroke-dasharray:9 7}
+  .diag.bold{stroke-width:5;filter:drop-shadow(0 0 5px currentColor)}
+
+  .shade{opacity:0;transition:opacity .18s;pointer-events:none}
+  .shade.on{opacity:.14}
+  .shade.pos{fill:#16a34a}
+  .shade.neg{fill:#dc2626}
+
+  .hit{fill:transparent;cursor:pointer}
+  .ring{fill:none;stroke:var(--hot);stroke-width:0;opacity:0;transition:opacity .16s,stroke-width .16s,r .16s}
+  .dot{fill:var(--pt);transition:fill .16s,r .16s,opacity .16s;cursor:pointer}
+  .pt{outline:none}
+  .pt.active .ring,.pt:focus-visible .ring{opacity:1;stroke-width:3;r:14}
+  .pt.active .dot,.pt:focus-visible .dot{fill:var(--hot);r:9.5}
+  .diagram.has-active .pt:not(.active) .dot{opacity:.4}
+  .diagram.has-active .pt:not(.active) .lab{opacity:.4}
+
+  /* ---- tooltip ---- */
+  .tooltip{
+    position:absolute;z-index:5;max-width:282px;min-width:184px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:11px 13px;box-shadow:0 10px 26px rgba(15,23,42,.17);
+    pointer-events:none;font-size:.9rem;
+  }
+  .tooltip[hidden]{display:none}
+  .tt-title{font-weight:700;font-size:.97rem;margin-bottom:7px}
+  .tt-title i{font-style:italic}
+  .tt-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+  .tag{font-size:.72rem;font-weight:600;padding:2px 8px;border-radius:999px;white-space:nowrap}
+  .tag.good{background:#dcfce7;color:#166534}
+  .tag.bad{background:#fee2e2;color:#991b1b}
+  .tag.eq{background:#ccfbf1;color:#0f766e}
+  .tag.neutral{background:#e2e8f0;color:#334155}
+  .tt-text{color:#1e293b;margin:0}
+  .tt-text b{color:#0f172a}
+  .tooltip::after{
+    content:"";position:absolute;left:var(--caret,50%);transform:translateX(-50%);
+    bottom:-8px;border:8px solid transparent;border-top-color:var(--card);
+    filter:drop-shadow(0 2px 1px rgba(15,23,42,.07));
+  }
+  .tooltip.below::after{bottom:auto;top:-8px;border-top-color:transparent;border-bottom-color:var(--card)}
+
+  /* ---- legend ---- */
+  .legend{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:16px 16px 18px;box-shadow:0 1px 3px rgba(15,23,42,.07);
+  }
+  .legend h2,.howto h3{font-size:.76rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin:0 0 12px}
+  .leg-item{display:flex;gap:11px;align-items:flex-start;margin-bottom:13px}
+  .leg-item .k{flex:0 0 32px;margin-top:5px;text-align:center}
+  .sw{display:inline-block;width:30px;height:0;border-top:4px solid;border-radius:2px;vertical-align:middle}
+  .sw.eq{border-color:var(--eq)}
+  .sw.iso{border-top:3px dotted var(--eq)}
+  .sw.net{border-top-style:dashed;border-color:var(--net)}
+  .sw.dot{width:13px;height:13px;border:0;border-radius:50%;background:var(--pt)}
+  .leg-item .d strong{display:block;font-size:.9rem}
+  .leg-item .d span{color:var(--muted);font-size:.84rem}
+  .howto{border-top:1px solid var(--line);padding-top:14px;margin-top:2px}
+  .howto ul{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:7px 12px;font-size:.85rem}
+  .howto li{display:flex;gap:8px;align-items:baseline}
+  .howto .ar{font-weight:700;color:var(--ink);width:1.1em;text-align:center;flex:0 0 auto}
+  .guide-note{margin:11px 0 0;font-size:.8rem;color:var(--muted)}
+  .guide-note i{font-style:italic}
+
+  .note{margin-top:18px;background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:13px 16px;font-size:.92rem;color:#7c2d12}
+  .note b,.note i{color:#7c2d12}
+  .cap{margin-top:14px;color:var(--muted);font-size:.8rem}
+
+  @media (max-width:780px){
+    .board{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <h1>Forms of &ldquo;Redistributive&rdquo; Policy</h1>
+    <p class="sub">An interactive reading of Joseph Heath&rsquo;s Figure&nbsp;4.1. <b>s</b> is the market status quo; every policy option <i>a</i>&ndash;<i>e</i> is measured relative to it. Hover or tap any point to see how the lines classify it.</p>
+  </header>
+
+  <div class="board">
+    <div class="diagram" id="diagram">
+      <svg viewBox="0 0 770 560" role="img" aria-labelledby="svgTitle svgDesc">
+        <title id="svgTitle">Two-person welfare diagram (upper-right quadrant)</title>
+        <desc id="svgDesc">The bottom axis is the rich person's welfare, increasing rightward; the left axis is the poor person's welfare, increasing upward; the origin is the bottom-left corner. A solid equality line runs from the origin where rich equals poor. The status quo s and five options a to e are plotted as points. A dotted constant-inequality line runs through s and a; a dashed zero-net-welfare line runs through s from upper-left to lower-right; faint vertical and horizontal guides pass through s.</desc>
+        <defs>
+          <clipPath id="qclip"><rect x="140" y="40" width="572" height="440"/></clipPath>
+        </defs>
+
+        <!-- shaded region for the selected point (clipped to the quadrant) -->
+        <polygon id="shade" class="shade" points="" clip-path="url(#qclip)"/>
+
+        <!-- frame axes: bottom = Rich, left = Poor, origin at bottom-left -->
+        <line class="frame" x1="140" y1="480" x2="712" y2="480"/>
+        <line class="frame" x1="140" y1="480" x2="140" y2="40"/>
+
+        <!-- faint guides through s: rich unchanged (vertical), poor unchanged (horizontal) -->
+        <line class="guide" x1="492" y1="480" x2="492" y2="40"/>
+        <line class="guide" x1="140" y1="260" x2="548" y2="260"/>
+
+        <!-- constant-inequality line through s and a (teal, dotted) -->
+        <line id="line-iso" class="diag line-iso" x1="272" y1="480" x2="712" y2="40"/>
+        <!-- zero-net-welfare line through s (orange, dashed) -->
+        <line id="line-net" class="diag line-net" x1="272" y1="40"  x2="712" y2="480"/>
+        <!-- equality line from the origin (teal, solid) -->
+        <line id="line-eq"  class="diag line-eq"  x1="140" y1="480" x2="580" y2="40"/>
+
+        <!-- axis titles -->
+        <text class="axis-title" x="96"  y="250" text-anchor="middle">Poor</text>
+        <text class="axis-title" x="426" y="514" text-anchor="middle">Rich</text>
+
+        <!-- points: status quo s and options a-e, all styled alike -->
+        <g class="pt" data-id="s" tabindex="0" role="button" aria-label="Point s: the market status quo">
+          <circle class="hit"  cx="492" cy="260" r="20"/>
+          <circle class="ring" cx="492" cy="260" r="11"/>
+          <circle class="dot"  cx="492" cy="260" r="7"/>
+          <text class="lab" x="500" y="280">s</text>
+        </g>
+        <g class="pt" data-id="a" tabindex="0" role="button" aria-label="Point a: Pareto improvement, inequality unchanged">
+          <circle class="hit"  cx="558" cy="194" r="20"/>
+          <circle class="ring" cx="558" cy="194" r="11"/>
+          <circle class="dot"  cx="558" cy="194" r="7"/>
+          <text class="lab" x="572" y="200">a</text>
+        </g>
+        <g class="pt" data-id="b" tabindex="0" role="button" aria-label="Point b: egalitarian Pareto improvement">
+          <circle class="hit"  cx="527" cy="172" r="20"/>
+          <circle class="ring" cx="527" cy="172" r="11"/>
+          <circle class="dot"  cx="527" cy="172" r="7"/>
+          <text class="lab" x="540" y="167">b</text>
+        </g>
+        <g class="pt" data-id="c" tabindex="0" role="button" aria-label="Point c: welfare-maximizing redistribution">
+          <circle class="hit"  cx="470" cy="172" r="20"/>
+          <circle class="ring" cx="470" cy="172" r="11"/>
+          <circle class="dot"  cx="470" cy="172" r="7"/>
+          <text class="lab" x="470" y="193" text-anchor="middle">c</text>
+        </g>
+        <g class="pt" data-id="d" tabindex="0" role="button" aria-label="Point d: non-welfare-maximizing redistribution">
+          <circle class="hit"  cx="417" cy="216" r="20"/>
+          <circle class="ring" cx="417" cy="216" r="11"/>
+          <circle class="dot"  cx="417" cy="216" r="7"/>
+          <text class="lab" x="431" y="222">d</text>
+        </g>
+        <g class="pt" data-id="e" tabindex="0" role="button" aria-label="Point e: leveling down">
+          <circle class="hit"  cx="373" cy="295" r="20"/>
+          <circle class="ring" cx="373" cy="295" r="11"/>
+          <circle class="dot"  cx="373" cy="295" r="7"/>
+          <text class="lab" x="373" y="317" text-anchor="middle">e</text>
+        </g>
+      </svg>
+
+      <div class="tooltip" id="tooltip" hidden></div>
+    </div>
+
+    <aside class="legend">
+      <h2>Legend</h2>
+      <div class="leg-item">
+        <span class="k"><span class="sw eq"></span></span>
+        <span class="d"><strong>Equality line</strong><span>Where rich and poor are equal. <i>s</i> and every option sit to its right (rich still ahead) &mdash; the closer to the line, the more equal.</span></span>
+      </div>
+      <div class="leg-item">
+        <span class="k"><span class="sw net"></span></span>
+        <span class="d"><strong>Zero-net-welfare line</strong><span>Total welfare is unchanged along it. Above-right = net gain; below-left = net loss.</span></span>
+      </div>
+      <div class="leg-item">
+        <span class="k"><span class="sw iso"></span></span>
+        <span class="d"><strong>Constant-inequality line</strong><span>Runs through <i>s</i> and <i>a</i>; the rich&ndash;poor gap stays exactly as at <i>s</i>. Crossing above it means less inequality.</span></span>
+      </div>
+      <div class="leg-item">
+        <span class="k"><span class="sw dot"></span></span>
+        <span class="d"><strong>Points <i>s</i>, <i>a</i>&ndash;<i>e</i></strong><span>The status quo and five policy options. Hover or tap any point.</span></span>
+      </div>
+      <div class="howto">
+        <h3>Reading the axes</h3>
+        <ul>
+          <li><span class="ar">&rarr;</span> rich better off</li>
+          <li><span class="ar">&larr;</span> rich worse off</li>
+          <li><span class="ar">&uarr;</span> poor better off</li>
+          <li><span class="ar">&darr;</span> poor worse off</li>
+        </ul>
+        <p class="guide-note">Origin sits at the bottom-left; only this upper-right quadrant is shown. Faint guides through <i>s</i> mark no change for the rich (vertical) or the poor (horizontal).</p>
+      </div>
+    </aside>
+  </div>
+
+  <p class="note">In Heath&rsquo;s argument, the <b>egalitarian model</b> pictures the welfare state pushing <i>s</i> toward <i>c</i>, <i>d</i>, even <i>e</i>. The <b>public-economics view</b> says it actually moves society toward <i>a</i> and <i>b</i> &mdash; and that where it is egalitarian, that shows up as a preference for <i>b</i>.</p>
+  <p class="cap">Recreated from Joseph Heath, Figure&nbsp;4.1, &ldquo;Forms of &lsquo;redistributive&rsquo; policy.&rdquo;</p>
+</main>
+
+<script>
+(function(){
+  // shaded regions (pixel polygons, clipped to the quadrant)
+  var SHADES = {
+    pareto:   { pts:'492,260 712,260 712,40 492,40',     kind:'pos' }, // both gain (up-right of s)
+    loselose: { pts:'140,260 492,260 492,480 140,480',   kind:'neg' }, // both lose (down-left of s)
+    netgain:  { pts:'272,40 712,40 712,480',             kind:'pos' }, // net welfare gain (above zero-net)
+    netloss:  { pts:'272,40 712,480 140,480 140,40',      kind:'neg' }  // net welfare loss (below zero-net)
+  };
+  var DATA = {
+    s:{ shade:null, bold:null,
+        title:'<i>s</i> &middot; The status quo',
+        tags:[['Market outcome','neutral'],['Unequal: rich ahead','neutral']],
+        text:'The market allocation &mdash; an unequal split, with the rich above the poor. Every option <i>a</i>&ndash;<i>e</i> is measured relative to <b>s</b>.' },
+    a:{ shade:'pareto', bold:'iso',
+        title:'<i>a</i> &middot; Pareto improvement',
+        tags:[['Both gain','good'],['Gap unchanged','eq'],['Net gain','good']],
+        text:'Both rich and poor gain, so no one is harmed. But <b>a</b> sits on the same diagonal as <b>s</b> &mdash; the constant-inequality line &mdash; so the rich&ndash;poor gap is unchanged.' },
+    b:{ shade:'pareto', bold:'eq',
+        title:'<i>b</i> &middot; Egalitarian Pareto improvement',
+        tags:[['Both gain','good'],['More equal','eq'],['Net gain','good']],
+        text:'Both gain (still a Pareto improvement), but the poor gain proportionally more, so <b>b</b> lifts off <b>s</b>&rsquo;s inequality line toward the equality line &mdash; inequality falls.' },
+    c:{ shade:'netgain', bold:'net',
+        title:'<i>c</i> &middot; Welfare-maximizing redistribution',
+        tags:[['Redistributive','neutral'],['More equal','eq'],['Welfare-maximizing','good']],
+        text:'Redistributive: the poor gain while the rich lose. <b>c</b> lies on the net-gain side of the zero-net line, so the poor&rsquo;s gain outweighs the rich&rsquo;s loss &mdash; total welfare rises.' },
+    d:{ shade:'netloss', bold:'net',
+        title:'<i>d</i> &middot; Non-welfare-maximizing redistribution',
+        tags:[['Redistributive','neutral'],['More equal','eq'],['Net loss','bad']],
+        text:'Also redistributive &mdash; poor gain, rich lose &mdash; but <b>d</b> falls on the net-loss side of the zero-net line: the rich&rsquo;s loss exceeds the poor&rsquo;s gain, so total welfare drops.' },
+    e:{ shade:'loselose', bold:'eq',
+        title:'<i>e</i> &middot; Leveling down',
+        tags:[['Both worse off','bad'],['More equal','eq'],['Net loss','bad']],
+        text:'Both rich and poor end up worse off than at <b>s</b> (Pareto-inferior), yet the split is more equal &mdash; <b>e</b> moves toward the equality line. This is &ldquo;leveling down.&rdquo;' }
+  };
+
+  var diagram = document.getElementById('diagram');
+  var svg     = diagram.querySelector('svg');
+  var tip     = document.getElementById('tooltip');
+  var shade   = document.getElementById('shade');
+  var lineEq  = document.getElementById('line-eq');
+  var lineIso = document.getElementById('line-iso');
+  var lineNet = document.getElementById('line-net');
+  var LINES   = { eq:lineEq, iso:lineIso, net:lineNet };
+  var groups  = Array.prototype.slice.call(svg.querySelectorAll('.pt'));
+  var canHover= window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  var selected= null;   // locked by click/tap
+  var active  = null;   // currently shown (hover or locked)
+
+  function tipHTML(d){
+    var tags = d.tags.map(function(t){ return '<span class="tag '+t[1]+'">'+t[0]+'</span>'; }).join('');
+    return '<div class="tt-title">'+d.title+'</div><div class="tt-tags">'+tags+'</div><p class="tt-text">'+d.text+'</p>';
+  }
+
+  function positionTip(id){
+    var dot = diagram.querySelector('.pt[data-id="'+id+'"] .dot');
+    var cr = diagram.getBoundingClientRect();
+    var dr = dot.getBoundingClientRect();
+    var cx = dr.left + dr.width/2 - cr.left;
+    var cy = dr.top  + dr.height/2 - cr.top;
+    tip.style.left = '-9999px'; tip.style.top = '0px';   // measure off-screen
+    var tw = tip.offsetWidth, th = tip.offsetHeight;
+    var left = cx - tw/2;
+    left = Math.max(8, Math.min(left, cr.width - tw - 8));
+    var top = cy - th - 16, below = false;
+    if (top < 6){ top = cy + 18; below = true; }
+    tip.classList.toggle('below', below);
+    tip.style.left = left + 'px';
+    tip.style.top  = top + 'px';
+    var caret = Math.max(14, Math.min(cx - left, tw - 14));
+    tip.style.setProperty('--caret', caret + 'px');
+  }
+
+  function show(id){
+    var d = DATA[id];
+    active = id;
+    if (d.shade){ var sh = SHADES[d.shade]; shade.setAttribute('points', sh.pts); shade.setAttribute('class', 'shade on ' + sh.kind); }
+    else { shade.setAttribute('class', 'shade'); }
+    for (var k in LINES){ LINES[k].classList.toggle('bold', d.bold === k); }
+    groups.forEach(function(g){ g.classList.toggle('active', g.dataset.id === id); });
+    tip.innerHTML = tipHTML(d);
+    tip.hidden = false;
+    diagram.classList.add('has-active');
+    positionTip(id);
+  }
+
+  function hide(){
+    active = null;
+    shade.setAttribute('class', 'shade');
+    for (var k in LINES){ LINES[k].classList.remove('bold'); }
+    groups.forEach(function(g){ g.classList.remove('active'); });
+    tip.hidden = true;
+    diagram.classList.remove('has-active');
+  }
+
+  groups.forEach(function(g){
+    var id = g.dataset.id;
+    g.addEventListener('click', function(e){
+      e.stopPropagation();
+      if (selected === id){ selected = null; hide(); }
+      else { selected = id; show(id); }
+    });
+    if (canHover){
+      g.addEventListener('mouseenter', function(){ if (!selected) show(id); });
+      g.addEventListener('mouseleave', function(){ if (!selected) hide(); });
+    }
+    g.addEventListener('focus', function(){ if (!selected) show(id); });
+    g.addEventListener('blur',  function(){ if (!selected) hide(); });
+    g.addEventListener('keydown', function(e){
+      if (e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        selected = (selected === id) ? null : id;
+        if (selected) show(id); else hide();
+      }
+    });
+  });
+
+  // tap / click empty space dismisses
+  svg.addEventListener('click', function(){ selected = null; hide(); });
+  window.addEventListener('resize', function(){ if (active) positionTip(active); });
+})();
+</script>
+</body>
+</html>
