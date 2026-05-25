@@ -1,12 +1,164 @@
 <!DOCTYPE html>
-<html>
-<head><title>Graphs</title></head>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Nonfon420 — Graph Gallery</title>
+<style>
+  :root{
+    --bg:#0f1419; --panel:#171c24; --panel-2:#1e242e; --border:#2a323d;
+    --text:#e6e9ee; --muted:#8b95a3; --accent:#4f9cf9; --accent-soft:#1d3a5f;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;margin:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--text); display:flex; height:100vh; overflow:hidden;
+  }
+  #sidebar{
+    width:300px; flex:0 0 300px; background:var(--panel); border-right:1px solid var(--border);
+    display:flex; flex-direction:column; transition:margin-left .2s ease;
+  }
+  #sidebar .brand{ padding:18px 20px; border-bottom:1px solid var(--border); }
+  #sidebar .brand h1{ font-size:16px; margin:0; letter-spacing:.3px; }
+  #sidebar .brand p{ margin:4px 0 0; font-size:12px; color:var(--muted); }
+  #nav{ overflow-y:auto; padding:10px 0; flex:1; }
+  .group-label{
+    padding:14px 20px 6px; font-size:11px; text-transform:uppercase;
+    letter-spacing:.08em; color:var(--muted); font-weight:600;
+  }
+  .nav-item{
+    display:block; padding:9px 20px; color:var(--text); text-decoration:none;
+    font-size:14px; border-left:3px solid transparent; cursor:pointer;
+  }
+  .nav-item:hover{ background:var(--panel-2); }
+  .nav-item.active{ background:var(--accent-soft); border-left-color:var(--accent); color:#fff; }
+  #main{ flex:1; display:flex; flex-direction:column; min-width:0; }
+  #topbar{
+    display:flex; align-items:center; gap:12px; padding:12px 18px;
+    background:var(--panel); border-bottom:1px solid var(--border);
+  }
+  #menu-toggle{
+    display:none; background:none; border:1px solid var(--border); color:var(--text);
+    border-radius:6px; padding:6px 10px; cursor:pointer; font-size:16px; line-height:1;
+  }
+  #current-title{ font-size:15px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #topbar .spacer{ flex:1; }
+  #open-new{
+    color:var(--accent); text-decoration:none; font-size:13px; white-space:nowrap;
+    border:1px solid var(--border); padding:6px 12px; border-radius:6px;
+  }
+  #open-new:hover{ background:var(--panel-2); }
+  #frame-wrap{ flex:1; position:relative; background:#fff; }
+  #graph-frame{ width:100%; height:100%; border:0; display:block; }
+  #loader{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    background:var(--bg); color:var(--muted); font-size:14px; gap:10px;
+  }
+  #loader.hidden{ display:none; }
+  .spinner{
+    width:18px; height:18px; border:2px solid var(--border); border-top-color:var(--accent);
+    border-radius:50%; animation:spin .8s linear infinite;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  #backdrop{ display:none; }
+  @media (max-width:760px){
+    #sidebar{ position:fixed; z-index:30; height:100%; margin-left:-300px; }
+    #sidebar.open{ margin-left:0; }
+    #menu-toggle{ display:block; }
+    #backdrop.show{ display:block; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:20; }
+  }
+</style>
+</head>
 <body>
-  <h1>My Graphs</h1>
-  <ul>
-    <li><a href="Welfare1.html">Welfare 1</a></li>
-    <li><a href="Welfare2.html">Welfare 2</a></li>
-    <!-- add the rest -->
-  </ul>
+  <aside id="sidebar">
+    <div class="brand">
+      <h1>Graph Gallery</h1>
+      <p>mrnonfon0-bot / Nonfon420</p>
+    </div>
+    <nav id="nav"></nav>
+  </aside>
+  <div id="backdrop"></div>
+  <main id="main">
+    <div id="topbar">
+      <button id="menu-toggle" aria-label="Toggle menu">&#9776;</button>
+      <span id="current-title">Select a graph</span>
+      <span class="spacer"></span>
+      <a id="open-new" href="#" target="_blank" rel="noopener">Open in new tab &#8599;</a>
+    </div>
+    <div id="frame-wrap">
+      <div id="loader"><span class="spinner"></span> Loading&hellip;</div>
+      <iframe id="graph-frame" title="Graph"></iframe>
+    </div>
+  </main>
+
+<script>
+  const GRAPHS = [
+    { slug:"redistributive-policy",     file:"Welfare1.html",                                                 label:"Forms of “Redistributive” Policy", group:"Welfare" },
+    { slug:"capex-expectations",        file:"manufacturing_capex_expectations_interactive.html",             label:"Capex Expectations",            group:"Manufacturing Capex" },
+    { slug:"capex-expectations-styled", file:"manufacturing_capex_expectations_interactive_styled.html",      label:"Capex Expectations (styled)",   group:"Manufacturing Capex" },
+    { slug:"capex-zscores",             file:"manufacturing_capex_zscores_interactive.html",                  label:"Capex Z-Scores",                group:"Manufacturing Capex" },
+    { slug:"capex-zscores-styled",      file:"manufacturing_capex_zscores_interactive_styled2.html",          label:"Capex Z-Scores (styled)",       group:"Manufacturing Capex" },
+    { slug:"avg-capex-zscores",         file:"avg_manufacturing_capex_zscores_interactive.html",              label:"Avg Capex Z-Scores",            group:"Manufacturing Capex" },
+    { slug:"avg-capex-zscores-styled",  file:"avg_manufacturing_capex_zscores_interactive_styled (1).html",   label:"Avg Capex Z-Scores (styled)",   group:"Manufacturing Capex" },
+    { slug:"regional-fed-zscores",      file:"regional_fed_avg_zscores_interactive.html",                     label:"Regional Fed Avg Z-Scores",     group:"Regional Fed" },
+  ];
+
+  const encFile = f => f.split('/').map(encodeURIComponent).join('/');
+  const navEl   = document.getElementById('nav');
+  const frame   = document.getElementById('graph-frame');
+  const loader  = document.getElementById('loader');
+  const titleEl = document.getElementById('current-title');
+  const openNew = document.getElementById('open-new');
+  const sidebar = document.getElementById('sidebar');
+  const backdrop= document.getElementById('backdrop');
+
+  const linksBySlug = {};
+  let lastGroup = null;
+  GRAPHS.forEach(g => {
+    if (g.group !== lastGroup) {
+      const gl = document.createElement('div');
+      gl.className = 'group-label';
+      gl.textContent = g.group;
+      navEl.appendChild(gl);
+      lastGroup = g.group;
+    }
+    const a = document.createElement('a');
+    a.className = 'nav-item';
+    a.textContent = g.label;
+    a.href = '#' + g.slug;
+    navEl.appendChild(a);
+    linksBySlug[g.slug] = a;
+  });
+
+  function closeSidebar(){ sidebar.classList.remove('open'); backdrop.classList.remove('show'); }
+
+  function select(slug){
+    const g = GRAPHS.find(x => x.slug === slug) || GRAPHS[0];
+    Object.values(linksBySlug).forEach(a => a.classList.remove('active'));
+    linksBySlug[g.slug].classList.add('active');
+    titleEl.textContent = g.label;
+    document.title = g.label + " — Nonfon420";
+    const url = encFile(g.file);
+    openNew.href = url;
+    loader.classList.remove('hidden');
+    if (frame.getAttribute('src') !== url) { frame.src = url; }
+    else { loader.classList.add('hidden'); }
+    closeSidebar();
+  }
+
+  frame.addEventListener('load', () => loader.classList.add('hidden'));
+
+  const currentSlug = () => decodeURIComponent((location.hash || '').replace(/^#/, ''));
+  window.addEventListener('hashchange', () => select(currentSlug()));
+
+  document.getElementById('menu-toggle').addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+    backdrop.classList.toggle('show');
+  });
+  backdrop.addEventListener('click', closeSidebar);
+
+  select(currentSlug() || GRAPHS[0].slug);
+</script>
 </body>
 </html>
