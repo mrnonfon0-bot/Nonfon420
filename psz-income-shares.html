@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PSZ — US Pre-Tax Income Shares, 1913–2019</title>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+<style>
+  :root { --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; --bg:#f1f5f9; --card:#ffffff; --accent:#2563eb; }
+  *{box-sizing:border-box;} html,body{margin:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55;padding:clamp(12px,3vw,30px);}
+  .wrap{max-width:1080px;margin:0 auto;}
+  header{margin-bottom:14px;}
+  h1{font-size:clamp(1.4rem,3.2vw,2.05rem);margin:0 0 .25em;letter-spacing:-.01em;}
+  .subtitle{margin:0;color:var(--muted);font-size:clamp(.95rem,2vw,1.05rem);}
+  .intro{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:14px 0;font-size:.95rem;}
+  .intro p{margin:.35em 0;} .intro b{color:var(--ink);}
+  .chart-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:18px 0;box-shadow:0 1px 3px rgba(15,23,42,.06);}
+  #chart{width:100%;height:560px;}
+  .legend-note{color:var(--muted);font-size:.85rem;margin:6px 4px 0;}
+  .sources{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:18px 0;font-size:.92rem;}
+  .sources h2{font-size:1.05rem;margin:0 0 .6em;color:var(--ink);}
+  .sources ul{margin:0;padding-left:18px;} .sources li{margin-bottom:.55em;}
+  .sources a{color:var(--accent);text-decoration:none;} .sources a:hover{text-decoration:underline;}
+  .sources .src-label{display:inline-block;min-width:9em;font-weight:600;color:var(--ink);}
+  .processed{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:14px 0;font-size:.88rem;color:var(--muted);}
+  .processed b{color:var(--ink);} .processed details{margin-top:.4em;}
+  .processed summary{cursor:pointer;color:var(--accent);font-weight:600;}
+  .processed ul{margin:.4em 0 0 0;padding-left:20px;color:var(--ink);}
+  footer{margin-top:30px;padding-top:14px;border-top:1px solid var(--line);font-size:.85rem;color:var(--muted);}
+  footer a{color:var(--accent);text-decoration:none;} footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>US pre-tax income shares by income group, 1913–2019</h1>
+  <p class="subtitle">Piketty, Saez & Zucman — Distributional National Accounts (2022 update of 2018 QJE)</p>
+</header>
+
+<div class="intro">
+  <p>This chart shows what share of total US pre-tax national income went to each income group, every year from 1913 to 2019. Data comes from the <b>PSZ 2022 update</b> of their 2018 QJE estimates — the authoritative Piketty-Saez-Zucman series, computed on an equal-split-adult basis (one adult = one observation, spouses' income split equally).</p>
+  <p>The PSZ story: top-10% share fell from ~46% in the 1920s to a low ~33% in the late 1970s, then rose back to ~46% by 2019. The mirror image is the bottom 90% share, which rose to ~67% in the post-war period then drifted back to ~54%. The famous "U-shape" of inequality is built from these series.</p>
+  <p>Click any series in the legend to hide/show it. Start by comparing the Top 1% (the most-cited inequality number) against the Bottom 50% (the disappearing middle-and-bottom).</p>
+</div>
+
+<div class="chart-card">
+  <div id="chart"></div>
+  <p class="legend-note">Hover any point for the exact year and share. Toggle series in the legend to compare specific groups.</p>
+</div>
+
+<div class="sources">
+  <h2>Sources — every line, with exact citation</h2>
+  <ul>
+    <li><span class="src-label">PSZ 2018 (paper):</span> Piketty, T., Saez, E., &amp; Zucman, G. (2018). "Distributional National Accounts: Methods and Estimates for the United States," <i>Quarterly Journal of Economics</i> 133(2), 553–609. <a href="https://eml.berkeley.edu/~saez/PSZ2018QJE.pdf" target="_blank" rel="noopener">JEM PDF</a>.</li>
+    <li><span class="src-label">PSZ 2022 update:</span> Updated estimates through 2019 on the authors' project page: <a href="https://gabriel-zucman.eu/usdina/" target="_blank" rel="noopener">gabriel-zucman.eu/usdina/</a>.</li>
+    <li><span class="src-label">Data file:</span> <a href="https://gabriel-zucman.eu/files/PSZ2022AppendixTablesII(Distrib).xlsx" target="_blank" rel="noopener">PSZ2022AppendixTablesII(Distrib).xlsx</a>, sheet <b>TB1</b> ("Shares of total pre-tax income, equal-split individuals, % of national income"). Every series on this chart maps to one column of that sheet.</li>
+    <li><span class="src-label">Methodology:</span> Pre-tax national income measure (broader than fiscal income — includes corporate retained earnings, payroll-tax-paid wages, employer-paid health insurance, government interest, etc.). Equal-split-adult population basis. See PSZ 2018 §III and the data appendix on the project page for details.</li>
+  </ul>
+</div>
+
+<div class="processed">
+  <b>How this chart was produced.</b> Values read programmatically from PSZ's published <code>PSZ2022AppendixTablesII(Distrib).xlsx</code> sheet TB1 via openpyxl. No pixel tracing.
+  <details>
+    <summary>Show transformation steps</summary>
+    <ul>
+      <li>Downloaded <code>PSZ2022AppendixTablesII(Distrib).xlsx</code> from <code>gabriel-zucman.eu</code> on 2026-05-28.</li>
+      <li>Read sheet <code>TB1</code> "Shares of total pre-tax income (equal-split individuals)" via openpyxl. 108 year-rows (1913–2020); 2020 is blank in source.</li>
+      <li>Decimal fractions in source converted to percentages for display (×100).</li>
+      <li>Bottom 50% / Middle 40% only populated from 1962 onward in PSZ 2022; earlier values are blank in TB1.</li>
+      <li>Output: <code>data/psz-2022-update/pre-tax-shares.csv</code> + <code>metadata.json</code>.</li>
+    </ul>
+  </details>
+</div>
+
+<footer>
+  <a href="./">← Back to gallery</a> &nbsp;·&nbsp;
+  Data from <a href="https://gabriel-zucman.eu/usdina/" target="_blank" rel="noopener">PSZ 2022 update</a>.
+</footer>
+</div>
+
+<script>
+// Embed the full time series. Loaded inline so the page is self-contained.
+// Source: data/psz-2022-update/pre-tax-shares.csv
+const DATA = [
+  // [year, b90, b50, m40, t10, t5, t1, t05, t01, t001]
+  [1913,57.1469,null,null,42.8531,32.6051,20.225,17.1861,9.1348,3.1406],
+  [1914,56.3542,null,null,43.6458,33.4478,20.8224,17.8051,9.3191,3.4448],
+  [1915,57.0216,null,null,42.9784,32.7427,20.2127,17.3105,9.6461,4.2688],
+  [1916,55.6624,null,null,44.3376,34.6012,21.2379,17.8902,11.2907,4.9043],
+  [1917,55.2809,null,null,44.7191,35.3676,21.0534,17.1858,10.1218,3.9003],
+  [1918,56.4836,null,null,43.5164,34.0461,19.4724,15.2872,8.3059,2.8574],
+  [1919,54.6377,null,null,45.3623,36.4768,21.3823,16.68,8.831,2.87],
+  [1920,56.4221,null,null,43.5779,33.9293,18.9125,14.2968,6.8425,1.8988],
+  [1921,52.8944,null,null,47.1056,35.6819,19.1052,14.4562,6.9381,1.9188],
+  [1922,54.0959,null,null,45.9041,34.7613,18.5218,14.0533,6.8629,2.1046],
+  [1923,56.5994,null,null,43.4006,32.8847,17.6373,13.4447,6.556,1.9739],
+  [1924,54.5212,null,null,45.4788,34.3173,18.4362,14.0697,6.8818,2.0844],
+  [1925,53.0013,null,null,46.9987,36.676,20.645,15.843,8.0409,2.7414],
+  [1926,52.7796,null,null,47.2204,37.4398,21.7765,16.8473,8.8998,3.1915],
+  [1927,53.2398,null,null,46.7602,36.8693,21.1304,16.2783,8.5425,3.0671],
+  [1928,51.9641,null,null,48.0359,37.9711,22.222,17.3307,9.5342,3.6925],
+  [1929,53.2867,null,null,46.7133,37.3003,22.0753,17.3195,9.816,4.0308],
+  [1930,54.0334,null,null,45.9666,35.2232,19.3117,14.6256,7.5105,2.6637],
+  [1931,53.9954,null,null,46.0046,33.6673,16.7867,12.3038,5.8559,1.8689],
+  [1932,52.1689,null,null,47.8311,35.066,16.4937,12.2605,5.8563,1.5183],
+  [1933,52.6624,null,null,47.3376,35.6504,17.3672,13.0289,6.4555,1.8818],
+  [1934,51.4083,null,null,48.5917,37.6423,19.0279,14.5069,7.1569,2.1668],
+  [1935,52.1622,null,null,47.8378,36.4869,19.3516,14.8265,7.4158,2.2995],
+  [1936,52.3375,null,null,47.6625,36.585,20.6269,15.8897,7.8223,2.2901],
+  [1937,53.1942,null,null,46.8058,35.9136,20.3576,15.6318,7.7603,2.3534],
+  [1938,53.3129,null,null,46.6871,34.7239,18.529,13.9488,6.8751,2.354],
+  [1939,51.6257,null,null,48.3743,36.2043,19.6107,14.7936,7.1944,2.1942],
+  [1940,51.2954,null,null,48.7046,36.879,20.797,15.8932,7.9706,2.6134],
+  [1941,53.4971,null,null,46.5029,36.0803,21.3199,16.3366,8.3222,2.8133],
+  [1942,57.9567,null,null,42.0433,33.2914,20.4332,15.8148,8.006,2.5244],
+  [1943,61.3159,null,null,38.6841,30.7475,18.5409,14.0603,6.8322,1.8718],
+  [1944,63.8469,null,null,36.1531,27.4212,15.4278,11.4479,5.3948,1.6559],
+  [1945,64.6221,null,null,35.3779,26.7299,14.3678,10.3822,4.617,1.2433],
+  [1946,63.0128,null,null,36.9872,28.1543,14.401,10.195,4.3916,1.2877],
+  [1947,63.5074,null,null,36.4926,28.103,14.8453,10.7102,4.945,1.6072],
+  [1948,61.5172,null,null,38.4828,29.6824,16.1334,11.897,5.6387,1.7928],
+  [1949,62.0872,null,null,37.9128,28.7666,15.4946,11.4445,5.4631,1.7777],
+  [1950,61.2721,null,null,38.7279,29.7129,16.5441,12.1862,5.9184,1.5181],
+  [1951,62.3095,null,null,37.6905,28.8847,15.9163,11.6451,5.4981,1.7828],
+  [1952,63.6683,null,null,36.3317,27.4788,14.8196,10.8234,5.1005,1.6159],
+  [1953,64.6927,null,null,35.3073,26.3273,13.8765,10.1032,4.7212,1.5419],
+  [1954,64.3803,null,null,35.6197,26.5098,13.7774,9.9137,4.6326,1.4499],
+  [1955,63.7106,null,null,36.2894,27.1419,14.4178,10.4458,5.1013,1.7057],
+  [1956,64.5787,null,null,35.4213,26.282,13.6621,10.0764,4.7764,1.5374],
+  [1957,64.6144,null,null,35.3856,26.267,13.4222,9.8245,4.5752,1.4179],
+  [1958,64.6958,null,null,35.3042,25.7815,12.612,9.0881,4.0932,1.2437],
+  [1959,64.3831,null,null,35.6169,26.1883,13.0776,9.5323,4.3251,1.3264],
+  [1960,64.8649,null,null,35.1351,25.486,12.5493,9.0745,4.2654,1.4517],
+  [1961,64.6146,null,null,35.3854,25.6731,12.46,8.9634,4.2634,1.4792],
+  [1962,63.8423,19.3159,44.5265,36.1577,26.3018,12.8518,9.3086,4.3845,1.4838],
+  [1963,63.4271,18.9334,44.4938,36.5729,26.6377,12.9878,9.4255,4.4744,1.542],
+  [1964,63.012,18.5509,44.4611,36.988,26.9735,13.1238,9.5424,4.5644,1.6002],
+  [1965,63.3344,19.0117,44.3227,36.6656,26.7584,13.0399,9.4968,4.5755,1.6109],
+  [1966,63.6568,19.4726,44.1842,36.3432,26.5432,12.956,9.4512,4.5866,1.6216],
+  [1967,64.401,20.3811,44.0199,35.599,25.8905,12.5902,9.1538,4.3529,1.4878],
+  [1968,64.8166,20.7105,44.1061,35.1834,25.501,12.3671,8.9812,4.2566,1.4503],
+  [1969,65.7641,21.0916,44.6725,34.2359,24.4779,11.5693,8.3191,3.8827,1.3303],
+  [1970,66.142,20.9447,45.1973,33.858,23.9457,11.0056,7.8234,3.5703,1.2022],
+  [1971,65.883,20.5031,45.3799,34.117,24.1315,11.0531,7.8584,3.5829,1.1974],
+  [1972,65.6066,20.3404,45.2661,34.3934,24.3402,11.0228,7.8076,3.5427,1.1754],
+  [1973,65.7,20.5491,45.1509,34.3,24.2303,10.7957,7.5852,3.4013,1.0977],
+  [1974,66.1533,20.7331,45.4201,33.8467,23.7298,10.4972,7.3597,3.2787,1.0585],
+  [1975,66.0877,20.5282,45.5596,33.9123,23.673,10.4335,7.3006,3.263,1.0823],
+  [1976,66.0099,20.4675,45.5425,33.9901,23.708,10.4293,7.3068,3.2754,1.0935],
+  [1977,65.8538,20.3033,45.5505,34.1462,23.8465,10.4939,7.3677,3.3097,1.1074],
+  [1978,65.8804,20.2767,45.6037,34.1196,23.8256,10.5173,7.4264,3.3885,1.1543],
+  [1979,65.6954,20.3521,45.3433,34.3046,24.1089,10.8541,7.7655,3.6744,1.3072],
+  [1980,66.1504,20.0862,46.0642,33.8496,23.5345,10.4333,7.4076,3.4347,1.176],
+  [1981,65.6807,19.6967,45.984,34.3193,23.9306,10.6629,7.6144,3.5627,1.2326],
+  [1982,65.3887,19.1269,46.2618,34.6113,24.2137,10.9913,7.9879,4.0046,1.5629],
+  [1983,64.6574,18.3407,46.3167,35.3426,24.7548,11.481,8.421,4.2899,1.798],
+  [1984,63.5073,17.9444,45.5629,36.4927,25.8566,12.1541,8.9796,4.6563,1.938],
+  [1985,63.3867,17.8095,45.5772,36.6133,25.9301,12.3456,9.1792,4.7637,1.957],
+  [1986,63.6599,17.6123,46.0476,36.3401,25.6158,11.97,8.8007,4.4571,1.8268],
+  [1987,62.5339,17.3599,45.174,37.4661,26.9304,13.2339,9.8904,5.1885,2.2012],
+  [1988,60.753,16.872,43.881,39.247,28.9161,15.2237,11.7529,6.4615,2.66],
+  [1989,61.2054,16.9764,44.229,38.7946,28.3914,14.6982,11.2329,6.0286,2.4997],
+  [1990,61.2338,16.8636,44.3702,38.7662,28.3527,14.7101,11.2231,5.9676,2.4623],
+  [1991,61.6694,16.7133,44.956,38.3306,27.6572,13.6483,10.1945,5.2392,2.1403],
+  [1992,60.5679,15.9938,44.5741,39.4321,28.8253,14.6802,11.0926,5.8925,2.4631],
+  [1993,60.9099,16.1193,44.7906,39.0901,28.3525,14.1409,10.6108,5.5662,2.3155],
+  [1994,60.846,16.1298,44.7163,39.154,28.3548,14.0498,10.4907,5.4674,2.2469],
+  [1995,60.1014,15.7536,44.3477,39.8986,29.0439,14.5191,10.9131,5.7312,2.3583],
+  [1996,59.1937,15.4871,43.7066,40.8063,29.9882,15.244,11.5292,6.1865,2.6272],
+  [1997,58.4672,15.2604,43.2068,41.5328,30.7865,15.9849,12.2343,6.696,2.861],
+  [1998,58.0823,15.2765,42.8059,41.9177,31.2117,16.3289,12.5269,6.8939,2.9242],
+  [1999,57.7197,15.1755,42.5443,42.2803,31.5989,16.7616,12.9426,7.2359,3.1343],
+  [2000,57.2483,15.0664,42.1819,42.7517,32.0956,17.3461,13.51,7.7288,3.4473],
+  [2001,58.0436,15.2829,42.7607,41.9564,31.2695,16.6084,12.8554,7.183,3.1036],
+  [2002,58.4944,15.3814,43.113,41.5056,30.7546,16.1026,12.3587,6.8628,2.9976],
+  [2003,58.3645,15.082,43.2824,41.6355,30.86,16.3327,12.6094,7.0764,3.1762],
+  [2004,57.5687,14.7943,42.7744,42.4313,31.727,17.0633,13.2673,7.5218,3.3323],
+  [2005,56.4071,14.3549,42.0522,43.5929,32.8824,18.0773,14.1753,8.1702,3.5617],
+  [2006,55.6872,14.0601,41.6271,44.3128,33.5009,18.5419,14.592,8.4436,3.6871],
+  [2007,55.9684,14.3272,41.6412,44.0316,33.2644,18.3826,14.4618,8.3553,3.6983],
+  [2008,56.4472,14.3076,42.1396,43.5528,32.7505,17.9358,14.1028,8.2774,3.8961],
+  [2009,57.5187,14.2507,43.2679,42.4813,31.4626,16.7553,13.0731,7.5643,3.5599],
+  [2010,56.113,13.8183,42.2947,43.887,32.9207,17.932,14.0636,8.17,3.7034],
+  [2011,55.6719,13.5249,42.1469,44.3281,33.3043,18.1766,14.2616,8.2387,3.7596],
+  [2012,54.4179,13.1615,41.2564,45.5821,34.6731,19.497,15.4525,9.1242,4.2562],
+  [2013,55.0805,13.4398,41.6407,44.9195,33.827,18.4852,14.5163,8.562,4.0749],
+  [2014,54.4094,13.116,41.2935,45.5906,34.4698,18.98,14.9503,8.8378,4.1927],
+  [2015,54.48,13.1758,41.3042,45.52,34.3978,18.911,14.8979,8.7739,4.0992],
+  [2016,54.6719,13.0255,41.6464,45.3281,34.1625,18.6711,14.6691,8.6135,4.008],
+  [2017,54.5265,13.4611,41.0654,45.4735,34.4302,19.0641,15.0047,8.755,4.0981],
+  [2018,54.1649,13.3185,40.8464,45.8351,34.8118,19.2588,15.1232,8.7645,4.0],
+  [2019,54.2984,13.5718,40.7265,45.7016,34.6436,19.0778,14.931,8.5161,3.7989]
+];
+
+const years = DATA.map(r => r[0]);
+const series = [
+  { idx: 7, name: "Top 0.1%",  color: "#7c2d12", width: 2.5 },
+  { idx: 6, name: "Top 0.5%",  color: "#b91c1c", width: 1.8 },
+  { idx: 5, name: "Top 1%",    color: "#dc2626", width: 2.8 },
+  { idx: 4, name: "Top 5%",    color: "#f97316", width: 1.8 },
+  { idx: 3, name: "Top 10%",   color: "#ea580c", width: 2.8 },
+  { idx: 2, name: "Middle 40%",color: "#16a34a", width: 2.2 },
+  { idx: 1, name: "Bottom 50%",color: "#2563eb", width: 2.2 },
+  { idx: 0, name: "Bottom 90%",color: "#1e40af", width: 2.8 },
+];
+
+const traces = series.map(s => ({
+  name: s.name,
+  x: years,
+  y: DATA.map(r => r[s.idx]),
+  mode: "lines",
+  type: "scatter",
+  line: { color: s.color, width: s.width },
+  hovertemplate: `<b>%{x}</b><br>${s.name}: %{y:.2f}%<extra></extra>`,
+  visible: ["Top 1%", "Top 10%", "Bottom 50%", "Bottom 90%"].includes(s.name) ? true : "legendonly",
+}));
+
+const layout = {
+  margin: { l: 56, r: 24, t: 18, b: 60 },
+  xaxis: { title: { text: "Year", standoff: 10 }, gridcolor: "#f1f5f9", dtick: 10 },
+  yaxis: { title: { text: "Share of total US pre-tax national income (%)", standoff: 8 },
+           ticksuffix: "%", gridcolor: "#e2e8f0", range: [0, 75] },
+  hovermode: "x unified",
+  legend: { orientation: "h", y: 1.06, x: 0.5, xanchor: "center" },
+  plot_bgcolor: "white", paper_bgcolor: "white",
+  font: { family: "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif", color: "#0f172a" },
+};
+
+Plotly.newPlot("chart", traces, layout, {
+  responsive: true, displaylogo: false,
+  modeBarButtonsToRemove: ["select2d","lasso2d","autoScale2d"],
+  toImageButtonOptions: { filename: "psz-2022-pre-tax-income-shares" },
+});
+</script>
+</body>
+</html>

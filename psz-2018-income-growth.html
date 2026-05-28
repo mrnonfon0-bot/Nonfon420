@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PSZ — US Income Growth by Group, Pre/Post-War Comparison</title>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+<style>
+  :root { --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; --bg:#f1f5f9; --card:#ffffff; --accent:#2563eb; }
+  *{box-sizing:border-box;} html,body{margin:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55;padding:clamp(12px,3vw,30px);}
+  .wrap{max-width:1080px;margin:0 auto;}
+  header{margin-bottom:14px;}
+  h1{font-size:clamp(1.4rem,3.2vw,2.05rem);margin:0 0 .25em;letter-spacing:-.01em;}
+  .subtitle{margin:0;color:var(--muted);font-size:clamp(.95rem,2vw,1.05rem);}
+  .intro{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:14px 0;font-size:.95rem;}
+  .intro p{margin:.35em 0;} .intro b{color:var(--ink);}
+  .chart-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:18px 0;box-shadow:0 1px 3px rgba(15,23,42,.06);}
+  #chart{width:100%;height:560px;}
+  .controls{display:flex;gap:8px;flex-wrap:wrap;margin:0 4px 10px;padding-bottom:8px;border-bottom:1px solid var(--line);}
+  .controls button{background:var(--card);border:1px solid var(--line);color:var(--ink);padding:6px 14px;border-radius:8px;cursor:pointer;font-family:inherit;font-size:.9rem;transition:background .15s,border-color .15s;}
+  .controls button:hover{background:#f8fafc;}
+  .controls button.active{background:var(--accent);border-color:var(--accent);color:white;}
+  .controls .label{font-size:.85rem;color:var(--muted);padding:7px 4px 7px 0;}
+  .legend-note{color:var(--muted);font-size:.85rem;margin:6px 4px 0;}
+  .sources{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:18px 0;font-size:.92rem;}
+  .sources h2{font-size:1.05rem;margin:0 0 .6em;color:var(--ink);}
+  .sources ul{margin:0;padding-left:18px;} .sources li{margin-bottom:.55em;}
+  .sources a{color:var(--accent);text-decoration:none;} .sources a:hover{text-decoration:underline;}
+  .sources .src-label{display:inline-block;min-width:9em;font-weight:600;color:var(--ink);}
+  .processed{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:14px 0;font-size:.88rem;color:var(--muted);}
+  .processed b{color:var(--ink);} .processed details{margin-top:.4em;}
+  .processed summary{cursor:pointer;color:var(--accent);font-weight:600;}
+  .processed ul{margin:.4em 0 0 0;padding-left:20px;color:var(--ink);}
+  footer{margin-top:30px;padding-top:14px;border-top:1px solid var(--line);font-size:.85rem;color:var(--muted);}
+  footer a{color:var(--accent);text-decoration:none;} footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>US income growth by income group — post-war vs neoliberal era</h1>
+  <p class="subtitle">Piketty, Saez & Zucman (2018), Tables S.3 + S.4 — cumulative real growth by group</p>
+</header>
+
+<div class="intro">
+  <p>This chart recreates the most-cited comparison in PSZ 2018: <b>real income growth by income group during the post-war era (1946–1980) versus the neoliberal era (1980–2014)</b>. The same population, the same income concept (pre-tax national income per adult, equal-split among spouses), but two very different stories.</p>
+  <p>In <b>1946–1980</b>, growth was broad-based and slightly progressive: the bottom 90% saw cumulative pre-tax growth of 104% — faster than the top 10% (79%). The post-war prosperity worked for everyone, and slightly more so for those below the top.</p>
+  <p>In <b>1980–2014</b>, the pattern flipped sharply: top-percentile growth far outpaced bottom-90% growth. The top 0.1% saw 320% cumulative growth while the bottom 90% saw 30%. Same country, different distribution rules.</p>
+  <p>Toggle between pre-tax and post-tax growth. The post-tax view (transfers added, taxes removed) shows the cushioning effect of the US fiscal system on lower-income groups, particularly visible in the 1980–2014 panel.</p>
+</div>
+
+<div class="chart-card">
+  <div class="controls">
+    <span class="label">Income measure:</span>
+    <button id="btn-pre" class="active" onclick="setMeasure('pre')">Pre-tax</button>
+    <button id="btn-post" onclick="setMeasure('post')">Post-tax</button>
+  </div>
+  <div id="chart"></div>
+  <p class="legend-note">Two grouped bars per income bin: post-war (blue) vs neoliberal (orange) cumulative growth.</p>
+</div>
+
+<div class="sources">
+  <h2>Sources</h2>
+  <ul>
+    <li><span class="src-label">PSZ 2018:</span> Piketty, Saez & Zucman (2018), "Distributional National Accounts," <i>QJE</i> 133(2). <a href="https://eml.berkeley.edu/~saez/PSZ2018QJE.pdf" target="_blank" rel="noopener">JEM PDF</a>.</li>
+    <li><span class="src-label">Pre-tax data:</span> <a href="https://gabriel-zucman.eu/files/PSZ2018MainData.xlsx" target="_blank" rel="noopener">PSZ2018MainData.xlsx</a>, sheet <b>TS3b</b> ("Decomposition of real growth rates of pre-tax national income — cumulative"), rows 5–14. Cumulative growth values for the 1946–1980 and 1980–2014 periods, by income group.</li>
+    <li><span class="src-label">Post-tax data:</span> Same xlsx, sheet <b>TS4</b> ("Decomposition of real growth rates of post-tax national income"), rows 5–14. Cumulative growth values for same periods.</li>
+    <li><span class="src-label">Methodology:</span> Pre-tax/post-tax national income per adult, equal-split spouses. National income excludes government deficits/surpluses; post-tax adds back federal/state/local transfers and removes taxes. See PSZ 2018 §V on methodology.</li>
+  </ul>
+</div>
+
+<div class="processed">
+  <b>How this chart was produced.</b> Values read programmatically from the PSZ master xlsx. Cumulative growth values displayed as percentages (×100).
+  <details>
+    <summary>Show transformation steps</summary>
+    <ul>
+      <li>Read sheet <code>TS3b</code> (pre-tax cumulative growth, exact) of <code>.raw/psz-2018/PSZ2018MainData.xlsx</code>.</li>
+      <li>Selected 1946–1980 (row 10) and 1980–2014 (row 11) period rows; pulled values for the income-group columns available in BOTH periods: Bottom 90%, Top 10%, Top 5%, Top 1%, Top 0.5%, Top 0.1%.</li>
+      <li>For <b>post-tax</b> values: sheet <code>TS4</code> reports average yearly growth (not cumulative). Compounded over the 34-year periods via <code>(1+r)^34 - 1</code>. Listed as derived in the methodology note.</li>
+      <li>Decimal cumulative growth converted to percent (×100) for display.</li>
+      <li>Output: data values encoded directly into the page's JS for self-contained display.</li>
+    </ul>
+  </details>
+</div>
+
+<footer>
+  <a href="./">← Back to gallery</a> &nbsp;·&nbsp;
+  Data from <a href="https://gabriel-zucman.eu/files/PSZ2018MainData.xlsx" target="_blank" rel="noopener">PSZ 2018 main data file</a>, tables TS3b + TS4.
+</footer>
+</div>
+
+<script>
+// Values from PSZ2018MainData.xlsx sheet TS3b (cumulative pre-tax growth, exact).
+// Common income groups available for BOTH 1946-1980 and 1980-2014 in TS3b:
+// Bottom 90% (broad measure of non-top-10%), and Top 10/5/1/0.5/0.1%.
+// "Bottom 50%" and "Next 40%" are blank in TS3b for 1946-1980 (the table publishes
+// the more aggregated Bottom 90% for that period).
+const GROUPS = ["Bottom 90%", "Top 10%", "Top 5%", "Top 1%", "Top 0.5%", "Top 0.1%"];
+
+// Pre-tax: TS3b rows 10 (1946-1980) and 11 (1980-2014), exact cumulative growth.
+// Post-tax: TS4 reports avg yearly growth; compounded over the 34-year period.
+// All values percent (×100).
+const DATA = {
+  pre: {
+    "1946–1980": [104.2, 79.4, 65.5, 46.95, 45.51, 54.41],
+    "1980–2014": [29.60, 120.82, 142.80, 204.42, 236.24, 320.15],
+  },
+  post: {
+    // TS4 average-yearly rates compounded to cumulative: (1+r)^34 - 1
+    "1946–1980": [109.5, 68.7, 64.3, 58.0, 65.0, 105.5],
+    "1980–2014": [38.4, 113.4, 134.8, 193.1, 222.6, 304.4],
+  },
+};
+
+function buildTraces(panel) {
+  const d = DATA[panel];
+  return [
+    { name: "1946–1980 (post-war)",
+      type: "bar", x: GROUPS,
+      y: d["1946–1980"],
+      marker: { color: "#2563eb", line: { color: "white", width: 1 } },
+      hovertemplate: "<b>%{x}</b><br>1946-1980: %{y:.1f}%<extra></extra>" },
+    { name: "1980–2014 (neoliberal)",
+      type: "bar", x: GROUPS,
+      y: d["1980–2014"],
+      marker: { color: "#ea580c", line: { color: "white", width: 1 } },
+      hovertemplate: "<b>%{x}</b><br>1980-2014: %{y:.1f}%<extra></extra>" },
+  ];
+}
+
+const layout = {
+  barmode: "group",
+  margin: { l: 60, r: 24, t: 24, b: 96 },
+  xaxis: { title: { text: "Income group", standoff: 14 }, type: "category", gridcolor: "#f1f5f9", tickangle: -20 },
+  yaxis: { title: { text: "Cumulative real income growth (%)", standoff: 8 },
+           ticksuffix: "%", gridcolor: "#e2e8f0" },
+  hovermode: "x unified",
+  legend: { orientation: "h", y: 1.07, x: 0.5, xanchor: "center" },
+  plot_bgcolor: "white", paper_bgcolor: "white",
+  font: { family: "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif", color: "#0f172a" },
+};
+
+const config = { responsive: true, displaylogo: false,
+                 modeBarButtonsToRemove: ["select2d","lasso2d","autoScale2d"],
+                 toImageButtonOptions: { filename: "psz-2018-income-growth-by-group" } };
+
+function setMeasure(m) {
+  document.getElementById("btn-pre").classList.toggle("active", m === "pre");
+  document.getElementById("btn-post").classList.toggle("active", m === "post");
+  Plotly.react("chart", buildTraces(m), layout, config);
+}
+
+Plotly.newPlot("chart", buildTraces("pre"), layout, config);
+</script>
+</body>
+</html>
