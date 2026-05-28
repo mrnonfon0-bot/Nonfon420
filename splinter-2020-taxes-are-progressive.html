@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Splinter (2020) — U.S. Taxes are Progressive</title>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+<style>
+  :root {
+    --ink: #0f172a;
+    --muted: #64748b;
+    --line: #e2e8f0;
+    --bg: #f1f5f9;
+    --card: #ffffff;
+    --accent: #2563eb;
+    --ps: #2563eb;
+    --cbo: #16a34a;
+    --tpc: #ea580c;
+    --as: #9333ea;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink); background: var(--bg); line-height: 1.55;
+    padding: clamp(12px, 3vw, 30px);
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; }
+  header { margin-bottom: 14px; }
+  h1 {
+    font-size: clamp(1.4rem, 3.2vw, 2.05rem);
+    margin: 0 0 .25em; letter-spacing: -.01em;
+  }
+  .subtitle {
+    margin: 0 0 .25em; color: var(--muted);
+    font-size: clamp(.95rem, 2vw, 1.05rem);
+  }
+  .intro {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 12px; padding: 14px 18px; margin: 14px 0;
+    font-size: .95rem;
+  }
+  .intro p { margin: .35em 0; }
+  .intro b { color: var(--ink); }
+  .chart-card {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 14px; padding: 14px; margin: 18px 0;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, .06);
+  }
+  #chart { width: 100%; height: 540px; }
+  .controls {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin: 0 4px 10px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+  }
+  .controls button {
+    background: var(--card); border: 1px solid var(--line); color: var(--ink);
+    padding: 6px 14px; border-radius: 8px; cursor: pointer;
+    font-family: inherit; font-size: .9rem;
+    transition: background .15s, border-color .15s;
+  }
+  .controls button:hover { background: #f8fafc; }
+  .controls button.active {
+    background: var(--accent); border-color: var(--accent); color: white;
+  }
+  .controls .label {
+    font-size: .85rem; color: var(--muted); padding: 7px 4px 7px 0;
+  }
+  .legend-note {
+    color: var(--muted); font-size: .85rem; margin: 6px 4px 0;
+  }
+  .sources {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 12px; padding: 16px 20px; margin: 18px 0;
+    font-size: .92rem;
+  }
+  .sources h2 {
+    font-size: 1.05rem; margin: 0 0 .6em; color: var(--ink);
+  }
+  .sources ul { margin: 0; padding-left: 18px; }
+  .sources li { margin-bottom: .55em; }
+  .sources a { color: var(--accent); text-decoration: none; }
+  .sources a:hover { text-decoration: underline; }
+  .sources .src-label {
+    display: inline-block; min-width: 9em;
+    font-weight: 600; color: var(--ink);
+  }
+  .processed {
+    background: #f8fafc; border: 1px solid var(--line);
+    border-radius: 10px; padding: 12px 16px; margin: 14px 0;
+    font-size: .88rem; color: var(--muted);
+  }
+  .processed b { color: var(--ink); }
+  .processed details { margin-top: .4em; }
+  .processed summary { cursor: pointer; color: var(--accent); font-weight: 600; }
+  .processed ul { margin: .4em 0 0 0; padding-left: 20px; color: var(--ink); }
+  footer {
+    margin-top: 30px; padding-top: 14px; border-top: 1px solid var(--line);
+    font-size: .85rem; color: var(--muted);
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Effective Federal Tax Rates by Income Group</h1>
+  <p class="subtitle">Four research teams' estimates compared, 2014 (Piketty &amp; Saez: 2004)</p>
+</header>
+
+<div class="intro">
+  <p>This chart recreates <b>Figure 1 of David Splinter's 2020 Brookings comment</b> on Saez &amp; Zucman's "Progressive Wealth Taxation." It compares effective federal tax rates by income group as estimated by four research teams that use different income definitions, tax measures, and sharing units:</p>
+  <p>
+    <b>Piketty &amp; Saez (2007)</b> — fiscal income; payroll and corporate taxes (2004 data).
+    <b>CBO</b> — market income plus social insurance benefits.
+    <b>Tax Policy Center (TPC)</b> — expanded cash income.
+    <b>Auten &amp; Splinter (AS)</b> — pre-tax/after-transfer national income; includes state corporate and estate taxes; uses larger low-end bins (P0–50, P50–90).
+  </p>
+  <p>Income on the x-axis is grouped by percentile of the income distribution (P0–20 = bottom 20%, Top 0.01% = the highest 1-in-10,000). Toggle between excluding and including federal payroll taxes.</p>
+</div>
+
+<div class="chart-card">
+  <div class="controls">
+    <span class="label">Tax measure:</span>
+    <button id="btn-excl" class="active" onclick="setPanel('Excluding payroll')">Excluding payroll</button>
+    <button id="btn-incl" onclick="setPanel('Including payroll')">Including payroll</button>
+  </div>
+  <div id="chart"></div>
+  <p class="legend-note">Hover any point for the exact rate, year, and source. Click a series in the legend to hide/show.</p>
+</div>
+
+<div class="sources">
+  <h2>Sources — every line on this chart, with exact citation</h2>
+  <ul>
+    <li><span class="src-label">Splinter (2020):</span> "U.S. Taxes are Progressive: Comment on 'Progressive Wealth Taxation'," BPEA Conference Drafts, March 2020. The Figure 1 master data file is at <a href="http://davidsplinter.com/Splinter-TaxesAreProgressive.xlsx" target="_blank" rel="noopener">davidsplinter.com/Splinter-TaxesAreProgressive.xlsx</a>; the paper itself at <a href="https://www.brookings.edu/wp-content/uploads/2020/03/SaezZucman-comment-by-Splinter.pdf" target="_blank" rel="noopener">brookings.edu (PDF)</a>.</li>
+    <li><span class="src-label">Piketty &amp; Saez:</span> Piketty &amp; Saez (2007), "How Progressive is the U.S. Federal Tax System? A Historical and International Perspective," <i>Journal of Economic Perspectives</i> 21(1). 2004 data values. <a href="https://eml.berkeley.edu/~saez/piketty-saezJEP07taxprog.pdf" target="_blank" rel="noopener">JEP PDF</a>.</li>
+    <li><span class="src-label">CBO:</span> Congressional Budget Office, "The Distribution of Household Income, 2014." 2014 data values. <a href="https://www.cbo.gov/publication/53597" target="_blank" rel="noopener">cbo.gov/publication/53597</a>.</li>
+    <li><span class="src-label">TPC:</span> Tax Policy Center microsimulation model, 2014 estimates. <a href="https://www.taxpolicycenter.org/model-estimates" target="_blank" rel="noopener">taxpolicycenter.org/model-estimates</a>.</li>
+    <li><span class="src-label">Auten &amp; Splinter:</span> Auten &amp; Splinter (working paper), "Income Inequality in the United States: Using Tax Data to Measure Long-Term Trends." 2014 data. <a href="https://davidsplinter.com/AutenSplinter-Tax_Data_and_Inequality.pdf" target="_blank" rel="noopener">davidsplinter.com (PDF)</a>.</li>
+  </ul>
+</div>
+
+<div class="processed">
+  <b>How this chart was produced.</b> The values plotted are transcribed verbatim from the CSV that ships with Splinter's <a href="http://davidsplinter.com/Splinter-TaxesAreProgressive.xlsx" target="_blank" rel="noopener">Figure 1 master data file</a> — every bar is a number from that table, not a pixel measurement off the published chart image.
+  <details>
+    <summary>Show transformation steps</summary>
+    <ul>
+      <li>Read <code>.raw/splinter-2020-taxes-are-progressive/Splinter-TaxesAreProgressive(F1).csv</code>.</li>
+      <li>Reshape to tidy long format: one row per (source, income bin, panel) with the rate as a column.</li>
+      <li>Auten &amp; Splinter low-end bins (P0–50, P50–90) plotted at their native granularity — <b>no interpolation</b> to the narrower bins used by the other sources.</li>
+      <li>Output: <code>data/splinter-2020-taxes-are-progressive/effective-tax-rates-by-income-group.csv</code> + <code>metadata.json</code>.</li>
+    </ul>
+  </details>
+</div>
+
+<footer>
+  <a href="./">← Back to gallery</a> &nbsp;·&nbsp;
+  Data recreated faithfully from <a href="http://davidsplinter.com/Splinter-TaxesAreProgressive.xlsx" target="_blank" rel="noopener">Splinter (2020) Figure 1 master file</a>.
+</footer>
+
+</div><!-- /wrap -->
+
+<script>
+// Canonical income-bin order (low → high). The chart x-axis uses this exact order.
+const BINS = ["P0-20", "P0-50", "P20-40", "P40-60", "P50-90", "P60-80", "P80-90",
+              "P90-95", "P95-99", "P99-99.5", "P99.5-99.9", "P99.9-99.99", "Top 0.01%"];
+
+// Transcribed from .raw/splinter-2020-taxes-are-progressive/Splinter-TaxesAreProgressive(F1).csv
+// Built via: data/splinter-2020-taxes-are-progressive/effective-tax-rates-by-income-group.csv
+const DATA = {
+  "Excluding payroll": {
+    "Piketty & Saez (2007)": {year: 2004, color: "#2563eb",
+      vals: {"P20-40": -1.2, "P40-60": 4.9, "P60-80": 8.9, "P80-90": 10.8,
+             "P90-95": 13.4, "P95-99": 19.1, "P99-99.5": 26.7, "P99.5-99.9": 30.0,
+             "P99.9-99.99": 32.5, "Top 0.01%": 33.3}},
+    "CBO": {year: 2014, color: "#16a34a",
+      vals: {"P0-20": -7.9, "P20-40": 0.5, "P40-60": 5.0, "P60-80": 8.5,
+             "P80-90": 11.8, "P90-95": 14.6, "P95-99": 20.0, "P99-99.5": 25.8,
+             "P99.5-99.9": 31.5}},
+    "Tax Policy Center": {year: 2014, color: "#ea580c",
+      vals: {"P0-20": -3.5, "P20-40": 0.3, "P40-60": 5.2, "P60-80": 8.1,
+             "P80-90": 9.8, "P90-95": 12.3, "P95-99": 17.8, "P99-99.5": 23.3,
+             "P99.5-99.9": 28.8, "P99.9-99.99": 34.3}},
+    "Auten & Splinter": {year: 2014, color: "#9333ea",
+      vals: {"P0-50": 1.8, "P50-90": 4.8, "P90-95": 7.8, "P95-99": 10.0,
+             "P99-99.5": 12.2, "P99.5-99.9": 16.6, "P99.9-99.99": 22.6, "Top 0.01%": 26.3}},
+  },
+  "Including payroll": {
+    "Piketty & Saez (2007)": {year: 2004, color: "#2563eb",
+      vals: {"P20-40": 9.4, "P40-60": 16.1, "P60-80": 20.5, "P80-90": 22.7,
+             "P90-95": 24.9, "P95-99": 27.2, "P99-99.5": 31.3, "P99.5-99.9": 33.0,
+             "P99.9-99.99": 34.1, "Top 0.01%": 34.7}},
+    "CBO": {year: 2014, color: "#16a34a",
+      vals: {"P0-20": 1.9, "P20-40": 9.0, "P40-60": 14.0, "P60-80": 17.8,
+             "P80-90": 21.2, "P90-95": 23.4, "P95-99": 26.7, "P99-99.5": 30.2,
+             "P99.5-99.9": 33.6}},
+    "Tax Policy Center": {year: 2014, color: "#ea580c",
+      vals: {"P0-20": 3.1, "P20-40": 8.0, "P40-60": 13.7, "P60-80": 16.6,
+             "P80-90": 18.8, "P90-95": 20.3, "P95-99": 23.8, "P99-99.5": 27.8,
+             "P99.5-99.9": 31.7, "P99.9-99.99": 35.7}},
+    "Auten & Splinter": {year: 2014, color: "#9333ea",
+      vals: {"P0-50": 7.7, "P50-90": 11.6, "P90-95": 15.4, "P95-99": 17.2,
+             "P99-99.5": 19.0, "P99.5-99.9": 21.9, "P99.9-99.99": 26.0, "Top 0.01%": 28.7}},
+  }
+};
+
+function buildTraces(panel) {
+  const seriesData = DATA[panel];
+  const traces = [];
+  for (const [name, info] of Object.entries(seriesData)) {
+    const x = [];
+    const y = [];
+    const hover = [];
+    for (const bin of BINS) {
+      if (info.vals[bin] !== undefined) {
+        x.push(bin);
+        y.push(info.vals[bin]);
+        hover.push(
+          `<b>${name}</b><br>` +
+          `Income group: ${bin}<br>` +
+          `Effective tax rate: ${info.vals[bin].toFixed(1)}%<br>` +
+          `Year: ${info.year}<br>` +
+          `Panel: ${panel}`
+        );
+      }
+    }
+    traces.push({
+      name: `${name} (${info.year})`,
+      x, y,
+      mode: "lines+markers",
+      type: "scatter",
+      line: { color: info.color, width: 2.5 },
+      marker: { size: 9, color: info.color, line: { color: "white", width: 1.5 } },
+      hovertemplate: hover.map(h => h + "<extra></extra>"),
+      hoverlabel: { bgcolor: "white", bordercolor: info.color, font: { color: "#0f172a" } },
+    });
+  }
+  return traces;
+}
+
+const layout = {
+  margin: { l: 56, r: 24, t: 18, b: 96 },
+  xaxis: {
+    title: { text: "Income percentile group (P0-20 = bottom 20%)", standoff: 14 },
+    type: "category",
+    categoryorder: "array",
+    categoryarray: BINS,
+    tickangle: -32,
+    gridcolor: "#f1f5f9",
+    zeroline: false,
+  },
+  yaxis: {
+    title: { text: "Effective tax rate (%)", standoff: 8 },
+    ticksuffix: "%",
+    gridcolor: "#e2e8f0",
+    zerolinecolor: "#94a3b8",
+    zerolinewidth: 1.5,
+  },
+  hovermode: "closest",
+  legend: {
+    orientation: "h",
+    y: -0.25,
+    x: 0.5,
+    xanchor: "center",
+    bgcolor: "rgba(255,255,255,0.9)",
+    bordercolor: "#e2e8f0",
+    borderwidth: 1,
+  },
+  plot_bgcolor: "white",
+  paper_bgcolor: "white",
+  font: { family: "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif",
+          color: "#0f172a" },
+};
+
+const config = {
+  responsive: true,
+  displaylogo: false,
+  modeBarButtonsToRemove: ["select2d", "lasso2d", "autoScale2d"],
+  toImageButtonOptions: { filename: "splinter-2020-taxes-are-progressive" },
+};
+
+function setPanel(panel) {
+  document.getElementById("btn-excl").classList.toggle("active", panel === "Excluding payroll");
+  document.getElementById("btn-incl").classList.toggle("active", panel === "Including payroll");
+  Plotly.react("chart", buildTraces(panel), layout, config);
+}
+
+Plotly.newPlot("chart", buildTraces("Excluding payroll"), layout, config);
+</script>
+</body>
+</html>
