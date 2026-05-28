@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ITEP (2024) — Who Pays Taxes in America</title>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+<style>
+  :root { --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; --bg:#f1f5f9; --card:#ffffff; --accent:#2563eb; }
+  *{box-sizing:border-box;} html,body{margin:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55;padding:clamp(12px,3vw,30px);}
+  .wrap{max-width:1080px;margin:0 auto;}
+  header{margin-bottom:14px;}
+  h1{font-size:clamp(1.4rem,3.2vw,2.05rem);margin:0 0 .25em;letter-spacing:-.01em;}
+  .subtitle{margin:0;color:var(--muted);font-size:clamp(.95rem,2vw,1.05rem);}
+  .intro{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:14px 0;font-size:.95rem;}
+  .intro p{margin:.35em 0;} .intro b{color:var(--ink);}
+  .scope-callout{background:#fef3c7;border:1px solid #fcd34d;border-radius:10px;padding:10px 14px;margin:14px 0;font-size:.9rem;}
+  .scope-callout b{color:#92400e;}
+  .chart-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:18px 0;box-shadow:0 1px 3px rgba(15,23,42,.06);}
+  #chart{width:100%;height:540px;}
+  .legend-note{color:var(--muted);font-size:.85rem;margin:6px 4px 0;}
+  .sources{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:18px 0;font-size:.92rem;}
+  .sources h2{font-size:1.05rem;margin:0 0 .6em;color:var(--ink);}
+  .sources ul{margin:0;padding-left:18px;} .sources li{margin-bottom:.55em;}
+  .sources a{color:var(--accent);text-decoration:none;} .sources a:hover{text-decoration:underline;}
+  .sources .src-label{display:inline-block;min-width:9em;font-weight:600;color:var(--ink);}
+  .processed{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:14px 0;font-size:.88rem;color:var(--muted);}
+  .processed b{color:var(--ink);} .processed details{margin-top:.4em;}
+  .processed summary{cursor:pointer;color:var(--accent);font-weight:600;}
+  .processed ul{margin:.4em 0 0 0;padding-left:20px;color:var(--ink);}
+  footer{margin-top:30px;padding-top:14px;border-top:1px solid var(--line);font-size:.85rem;color:var(--muted);}
+  footer a{color:var(--accent);text-decoration:none;} footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Federal + state &amp; local taxes as a share of income, 2024</h1>
+  <p class="subtitle">ITEP "Who Pays Taxes in America" — by household income quintile, with top 1% broken out</p>
+</header>
+
+<div class="intro">
+  <p>This chart recreates <b>Figure 3 of ITEP's April 2024 report</b> "Who Pays Taxes in America in 2024." ITEP models the full US tax burden — federal + state + local, including income, payroll, property, sales, excise, and corporate taxes — and reports it as a share of a broad income measure (including employer-paid FICA and corporate profits).</p>
+  <p>The stacked bars decompose total effective tax rate into the federal piece and the state &amp; local piece. The structural pattern: total tax rates rise modestly from ~17% at the bottom to ~35% at the top. The federal share is progressive (3.6% → 25.5%); the state &amp; local share is mildly regressive (13.5% → 9.2%) — sales, excise, and property taxes weigh harder on lower-income households.</p>
+</div>
+
+<div class="scope-callout">
+  <b>Scope note.</b> This is ITEP's <b>all-government, all-tax</b> measure — broader than the federal-only series from CBO / TPC / Splinter / Auten-Splinter elsewhere on this dashboard. Compare ITEP totals against PSZ 2018 (also all-government); compare ITEP's "federal" column against the federal-only sources.
+</div>
+
+<div class="chart-card">
+  <div id="chart"></div>
+  <p class="legend-note">Each stack shows federal vs state &amp; local tax burden. Hover any segment for exact numbers.</p>
+</div>
+
+<div class="sources">
+  <h2>Sources — every bar segment, with exact citation</h2>
+  <ul>
+    <li><span class="src-label">ITEP (2024):</span> Institute on Taxation and Economic Policy, "Who Pays Taxes in America in 2024," April 2024. Web report: <a href="https://itep.org/who-pays-taxes-in-america-in-2024/" target="_blank" rel="noopener">itep.org/who-pays-taxes-in-america-in-2024/</a>. PDF: <a href="https://sfo2.digitaloceanspaces.com/itep/ITEP-Who-Pays-Taxes-in-America-in-2024.pdf" target="_blank" rel="noopener">ITEP-Who-Pays-Taxes-in-America-in-2024.pdf</a>.</li>
+    <li><span class="src-label">Figure 3:</span> "Incomes and Federal, State &amp; Local Taxes in 2024" — the source table for both series on this chart. Quoted verbatim from the linked web report (data table embedded under the figure caption).</li>
+    <li><span class="src-label">Underlying:</span> ITEP Tax Model, April 2024 vintage. Income groups defined by 2024 estimated income. Methodology described in the ITEP report and supplementary notes.</li>
+  </ul>
+</div>
+
+<div class="processed">
+  <b>How this chart was produced.</b> Values transcribed verbatim from ITEP's web Figure 3 table — no pixel tracing.
+  <details>
+    <summary>Show transformation steps</summary>
+    <ul>
+      <li>Fetched <code>itep.org/who-pays-taxes-in-america-in-2024/</code> page HTML on 2026-05-28.</li>
+      <li>Extracted Figure 3 table from the embedded <code>itep-data-table</code> markup.</li>
+      <li>Captured seven income groups (Lowest 20% → Top 1%) with average cash income, income range, share of income, share of taxes, federal tax %, state &amp; local tax %, and total tax %.</li>
+      <li>Output: <code>data/itep-2024/who-pays-2024.csv</code> + <code>metadata.json</code>.</li>
+    </ul>
+  </details>
+</div>
+
+<footer>
+  <a href="./">← Back to gallery</a> &nbsp;·&nbsp;
+  Data from <a href="https://itep.org/who-pays-taxes-in-america-in-2024/" target="_blank" rel="noopener">ITEP April 2024 report</a>.
+</footer>
+</div>
+
+<script>
+const DATA = [
+  // group, avg_income, federal, state_local, total
+  ["Lowest 20%",  "≤ $27,100",            15400,  3.6, 13.5, 17.1],
+  ["Second 20%",  "$27.1k–$51.5k",        38900, 10.0, 12.2, 22.2],
+  ["Middle 20%",  "$51.5k–$86.8k",        67400, 15.0, 11.5, 26.4],
+  ["Fourth 20%",  "$86.8k–$147.3k",      115200, 16.1, 11.1, 27.2],
+  ["Next 15%",    "$147.3k–$308.6k",     197400, 19.0,  9.9, 28.8],
+  ["Next 4%",     "$308.6k–$771.1k",     454400, 21.5,  8.6, 30.1],
+  ["Top 1%",      "≥ $771.1k",          2502100, 25.5,  9.2, 34.8],
+];
+
+const groups = DATA.map(r => r[0]);
+const ranges = DATA.map(r => r[1]);
+const incomes = DATA.map(r => r[2]);
+const federal = DATA.map(r => r[3]);
+const stateLocal = DATA.map(r => r[4]);
+const totals = DATA.map(r => r[5]);
+
+const traces = [
+  {
+    name: "Federal taxes",
+    type: "bar", x: groups, y: federal,
+    marker: { color: "#2563eb", line: { color: "white", width: 1 } },
+    customdata: groups.map((g, i) => [ranges[i], incomes[i].toLocaleString()]),
+    hovertemplate: "<b>%{x}</b><br>Income range: %{customdata[0]}<br>Avg cash income: $%{customdata[1]}<br>Federal: %{y:.1f}%<extra></extra>",
+  },
+  {
+    name: "State & local taxes",
+    type: "bar", x: groups, y: stateLocal,
+    marker: { color: "#16a34a", line: { color: "white", width: 1 } },
+    hovertemplate: "<b>%{x}</b><br>State & local: %{y:.1f}%<extra></extra>",
+  },
+];
+
+const annotations = groups.map((g, i) => ({
+  x: g, y: totals[i] + 1.2, text: `<b>${totals[i]}%</b>`,
+  showarrow: false, font: { size: 12, color: "#0f172a" },
+}));
+
+const layout = {
+  barmode: "stack",
+  margin: { l: 56, r: 24, t: 24, b: 90 },
+  xaxis: { title: { text: "Income group", standoff: 14 }, type: "category", gridcolor: "#f1f5f9" },
+  yaxis: { title: { text: "Taxes as % of total income", standoff: 8 },
+           ticksuffix: "%", gridcolor: "#e2e8f0", range: [0, 42] },
+  hovermode: "x unified",
+  legend: { orientation: "h", y: -0.22, x: 0.5, xanchor: "center",
+            bgcolor: "rgba(255,255,255,0.9)", bordercolor: "#e2e8f0", borderwidth: 1 },
+  plot_bgcolor: "white", paper_bgcolor: "white",
+  font: { family: "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif", color: "#0f172a" },
+  annotations,
+};
+
+Plotly.newPlot("chart", traces, layout, {
+  responsive: true, displaylogo: false,
+  modeBarButtonsToRemove: ["select2d","lasso2d","autoScale2d"],
+  toImageButtonOptions: { filename: "itep-2024-who-pays-taxes" },
+});
+</script>
+</body>
+</html>

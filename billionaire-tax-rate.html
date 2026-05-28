@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Splinter (2025) — Top 400 Effective Tax Rates: Comment on BSYZ</title>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+<style>
+  :root { --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; --bg:#f1f5f9; --card:#ffffff; --accent:#2563eb; }
+  *{box-sizing:border-box;} html,body{margin:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55;padding:clamp(12px,3vw,30px);}
+  .wrap{max-width:1080px;margin:0 auto;}
+  header{margin-bottom:14px;}
+  h1{font-size:clamp(1.4rem,3.2vw,2.05rem);margin:0 0 .25em;letter-spacing:-.01em;}
+  .subtitle{margin:0;color:var(--muted);font-size:clamp(.95rem,2vw,1.05rem);}
+  .intro{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:14px 0;font-size:.95rem;}
+  .intro p{margin:.35em 0;} .intro b{color:var(--ink);}
+  .scope-callout{background:#fef3c7;border:1px solid #fcd34d;border-radius:10px;padding:10px 14px;margin:14px 0;font-size:.9rem;}
+  .scope-callout b{color:#92400e;}
+  .chart-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:18px 0;box-shadow:0 1px 3px rgba(15,23,42,.06);}
+  #chart{width:100%;height:560px;}
+  .legend-note{color:var(--muted);font-size:.85rem;margin:6px 4px 0;}
+  .sources{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:18px 0;font-size:.92rem;}
+  .sources h2{font-size:1.05rem;margin:0 0 .6em;color:var(--ink);}
+  .sources ul{margin:0;padding-left:18px;} .sources li{margin-bottom:.55em;}
+  .sources a{color:var(--accent);text-decoration:none;} .sources a:hover{text-decoration:underline;}
+  .sources .src-label{display:inline-block;min-width:9em;font-weight:600;color:var(--ink);}
+  .processed{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:14px 0;font-size:.88rem;color:var(--muted);}
+  .processed b{color:var(--ink);} .processed details{margin-top:.4em;}
+  .processed summary{cursor:pointer;color:var(--accent);font-weight:600;}
+  .processed ul{margin:.4em 0 0 0;padding-left:20px;color:var(--ink);}
+  footer{margin-top:30px;padding-top:14px;border-top:1px solid var(--line);font-size:.85rem;color:var(--muted);}
+  footer a{color:var(--accent);text-decoration:none;} footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Top 400 effective tax rates — Splinter (2025) comment on BSYZ</h1>
+  <p class="subtitle">Successive adjustments to the BSYZ "top 400 by wealth" tax-rate estimate, 2018–2020 averages</p>
+</header>
+
+<div class="intro">
+  <p>This chart recreates <b>Table 1 of David Splinter's August 2025 comment</b> on Balkir, Saez, Yagan &amp; Zucman (2025) — "How Much Tax Do Billionaires Pay?" BSYZ estimated that the top 400 wealthiest US tax units paid an effective tax rate (24%) <i>below</i> the overall US rate (30%) in 2018–2020. Splinter argues the gap reverses sign after four adjustments. The bars show each adjustment in sequence.</p>
+  <p>The cumulative top-400 rate climbs from <b>24% → 27% → 35% → 35% → 38%</b> as four corrections are applied: removing pure capital gains (double-counting fix), spreading Forbes wealth across multiple tax returns (dynastic family correction), adding transfers + refundable credits (overall rate adjustment), and reinstating missing SALT-cap state income taxes. The two ALT bars at the right are top-400 <i>tax-and-giving</i> rates — adding annual charitable contributions and end-of-life bequests respectively.</p>
+</div>
+
+<div class="scope-callout">
+  <b>Scope note.</b> Tax measure = federal + state + local taxes; income measure follows BSYZ's economic-income framework. The point of this chart is the <b>methodological sensitivity</b> at the very top of the distribution — small definitional choices move the top-400 rate by 13+ percentage points. Compare cautiously with the bottom-of-distribution sources that share none of these definitional issues.
+</div>
+
+<div class="chart-card">
+  <div id="chart"></div>
+  <p class="legend-note">Each bar is the top-400 tax rate after applying one additional adjustment to the BSYZ baseline. The dashed line shows the overall US tax rate (30% before adjustments, 25% after adding transfers/credits).</p>
+</div>
+
+<div class="sources">
+  <h2>Sources — every bar, with exact citation</h2>
+  <ul>
+    <li><span class="src-label">Splinter (2025):</span> "Comment on 'How Much Tax Do Billionaires Pay?'," August 2025. <a href="https://www.davidsplinter.com/BillionaireTaxRate.pdf" target="_blank" rel="noopener">davidsplinter.com (PDF)</a>. Local copy: <code>.raw/billionaire-tax-rate/BillionaireTaxRate.pdf</code>.</li>
+    <li><span class="src-label">Table 1:</span> "Effective tax rates of 'top 400' tax returns, 2018–2020 averages," p. 3 of the PDF. Every bar value comes from this single table.</li>
+    <li><span class="src-label">BSYZ baseline:</span> Balkir, M.D., Saez, E., Yagan, D., &amp; Zucman, G. (2025). "How Much Tax Do Billionaires Pay?" NBER Working Paper. <a href="https://gabriel-zucman.eu/files/BSYZ2025NBER.pdf" target="_blank" rel="noopener">gabriel-zucman.eu (PDF)</a>. Splinter's comment starts from BSYZ's published numbers and adds corrections.</li>
+    <li><span class="src-label">Forbes correction:</span> Smith, Zidar &amp; Zwick (2023) finding that the Forbes 400 list represents ~2,370 adults across dynastic family groups (not 400 tax units).</li>
+    <li><span class="src-label">SALT/charity:</span> IRS data on SALT-capped deductions 2018–2020; Joulfaian (2001) estate-tax-return data for end-of-life bequest shares.</li>
+  </ul>
+</div>
+
+<div class="processed">
+  <b>How this chart was produced.</b> Values transcribed verbatim from Table 1 of the source PDF. pdfplumber used to locate the table; values read row-by-row.
+  <details>
+    <summary>Show transformation steps</summary>
+    <ul>
+      <li>Read PDF page 3 of <code>.raw/billionaire-tax-rate/BillionaireTaxRate.pdf</code> with <code>pdfplumber</code>.</li>
+      <li>Extracted Table 1 (seven rows: baseline + 4 sequential adjustments + 2 ALT cases).</li>
+      <li>Top 400 and overall tax rates plotted as the "Top 400 tax rate" and the dashed "Overall US tax rate" reference line.</li>
+      <li>The two ALT rates include charitable contributions (not pure tax rates) — flagged in the legend.</li>
+      <li>Output: <code>data/billionaire-tax-rate/top400-etr-adjustment-ladder.csv</code> + <code>metadata.json</code>.</li>
+    </ul>
+  </details>
+</div>
+
+<footer>
+  <a href="./">← Back to gallery</a> &nbsp;·&nbsp;
+  Data from <a href="https://www.davidsplinter.com/BillionaireTaxRate.pdf" target="_blank" rel="noopener">Splinter (2025) comment on BSYZ</a>.
+</footer>
+</div>
+
+<script>
+// Transcribed from Table 1, p. 3 of the source PDF.
+const LABELS = [
+  "BSYZ baseline",
+  "1. Remove 'pure' capital gains",
+  "2. Forbes dynastic families",
+  "3. Transfers & refundable credits",
+  "4. SALT cap correction",
+  "ALT 1: + charitable giving",
+  "ALT 2: + end-of-life giving",
+];
+const TOP_400 = [24, 27, 35, 35, 38, 59, 73];
+const OVERALL = [30, 30, 30, 25, 25, null, null];
+
+const traces = [
+  {
+    name: "Top 400 tax rate",
+    type: "bar", x: LABELS, y: TOP_400,
+    marker: {
+      color: ["#94a3b8","#94a3b8","#94a3b8","#94a3b8","#2563eb","#9333ea","#7c3aed"],
+      line: { color: "white", width: 1 },
+    },
+    text: TOP_400.map(v => v + "%"), textposition: "outside",
+    hovertemplate: "<b>%{x}</b><br>Top 400: %{y}%<extra></extra>",
+  },
+  {
+    name: "Overall US tax rate (reference)",
+    type: "scatter", mode: "lines+markers",
+    x: LABELS, y: OVERALL,
+    line: { color: "#dc2626", width: 2, dash: "dash" },
+    marker: { size: 8, color: "#dc2626" },
+    hovertemplate: "<b>Overall</b>: %{y}%<extra></extra>",
+    connectgaps: false,
+  },
+];
+
+const layout = {
+  margin: { l: 60, r: 24, t: 28, b: 130 },
+  xaxis: { title: "", type: "category", tickangle: -20, gridcolor: "#f1f5f9", automargin: true },
+  yaxis: { title: { text: "Effective tax rate (% of income)", standoff: 8 },
+           ticksuffix: "%", gridcolor: "#e2e8f0", range: [0, 80] },
+  hovermode: "x unified",
+  legend: { orientation: "h", y: 1.08, x: 0.5, xanchor: "center" },
+  plot_bgcolor: "white", paper_bgcolor: "white",
+  font: { family: "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif", color: "#0f172a" },
+};
+
+Plotly.newPlot("chart", traces, layout, {
+  responsive: true, displaylogo: false,
+  modeBarButtonsToRemove: ["select2d","lasso2d","autoScale2d"],
+  toImageButtonOptions: { filename: "billionaire-tax-rate-splinter-2025" },
+});
+</script>
+</body>
+</html>
