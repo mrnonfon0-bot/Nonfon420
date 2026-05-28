@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auten & Splinter — US Gini Coefficients, 1960–2022</title>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+<style>
+  :root { --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; --bg:#f1f5f9; --card:#ffffff; --accent:#2563eb; }
+  *{box-sizing:border-box;} html,body{margin:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55;padding:clamp(12px,3vw,30px);}
+  .wrap{max-width:1080px;margin:0 auto;}
+  header{margin-bottom:14px;}
+  h1{font-size:clamp(1.4rem,3.2vw,2.05rem);margin:0 0 .25em;letter-spacing:-.01em;}
+  .subtitle{margin:0;color:var(--muted);font-size:clamp(.95rem,2vw,1.05rem);}
+  .intro{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:14px 0;font-size:.95rem;}
+  .intro p{margin:.35em 0;} .intro b{color:var(--ink);}
+  .chart-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:18px 0;box-shadow:0 1px 3px rgba(15,23,42,.06);}
+  #chart{width:100%;height:540px;}
+  .legend-note{color:var(--muted);font-size:.85rem;margin:6px 4px 0;}
+  .sources{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:18px 0;font-size:.92rem;}
+  .sources h2{font-size:1.05rem;margin:0 0 .6em;color:var(--ink);}
+  .sources ul{margin:0;padding-left:18px;} .sources li{margin-bottom:.55em;}
+  .sources a{color:var(--accent);text-decoration:none;} .sources a:hover{text-decoration:underline;}
+  .sources .src-label{display:inline-block;min-width:9em;font-weight:600;color:var(--ink);}
+  .processed{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:14px 0;font-size:.88rem;color:var(--muted);}
+  .processed b{color:var(--ink);} .processed details{margin-top:.4em;}
+  .processed summary{cursor:pointer;color:var(--accent);font-weight:600;}
+  .processed ul{margin:.4em 0 0 0;padding-left:20px;color:var(--ink);}
+  footer{margin-top:30px;padding-top:14px;border-top:1px solid var(--line);font-size:.85rem;color:var(--muted);}
+  footer a{color:var(--accent);text-decoration:none;} footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Gini coefficients of US income — three measures, 1960–2022</h1>
+  <p class="subtitle">Auten & Splinter (2025 update) — pre-tax, pre-tax + transfers, after-tax</p>
+</header>
+
+<div class="intro">
+  <p>The <b>Gini coefficient</b> is a summary statistic of an entire income distribution: 0 means perfectly equal, 1 means one person has everything. It's the most-cited single number for inequality after the top-1% share. Auten-Splinter publish three parallel Gini series — one per income definition.</p>
+  <p>All three series rise from roughly 1960 to today, but at very different levels. <b>Pre-tax Gini</b> (highest) rises from ~0.44 in 1960 to ~0.55 in 2022. <b>Pre-tax + transfers</b> sits 4–7 points lower (transfers compress the bottom of the distribution upward). <b>After-tax Gini</b> sits another 7–10 points lower again (taxes paid by high earners compress the top of the distribution downward).</p>
+  <p>The gap between pre-tax and after-tax Gini measures the redistributive effect of the US fiscal system. That gap has grown modestly over time as transfer programs (Medicaid, EITC, ACA) expanded — but the underlying market distribution has worsened faster, so total post-tax inequality still rises.</p>
+</div>
+
+<div class="chart-card">
+  <div id="chart"></div>
+  <p class="legend-note">All three Gini series from AS's master xlsx, sheet F1, columns E/F/G.</p>
+</div>
+
+<div class="sources">
+  <h2>Sources</h2>
+  <ul>
+    <li><span class="src-label">AS-Update-2025:</span> <a href="https://www.davidsplinter.com/AS-Update-2025.pdf" target="_blank" rel="noopener">davidsplinter.com (PDF)</a>. Working paper extending Auten & Splinter (2024) <i>JPE</i> 132(7).</li>
+    <li><span class="src-label">Data file:</span> <a href="https://davidsplinter.com/AS-Update-2025.xlsx" target="_blank" rel="noopener">AS-Update-2025.xlsx</a>, sheet <b>F1</b> "Figure 1: Top 1% income shares and Gini coefficients," columns E (pre-tax Gini), F (pre-tax + transfers Gini), G (after-tax Gini). Rows 34+ (year 1960 onward).</li>
+    <li><span class="src-label">Methodology:</span> Same income concept as AS top-1% share series. Gini computed across the full distribution of tax units. See AS 2024 <i>JPE</i> §III for definitions.</li>
+  </ul>
+</div>
+
+<div class="processed">
+  <b>How this chart was produced.</b> Same extraction as the AS top-1% chart; the Gini columns of the source sheet were captured alongside the share columns.
+  <details>
+    <summary>Show transformation steps</summary>
+    <ul>
+      <li>Read <code>AS-Update-2025.xlsx</code> sheet F1 with openpyxl, rows 34+ (year 1960 through 2022).</li>
+      <li>Captured Gini columns E (pre-tax), F (pre-tax+transfers), G (after-tax). Values used as-is (Gini is already a decimal between 0 and 1).</li>
+      <li>Output: same CSV as the AS top-1% chart — <code>data/auten-splinter-2025-update/top1-shares-and-gini.csv</code>.</li>
+    </ul>
+  </details>
+</div>
+
+<footer>
+  <a href="./">← Back to gallery</a> &nbsp;·&nbsp;
+  Data from <a href="https://davidsplinter.com/AS-Update-2025.xlsx" target="_blank" rel="noopener">AS-Update-2025 Figure 1 master file</a>.
+</footer>
+</div>
+
+<script>
+// Same data array as auten-splinter-top1-shares.html; using Gini columns (idx 4-6).
+const DATA = [
+  [1960,10.377,9.9057,8.1354,0.4367,0.4052,0.3463],[1962,11.1754,10.6803,8.6244,0.4362,0.4079,0.3475],
+  [1964,11.482,10.9888,8.9334,0.4296,0.4017,0.3434],[1966,11.4692,11.0071,9.0521,0.4319,0.4036,0.3475],
+  [1967,11.2674,10.725,8.4516,0.4312,0.3987,0.3367],[1968,11.1465,10.576,8.1687,0.4313,0.3974,0.333],
+  [1969,10.1247,9.5967,7.5185,0.423,0.3877,0.3255],[1970,9.3119,8.765,6.7808,0.4196,0.3788,0.3171],
+  [1971,9.5811,8.9526,6.9542,0.4295,0.3845,0.321],[1972,9.7076,9.0709,7.1114,0.4244,0.3798,0.3167],
+  [1973,9.5463,8.8972,7.3671,0.4269,0.3797,0.3233],[1974,9.2287,8.5556,7.0305,0.4308,0.3789,0.3211],
+  [1975,9.2647,8.4503,6.9144,0.4424,0.3815,0.3175],[1976,9.4105,8.6036,7.0315,0.4383,0.3797,0.3144],
+  [1977,9.4108,8.6501,7.2549,0.4432,0.3866,0.3241],[1978,9.3177,8.5957,7.34,0.4394,0.384,0.3263],
+  [1979,9.4022,8.6845,7.35,0.4429,0.3858,0.3275],[1980,9.1032,8.3667,6.9353,0.4491,0.3878,0.3249],
+  [1981,8.9787,8.1904,6.9649,0.4478,0.3876,0.3272],[1982,9.1587,8.3029,6.8986,0.456,0.3926,0.3277],
+  [1983,9.4668,8.6027,7.195,0.4653,0.4022,0.338],[1984,9.8372,9.0177,7.7089,0.4643,0.4069,0.3506],
+  [1985,9.9795,9.1027,7.6892,0.4626,0.4084,0.3498],[1986,9.8565,9.0315,7.3654,0.4677,0.4135,0.3528],
+  [1987,10.0901,9.2237,7.6447,0.4699,0.4123,0.3513],[1988,11.2609,10.2913,8.7414,0.4721,0.4148,0.3553],
+  [1989,10.7745,9.8517,8.2458,0.4721,0.4136,0.3523],[1990,10.7311,9.7486,8.2756,0.4734,0.4138,0.3522],
+  [1991,10.4636,9.4321,7.7318,0.4743,0.408,0.3414],[1992,11.1735,10.0105,8.1185,0.4849,0.4139,0.3438],
+  [1993,10.6722,9.535,7.3484,0.4826,0.4121,0.3385],[1994,10.6276,9.5184,7.4135,0.479,0.4103,0.3412],
+  [1995,11.1758,10.0084,7.7998,0.4833,0.4168,0.3462],[1996,11.6873,10.491,8.1597,0.4861,0.4229,0.3529],
+  [1997,12.2449,11.0417,8.6296,0.4938,0.4319,0.3619],[1998,12.4603,11.2659,8.6839,0.4938,0.4346,0.3628],
+  [1999,12.8625,11.6437,9.0318,0.4949,0.4354,0.3648],[2000,13.4088,12.1515,9.4507,0.5035,0.4453,0.3755],
+  [2001,12.4905,11.251,8.6654,0.5004,0.4397,0.3658],[2002,11.8708,10.6405,8.1884,0.5006,0.4364,0.3588],
+  [2003,12.221,10.9495,8.5434,0.5078,0.4428,0.3654],[2004,13.1541,11.7833,9.2436,0.5151,0.4506,0.3741],
+  [2005,14.1152,12.643,9.856,0.5226,0.4582,0.3811],[2006,14.5759,13.0584,10.1263,0.5287,0.4654,0.3881],
+  [2007,14.4781,12.9224,9.737,0.526,0.4625,0.3831],[2008,13.9105,12.2448,9.0277,0.5337,0.4609,0.3747],
+  [2009,12.9073,11.2053,8.2277,0.5299,0.45,0.3585],[2010,13.925,12.0857,8.9866,0.5402,0.4599,0.3645],
+  [2011,13.6334,11.8979,8.651,0.5412,0.4648,0.3639],[2012,15.0427,13.148,9.84,0.5507,0.474,0.3815],
+  [2013,13.8475,12.123,8.7054,0.5424,0.4684,0.3778],[2014,14.4068,12.617,9.1579,0.5459,0.4713,0.3821],
+  [2015,13.9854,12.2865,8.8902,0.5437,0.4683,0.3792],[2016,13.7935,12.0252,8.7013,0.5434,0.4665,0.3757],
+  [2017,14.4297,12.5996,9.2293,0.5473,0.471,0.3838],[2018,14.6336,12.8004,9.4887,0.5449,0.469,0.383],
+  [2019,14.3328,12.5199,9.1805,0.5437,0.4679,0.3796],[2020,15.7543,13.0334,9.1482,0.5764,0.4633,0.3679],
+  [2021,16.8905,14.0413,10.2001,0.5823,0.4668,0.3809],[2022,15.5064,13.4408,10.3079,0.5618,0.4756,0.396],
+];
+
+const years = DATA.map(r => r[0]);
+const traces = [
+  { name: "Gini, pre-tax", x: years, y: DATA.map(r => r[4]),
+    mode: "lines+markers", type: "scatter",
+    line: { color: "#dc2626", width: 2.5 }, marker: { size: 5, color: "#dc2626" },
+    hovertemplate: "<b>%{x}</b><br>Pre-tax Gini: %{y:.4f}<extra></extra>" },
+  { name: "Gini, pre-tax + transfers", x: years, y: DATA.map(r => r[5]),
+    mode: "lines+markers", type: "scatter",
+    line: { color: "#ea580c", width: 2.5, dash: "dot" }, marker: { size: 5, color: "#ea580c" },
+    hovertemplate: "<b>%{x}</b><br>Pre-tax+transfers Gini: %{y:.4f}<extra></extra>" },
+  { name: "Gini, after-tax", x: years, y: DATA.map(r => r[6]),
+    mode: "lines+markers", type: "scatter",
+    line: { color: "#2563eb", width: 2.5 }, marker: { size: 5, color: "#2563eb" },
+    hovertemplate: "<b>%{x}</b><br>After-tax Gini: %{y:.4f}<extra></extra>" },
+];
+
+const layout = {
+  margin: { l: 56, r: 24, t: 18, b: 56 },
+  xaxis: { title: { text: "Year", standoff: 10 }, gridcolor: "#f1f5f9", dtick: 10 },
+  yaxis: { title: { text: "Gini coefficient (0 = perfect equality, 1 = perfect inequality)", standoff: 8 },
+           gridcolor: "#e2e8f0", range: [0.30, 0.60] },
+  hovermode: "x unified",
+  legend: { orientation: "h", y: 1.06, x: 0.5, xanchor: "center" },
+  plot_bgcolor: "white", paper_bgcolor: "white",
+  font: { family: "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif", color: "#0f172a" },
+};
+
+Plotly.newPlot("chart", traces, layout, {
+  responsive: true, displaylogo: false,
+  modeBarButtonsToRemove: ["select2d","lasso2d","autoScale2d"],
+  toImageButtonOptions: { filename: "auten-splinter-gini-coefficients" },
+});
+</script>
+</body>
+</html>
