@@ -32,9 +32,22 @@
   .sub{margin:0;color:var(--muted);font-size:clamp(.93rem,2vw,1.03rem);max-width:64ch}
   .sub b,.sub i{color:var(--ink)}
 
+  /* ---- tabs ---- */
+  .tabs{display:flex;gap:6px;margin:18px 0 0;border-bottom:1px solid var(--line)}
+  .tab{
+    appearance:none;background:none;border:0;cursor:pointer;font:inherit;
+    padding:10px 18px;color:var(--muted);font-weight:600;font-size:.96rem;
+    border-bottom:3px solid transparent;margin-bottom:-1px;border-radius:8px 8px 0 0;
+    transition:color .15s,border-color .15s,background .15s;
+  }
+  .tab:hover{color:var(--ink);background:#fff}
+  .tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--eq)}
+  .panel[hidden]{display:none}
+  .panel{margin-top:18px}
+
   .board{
     display:grid;grid-template-columns:minmax(0,1fr) 306px;
-    gap:clamp(14px,2.5vw,26px);align-items:start;margin-top:20px;
+    gap:clamp(14px,2.5vw,26px);align-items:start;
   }
   .diagram{
     position:relative;background:var(--card);border:1px solid var(--line);
@@ -120,19 +133,101 @@
   .note b,.note i{color:#7c2d12}
   .cap{margin-top:14px;color:var(--muted);font-size:.8rem}
 
+  /* ============ EXPLAINER (scrollytelling) ============ */
+  .intro-x{max-width:64ch;margin:4px 0 8px;color:var(--ink);font-size:1rem}
+  .intro-x .muted{color:var(--muted)}
+  .scrolly{position:relative;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(16px,3vw,40px);align-items:start}
+  .sticky{position:sticky;top:16px;align-self:start}
+  .sticky .diagram{padding:10px}
+  .ex-caption{margin:8px 2px 0;font-size:.82rem;color:var(--muted);min-height:2.4em}
+  .steps{display:flex;flex-direction:column;gap:0}
+  .step{min-height:78vh;display:flex;flex-direction:column;justify-content:center;padding:18px 0}
+  .step:first-child{min-height:60vh;padding-top:0}
+  .step:last-child{min-height:70vh}
+  .step-card{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:18px 20px;box-shadow:0 1px 3px rgba(15,23,42,.06);
+    opacity:.45;transform:translateY(8px);transition:opacity .4s,transform .4s,box-shadow .4s;
+  }
+  .step.active .step-card{opacity:1;transform:none;box-shadow:0 8px 26px rgba(15,23,42,.10)}
+  .step-num{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--eq);margin-bottom:6px}
+  .step-card h3{margin:0 0 .4em;font-size:1.2rem;letter-spacing:-.01em}
+  .step-card p{margin:.5em 0;font-size:.96rem}
+  .step-card p i{color:var(--ink)}
+  .example{margin-top:12px;border-left:3px solid var(--eq);background:#f0fdfa;border-radius:0 10px 10px 0;padding:10px 13px;font-size:.9rem}
+  .example.amber{border-left-color:var(--net);background:#fff7ed}
+  .example .ex-h{font-weight:700;font-size:.74rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:4px}
+  .cite{display:block;margin-top:6px;font-size:.78rem;color:var(--muted);font-style:italic}
+  .pill{display:inline-block;font-size:.72rem;font-weight:600;padding:2px 9px;border-radius:999px;margin:2px 4px 0 0}
+  .pill.good{background:#dcfce7;color:#166534}
+  .pill.bad{background:#fee2e2;color:#991b1b}
+  .pill.eq{background:#ccfbf1;color:#0f766e}
+  .pill.neutral{background:#e2e8f0;color:#334155}
+
+  /* explainer svg reveal + emphasis */
+  .rv{opacity:0;transition:opacity .55s ease}
+  .rv.in{opacity:1}
+  #ex-svg .diag.focus{stroke-width:5;filter:drop-shadow(0 0 5px currentColor)}
+  .ex-dot{fill:var(--pt)}
+  .ex-pt .ex-dot{transition:transform .4s ease, fill .3s}
+  .ex-pt.focus .ex-dot{fill:var(--hot)}
+  .ex-pt.focus{filter:drop-shadow(0 0 6px rgba(225,29,72,.5))}
+  .ex-lab{font-family:Georgia,"Times New Roman",serif;font-style:italic;font-size:21px;fill:var(--ink)}
+  .ex-shade{opacity:0;transition:opacity .45s;pointer-events:none}
+  .ex-shade.on{opacity:.16}
+  .ex-shade.pos{fill:#16a34a}.ex-shade.neg{fill:#dc2626}
+
+  /* axis-hint arrows (step 0) */
+  #ex-axis-hint{opacity:0;transition:opacity .5s}
+  #ex-svg.hint #ex-axis-hint{opacity:1}
+  .hint-arrow{stroke:#94a3b8;stroke-width:2.4;fill:none;marker-end:url(#exArrow)}
+  .hint-lab{font-size:14px;fill:#64748b;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+  #ex-svg.hint .hint-arrow{animation:hintpulse 2.6s ease-in-out infinite}
+  @keyframes hintpulse{0%,100%{opacity:.35}50%{opacity:1}}
+
+  /* ghost slider on equality line (step 1) */
+  #ex-eq-ghost{opacity:0;transition:opacity .4s}
+  #ex-svg.anim-eq #ex-eq-ghost{opacity:1;animation:slideEq 3s ease-in-out infinite alternate}
+  @keyframes slideEq{0%{transform:translate(-66px,66px)}100%{transform:translate(66px,-66px)}}
+
+  /* ghost slider on zero-net line (step 5) */
+  #ex-net-ghost{opacity:0;transition:opacity .4s}
+  #ex-svg.anim-net #ex-net-ghost{opacity:1;animation:slideNet 3s ease-in-out infinite alternate}
+  @keyframes slideNet{0%{transform:translate(-58px,-58px)}100%{transform:translate(58px,58px)}}
+
+  .ex-foot{margin-top:8px;background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:14px 18px;font-size:.86rem;color:var(--muted)}
+  .ex-foot b{color:var(--ink)}
+  .ex-foot a{color:#0d9488}
+
+  @media (max-width:860px){
+    .scrolly{grid-template-columns:1fr;gap:0}
+    .sticky{position:sticky;top:0;background:var(--bg);padding:8px 0 6px;z-index:4;margin:0 -4px}
+    .step{min-height:62vh}
+    .step:first-child{min-height:30vh}
+  }
   @media (max-width:780px){
     .board{grid-template-columns:1fr}
   }
-  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important;animation:none!important}
+    .step-card{opacity:1;transform:none}
+  }
 </style>
 </head>
 <body>
 <main class="wrap">
   <header>
     <h1>Forms of &ldquo;Redistributive&rdquo; Policy</h1>
-    <p class="sub">An interactive reading of Joseph Heath&rsquo;s Figure&nbsp;4.1. <b>s</b> is the market status quo; every policy option <i>a</i>&ndash;<i>e</i> is measured relative to it. Hover or tap any point to see how the lines classify it.</p>
+    <p class="sub">An interactive reading of Joseph Heath&rsquo;s Figure&nbsp;4.1. <b>s</b> is the market status quo; every policy option <i>a</i>&ndash;<i>e</i> is measured relative to it.</p>
   </header>
 
+  <div class="tabs" role="tablist" aria-label="Views">
+    <button class="tab" id="tab-btn-diagram" role="tab" aria-selected="true" aria-controls="panel-diagram">Diagram</button>
+    <button class="tab" id="tab-btn-explainer" role="tab" aria-selected="false" aria-controls="panel-explainer">Explainer</button>
+  </div>
+
+  <!-- ============================ DIAGRAM TAB ============================ -->
+  <section class="panel" id="panel-diagram" role="tabpanel" aria-labelledby="tab-btn-diagram">
   <div class="board">
     <div class="diagram" id="diagram">
       <svg viewBox="0 0 770 560" role="img" aria-labelledby="svgTitle svgDesc">
@@ -240,17 +335,237 @@
   </div>
 
   <p class="note">In Heath&rsquo;s argument, the <b>egalitarian model</b> pictures the welfare state pushing <i>s</i> toward <i>c</i>, <i>d</i>, even <i>e</i>. The <b>public-economics view</b> says it actually moves society toward <i>a</i> and <i>b</i> &mdash; and that where it is egalitarian, that shows up as a preference for <i>b</i>.</p>
-  <p class="cap">Recreated from Joseph Heath, Figure&nbsp;4.1, &ldquo;Forms of &lsquo;redistributive&rsquo; policy.&rdquo;</p>
+  <p class="cap">Recreated from Joseph Heath, <i>The Machinery of Government</i> (Oxford University Press, 2020), Figure&nbsp;4.1, pp.&nbsp;174&ndash;176.</p>
+  </section>
+
+  <!-- ============================ EXPLAINER TAB ============================ -->
+  <section class="panel" id="panel-explainer" role="tabpanel" aria-labelledby="tab-btn-explainer" hidden>
+    <p class="intro-x">A guided, scroll-through reading of the figure. <span class="muted">Scroll down &mdash; the diagram builds up one piece at a time. Each step adds a line or a point and shows a real welfare-state policy that could move society there.</span></p>
+
+    <div class="scrolly" id="scrolly">
+      <!-- sticky graphic -->
+      <div class="sticky">
+        <div class="diagram">
+          <svg id="ex-svg" viewBox="0 0 770 560" role="img" aria-label="Building diagram of welfare options">
+            <defs>
+              <clipPath id="qclip2"><rect x="140" y="40" width="572" height="440"/></clipPath>
+              <marker id="exArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/>
+              </marker>
+            </defs>
+
+            <!-- shading -->
+            <polygon id="ex-shade" class="ex-shade" points="" clip-path="url(#qclip2)"/>
+
+            <!-- frame (always visible) -->
+            <line class="frame" x1="140" y1="480" x2="712" y2="480"/>
+            <line class="frame" x1="140" y1="480" x2="140" y2="40"/>
+
+            <!-- grey guides through s (revealed at step 0) -->
+            <line class="guide rv" data-rv="0" x1="492" y1="480" x2="492" y2="40"/>
+            <line class="guide rv" data-rv="0" x1="140" y1="260" x2="712" y2="260"/>
+
+            <!-- diagonal lines -->
+            <line id="ex-eq"  class="diag line-eq  rv" data-rv="1" x1="140" y1="480" x2="580" y2="40"/>
+            <line id="ex-iso" class="diag line-iso rv" data-rv="3" x1="272" y1="480" x2="712" y2="40"/>
+            <line id="ex-net" class="diag line-net rv" data-rv="5" x1="272" y1="40"  x2="712" y2="480"/>
+
+            <!-- axis titles -->
+            <text class="axis-title" x="96"  y="250" text-anchor="middle">Poor</text>
+            <text class="axis-title" x="426" y="514" text-anchor="middle">Rich</text>
+
+            <!-- step-0 axis hint arrows around s -->
+            <g id="ex-axis-hint">
+              <line class="hint-arrow" x1="492" y1="244" x2="492" y2="188"/>
+              <text class="hint-lab" x="500" y="184">poor better off</text>
+              <line class="hint-arrow" x1="492" y1="276" x2="492" y2="332"/>
+              <text class="hint-lab" x="500" y="350">poor worse off</text>
+              <line class="hint-arrow" x1="508" y1="260" x2="588" y2="260"/>
+              <text class="hint-lab" x="592" y="264">rich better off</text>
+              <line class="hint-arrow" x1="476" y1="260" x2="396" y2="260"/>
+              <text class="hint-lab" x="392" y="264" text-anchor="end">rich worse off</text>
+            </g>
+
+            <!-- equality-line ghost slider (step 1): starts on the line at (360,260) -->
+            <g id="ex-eq-ghost"><circle cx="360" cy="260" r="6.5" fill="#0d9488"/></g>
+            <!-- zero-net ghost slider (step 5): starts on the line at (400,168) -->
+            <g id="ex-net-ghost"><circle cx="400" cy="168" r="6.5" fill="#ea580c"/></g>
+
+            <!-- points -->
+            <g class="ex-pt rv" data-rv="0" data-id="s">
+              <circle class="ex-dot" cx="492" cy="260" r="7"/>
+              <text class="ex-lab" x="485" y="288" text-anchor="middle">s</text>
+            </g>
+            <g class="ex-pt rv" data-rv="3" data-id="a">
+              <circle class="ex-dot" cx="558" cy="194" r="7"/>
+              <text class="ex-lab" x="572" y="200">a</text>
+            </g>
+            <g class="ex-pt rv" data-rv="4" data-id="b">
+              <circle class="ex-dot" cx="527" cy="172" r="7"/>
+              <text class="ex-lab" x="540" y="167">b</text>
+            </g>
+            <g class="ex-pt rv" data-rv="6" data-id="c">
+              <circle class="ex-dot" cx="470" cy="172" r="7"/>
+              <text class="ex-lab" x="470" y="193" text-anchor="middle">c</text>
+            </g>
+            <g class="ex-pt rv" data-rv="7" data-id="d">
+              <circle class="ex-dot" cx="421" cy="221" r="7"/>
+              <text class="ex-lab" x="435" y="227">d</text>
+            </g>
+            <g class="ex-pt rv" data-rv="8" data-id="e">
+              <circle class="ex-dot" cx="373" cy="295" r="7"/>
+              <text class="ex-lab" x="373" y="317" text-anchor="middle">e</text>
+            </g>
+          </svg>
+          <p class="ex-caption" id="ex-caption">The space: poor on the vertical axis, rich on the horizontal.</p>
+        </div>
+      </div>
+
+      <!-- scrolling steps -->
+      <div class="steps" id="steps">
+
+        <div class="step" data-step="0">
+          <div class="step-card">
+            <span class="step-num">Step 1 &middot; The space</span>
+            <h3>Two people, two axes</h3>
+            <p>Everything happens in one picture of a two-person society &mdash; a &ldquo;rich&rdquo; person and a &ldquo;poor&rdquo; person. The horizontal axis is the <b>rich</b> person&rsquo;s welfare; moving <b>right</b> makes them better off, <b>left</b> worse off. The vertical axis is the <b>poor</b> person&rsquo;s welfare; moving <b>up</b> makes them better off, <b>down</b> worse off.</p>
+            <p>Point <i>s</i> is the <b>status quo</b> &mdash; the split the market produces on its own. It sits low and to the right: the rich are well ahead of the poor. Every policy is judged by where it moves society <i>relative to s</i>. The two faint grey lines through <i>s</i> just mark &ldquo;no change&rdquo; for each person.</p>
+          </div>
+        </div>
+
+        <div class="step" data-step="1">
+          <div class="step-card">
+            <span class="step-num">Step 2 &middot; The equality line</span>
+            <h3>Where rich and poor are equal</h3>
+            <p>The solid line runs at 45&deg; from the origin. Every point on it is a society where the rich and poor have <b>exactly equal</b> welfare. Slide along it and both people&rsquo;s welfare changes by the <b>same amount</b> &mdash; equality is preserved, the pie just grows or shrinks.</p>
+            <p><i>s</i> sits well below and to the right of this line: that gap is the market&rsquo;s inequality. The closer a policy lands to the line, the more equal the society it produces.</p>
+          </div>
+        </div>
+
+        <div class="step" data-step="2">
+          <div class="step-card">
+            <span class="step-num">Step 3 &middot; Helping everyone</span>
+            <h3>The Pareto region</h3>
+            <p>Use the two grey guides through <i>s</i>. Anything in the shaded <b>upper-right box</b> makes <b>both</b> people better off than they were at <i>s</i> &mdash; the rich gain (rightward) <i>and</i> the poor gain (upward). Economists call a move that helps someone while harming no one a <b>Pareto improvement</b>.</p>
+            <p>This box is the heart of the &ldquo;public-economics&rdquo; reading of the welfare state: much of what it does isn&rsquo;t taking from one to give to another &mdash; it&rsquo;s finding moves that leave <i>everyone</i> ahead.</p>
+          </div>
+        </div>
+
+        <div class="step" data-step="3">
+          <div class="step-card">
+            <span class="step-num">Step 4 &middot; Point a</span>
+            <h3>A pure efficiency gain</h3>
+            <p>The dotted line through <i>s</i> is the <b>constant-inequality line</b>: every point on it keeps the rich&ndash;poor gap exactly as it is at <i>s</i>. Point <i>a</i> sits on that line, up and to the right &mdash; both gain, and the gap is unchanged. A &ldquo;win-win that doesn&rsquo;t touch inequality.&rdquo;</p>
+            <span class="pill good">Both gain</span><span class="pill eq">Gap unchanged</span>
+            <div class="example">
+              <div class="ex-h">Policy example</div>
+              A <b>public pension that pools longevity risk</b>. Nobody knows how long they&rsquo;ll live &mdash; life expectancy at 65 has a standard deviation of roughly 15 years &mdash; so people can&rsquo;t know how much to save. A collective pension is essentially a life annuity: it insures against &ldquo;outliving your savings&rdquo; and smooths consumption across the life cycle. Because private annuity markets are crippled by adverse selection, public provision can make <i>everyone</i> better off without changing who is rich or poor.
+              <span class="cite">Heath, <i>The Machinery of Government</i> (2020), pp. 174&ndash;175; Barr, <i>The Welfare State as Piggy Bank</i> (2001), ch. 1 (the &ldquo;piggy-bank&rdquo; function: insurance &amp; consumption smoothing, &ldquo;pensions being a particularly important example&rdquo;).</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="step" data-step="4">
+          <div class="step-card">
+            <span class="step-num">Step 5 &middot; Point b</span>
+            <h3>A win-win that also narrows the gap</h3>
+            <p>Point <i>b</i> is still in the Pareto box &mdash; both gain &mdash; but it sits <b>above</b> the dotted line, closer to the equality line. The poor gain proportionally more, so inequality <b>falls</b> at the same time as everyone wins.</p>
+            <span class="pill good">Both gain</span><span class="pill eq">More equal</span>
+            <div class="example">
+              <div class="ex-h">Policy example</div>
+              <b>Health insurance financed through a progressive income tax.</b> Public provision overcomes the market failures that plague private health insurance, so it is an efficiency gain for all (a Pareto improvement). But because it is funded progressively, the poor receive coverage on far better terms than they could buy privately &mdash; so inequality narrows too. Heath&rsquo;s key point: it is the Pareto improvement, not the redistribution, that <i>justifies</i> the state&rsquo;s involvement.
+              <span class="cite">Heath, <i>The Machinery of Government</i> (2020), pp. 175&ndash;176.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="step" data-step="5">
+          <div class="step-card">
+            <span class="step-num">Step 6 &middot; The zero-net-welfare line</span>
+            <h3>When does <i>total</i> welfare rise?</h3>
+            <p>Add up the two people&rsquo;s welfare and you get <b>total</b> welfare. The dashed orange line collects every society with the <b>same total as s</b>: it slopes down at 45&deg;, because one unit gained by the poor is exactly cancelled by one unit lost to the rich. Slide along it (watch the orange dot) and the total never changes.</p>
+            <p>Cross to the <b>upper-right</b> of the line and total welfare <b>rises</b>; fall to the <b>lower-left</b> and it <b>drops</b>. This is the test we&rsquo;ll use to judge the redistributions that follow.</p>
+          </div>
+        </div>
+
+        <div class="step" data-step="6">
+          <div class="step-card">
+            <span class="step-num">Step 7 &middot; Point c</span>
+            <h3>Redistribution that grows the pie</h3>
+            <p>Now we leave the Pareto box. Point <i>c</i> is up and to the <b>left</b> of <i>s</i>: the poor gain, but the rich <b>lose</b> &mdash; genuine redistribution. Yet <i>c</i> sits on the <b>net-gain</b> side of the orange line, so the poor&rsquo;s gain outweighs the rich&rsquo;s loss and <b>total welfare still rises</b>.</p>
+            <span class="pill neutral">Redistributive</span><span class="pill eq">More equal</span><span class="pill good">Welfare-maximizing</span>
+            <div class="example">
+              <div class="ex-h">Policy example</div>
+              A <b>cash transfer from rich to poor</b> where a dollar is worth more to the recipient than to the donor (income has diminishing marginal value) and the program is cheap to run with few work-disincentive losses. The transfer shrinks the gap <i>and</i> raises the combined welfare of the two. This is the &ldquo;Robin Hood&rdquo; function done well.
+              <span class="cite">Heath, <i>The Machinery of Government</i> (2020), p. 175 (c is &ldquo;welfare-maximizing, because the gain to poor is larger than the loss to rich&rdquo;); Barr, <i>The Welfare State as Piggy Bank</i> (2001), ch. 1 (the &ldquo;Robin Hood&rdquo; function).</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="step" data-step="7">
+          <div class="step-card">
+            <span class="step-num">Step 8 &middot; Point d</span>
+            <h3>Redistribution that shrinks the pie</h3>
+            <p>Point <i>d</i> is also redistributive &mdash; poor up, rich down &mdash; and also more equal than <i>s</i>. The difference is that <i>d</i> falls on the <b>net-loss</b> side of the orange line: the rich lose <b>more</b> than the poor gain, so <b>total welfare drops</b> even as the gap narrows.</p>
+            <span class="pill neutral">Redistributive</span><span class="pill eq">More equal</span><span class="pill bad">Net loss</span>
+            <div class="example amber">
+              <div class="ex-h">Policy example</div>
+              A transfer with <b>heavy administrative costs or strong work disincentives</b> &mdash; so much of what the rich give up never reaches the poor, or discourages effort enough that the economy shrinks. Society is more equal, but smaller. Same egalitarian motive as <i>c</i>; worse execution.
+              <span class="cite">Heath, <i>The Machinery of Government</i> (2020), p. 175 (d is &ldquo;non-welfare-maximizing, in that rich loses more than poor gains&rdquo;).</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="step" data-step="8">
+          <div class="step-card">
+            <span class="step-num">Step 9 &middot; Point e</span>
+            <h3>Leveling down</h3>
+            <p>Point <i>e</i> sits <b>down and to the left</b> of <i>s</i>: <b>both</b> people are worse off. It is more equal &mdash; closer to the equality line &mdash; but it got there by dragging everyone down. A move that harms everyone is <b>Pareto-inferior</b>; pursuing equality this way is called <b>leveling down</b>.</p>
+            <span class="pill bad">Both worse off</span><span class="pill eq">More equal</span><span class="pill bad">Net loss</span>
+            <div class="example amber">
+              <div class="ex-h">Policy example</div>
+              The state <b>monopolizes a service purely to prevent inequality</b> &mdash; say, banning private alternatives &mdash; but is a <i>less</i> efficient provider than the market it replaced. Everyone, rich and poor, ends up with less; the only thing gained is a more equal distribution of a smaller pie. Heath uses this as the case the egalitarian model can&rsquo;t tell apart from genuine welfare improvement.
+              <span class="cite">Heath, <i>The Machinery of Government</i> (2020), p. 176 (&ldquo;if the state were actually a less-efficient&hellip; provider, yet exercised a monopoly&hellip; to prevent&hellip; inequalities&hellip; intervention would actually be leveling down&rdquo;).</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="step" data-step="9">
+          <div class="step-card">
+            <span class="step-num">Step 10 &middot; Two readings of the welfare state</span>
+            <h3>Robin Hood vs. the piggy bank</h3>
+            <p>The whole figure is now in front of you. Heath&rsquo;s argument is about <i>which direction</i> the welfare state actually moves society from <i>s</i>.</p>
+            <p>The <b>egalitarian model</b> &mdash; Barr&rsquo;s &ldquo;Robin Hood&rdquo; function &mdash; pictures the state pushing <i>s</i> toward <i>c</i>, <i>d</i>, even <i>e</i>: taking from the rich to give to the poor, with equality as the goal.</p>
+            <p>The <b>public-economics view</b> &mdash; Barr&rsquo;s &ldquo;piggy-bank&rdquo; function &mdash; says the state mostly moves society toward <i>a</i> and <i>b</i>: insurance and consumption-smoothing that make everyone better off, with reduced inequality showing up as a preference for <i>b</i> rather than as the point of the exercise.</p>
+            <span class="pill eq">Robin Hood &rarr; c, d, e</span><span class="pill good">Piggy bank &rarr; a, b</span>
+            <div class="example">
+              <div class="ex-h">The two functions</div>
+              &ldquo;Of the many purposes of the welfare state, two stand out: &hellip; the &lsquo;Robin Hood&rsquo; function &hellip; [and] the &lsquo;piggy-bank&rsquo; function&rdquo; &mdash; insurance and redistribution over one&rsquo;s own life cycle.
+              <span class="cite">Barr, <i>The Welfare State as Piggy Bank</i> (2001), ch. 1; Heath, <i>The Machinery of Government</i> (2020), pp. 174&ndash;176.</span>
+            </div>
+            <p style="margin-top:14px"><a href="#" id="to-diagram" style="color:#0d9488;font-weight:600;text-decoration:none">&rarr; Explore the finished figure in the Diagram tab</a></p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="ex-foot">
+      <b>How to read the sourcing.</b> The diagram itself &mdash; the axes, the lines, and the points <i>a</i>&ndash;<i>e</i> &mdash; is Joseph Heath&rsquo;s <b>toy model</b> (<i>The Machinery of Government</i>, Fig.&nbsp;4.1). It is illustrative, not an empirical measurement, so the geometry carries no data citation. The <b>policy examples</b> attached to each point are drawn from Heath and from Nicholas Barr&rsquo;s <i>The Welfare State as Piggy Bank</i>, cited inline; some are simplified for intuition while preserving the original argument.
+    </div>
+  </section>
+
+  <p class="cap" style="margin-top:22px">Recreated and expanded from Joseph Heath, <i>The Machinery of Government</i> (Oxford University Press, 2020), Figure&nbsp;4.1. Policy examples also draw on Nicholas Barr, <i>The Welfare State as Piggy Bank</i> (Oxford University Press, 2001).</p>
 </main>
 
 <script>
+/* ----------------------- Diagram tab (interactive figure) ----------------------- */
 (function(){
-  // shaded regions (pixel polygons, clipped to the quadrant)
   var SHADES = {
-    pareto:   { pts:'492,260 712,260 712,40 492,40',     kind:'pos' }, // both gain (up-right of s)
-    loselose: { pts:'140,260 492,260 492,480 140,480',   kind:'neg' }, // both lose (down-left of s)
-    netgain:  { pts:'272,40 712,40 712,480',             kind:'pos' }, // net welfare gain (above zero-net)
-    netloss:  { pts:'272,40 712,480 140,480 140,40',      kind:'neg' }  // net welfare loss (below zero-net)
+    pareto:   { pts:'492,260 712,260 712,40 492,40',     kind:'pos' },
+    loselose: { pts:'140,260 492,260 492,480 140,480',   kind:'neg' },
+    netgain:  { pts:'272,40 712,40 712,480',             kind:'pos' },
+    netloss:  { pts:'272,40 712,480 140,480 140,40',      kind:'neg' }
   };
   var DATA = {
     s:{ shade:null, bold:null,
@@ -283,86 +598,143 @@
   var svg     = diagram.querySelector('svg');
   var tip     = document.getElementById('tooltip');
   var shade   = document.getElementById('shade');
-  var lineEq  = document.getElementById('line-eq');
-  var lineIso = document.getElementById('line-iso');
-  var lineNet = document.getElementById('line-net');
-  var LINES   = { eq:lineEq, iso:lineIso, net:lineNet };
+  var LINES   = { eq:document.getElementById('line-eq'), iso:document.getElementById('line-iso'), net:document.getElementById('line-net') };
   var groups  = Array.prototype.slice.call(svg.querySelectorAll('.pt'));
   var canHover= window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-  var selected= null;   // locked by click/tap
-  var active  = null;   // currently shown (hover or locked)
+  var selected= null, active = null;
 
   function tipHTML(d){
     var tags = d.tags.map(function(t){ return '<span class="tag '+t[1]+'">'+t[0]+'</span>'; }).join('');
     return '<div class="tt-title">'+d.title+'</div><div class="tt-tags">'+tags+'</div><p class="tt-text">'+d.text+'</p>';
   }
-
   function positionTip(id){
     var dot = diagram.querySelector('.pt[data-id="'+id+'"] .dot');
-    var cr = diagram.getBoundingClientRect();
-    var dr = dot.getBoundingClientRect();
-    var cx = dr.left + dr.width/2 - cr.left;
-    var cy = dr.top  + dr.height/2 - cr.top;
-    tip.style.left = '-9999px'; tip.style.top = '0px';   // measure off-screen
+    var cr = diagram.getBoundingClientRect(), dr = dot.getBoundingClientRect();
+    var cx = dr.left + dr.width/2 - cr.left, cy = dr.top + dr.height/2 - cr.top;
+    tip.style.left = '-9999px'; tip.style.top = '0px';
     var tw = tip.offsetWidth, th = tip.offsetHeight;
-    var left = cx - tw/2;
-    left = Math.max(8, Math.min(left, cr.width - tw - 8));
+    var left = Math.max(8, Math.min(cx - tw/2, cr.width - tw - 8));
     var top = cy - th - 16, below = false;
     if (top < 6){ top = cy + 18; below = true; }
     tip.classList.toggle('below', below);
-    tip.style.left = left + 'px';
-    tip.style.top  = top + 'px';
-    var caret = Math.max(14, Math.min(cx - left, tw - 14));
-    tip.style.setProperty('--caret', caret + 'px');
+    tip.style.left = left + 'px'; tip.style.top = top + 'px';
+    tip.style.setProperty('--caret', Math.max(14, Math.min(cx - left, tw - 14)) + 'px');
   }
-
   function show(id){
-    var d = DATA[id];
-    active = id;
-    if (d.shade){ var sh = SHADES[d.shade]; shade.setAttribute('points', sh.pts); shade.setAttribute('class', 'shade on ' + sh.kind); }
-    else { shade.setAttribute('class', 'shade'); }
+    var d = DATA[id]; active = id;
+    if (d.shade){ var sh = SHADES[d.shade]; shade.setAttribute('points', sh.pts); shade.setAttribute('class','shade on '+sh.kind); }
+    else shade.setAttribute('class','shade');
     for (var k in LINES){ LINES[k].classList.toggle('bold', d.bold === k); }
     groups.forEach(function(g){ g.classList.toggle('active', g.dataset.id === id); });
-    tip.innerHTML = tipHTML(d);
-    tip.hidden = false;
-    diagram.classList.add('has-active');
-    positionTip(id);
+    tip.innerHTML = tipHTML(d); tip.hidden = false;
+    diagram.classList.add('has-active'); positionTip(id);
   }
-
   function hide(){
-    active = null;
-    shade.setAttribute('class', 'shade');
+    active = null; shade.setAttribute('class','shade');
     for (var k in LINES){ LINES[k].classList.remove('bold'); }
     groups.forEach(function(g){ g.classList.remove('active'); });
-    tip.hidden = true;
-    diagram.classList.remove('has-active');
+    tip.hidden = true; diagram.classList.remove('has-active');
   }
-
   groups.forEach(function(g){
     var id = g.dataset.id;
-    g.addEventListener('click', function(e){
-      e.stopPropagation();
-      if (selected === id){ selected = null; hide(); }
-      else { selected = id; show(id); }
-    });
+    g.addEventListener('click', function(e){ e.stopPropagation(); if (selected===id){ selected=null; hide(); } else { selected=id; show(id); } });
     if (canHover){
       g.addEventListener('mouseenter', function(){ if (!selected) show(id); });
       g.addEventListener('mouseleave', function(){ if (!selected) hide(); });
     }
     g.addEventListener('focus', function(){ if (!selected) show(id); });
     g.addEventListener('blur',  function(){ if (!selected) hide(); });
-    g.addEventListener('keydown', function(e){
-      if (e.key === 'Enter' || e.key === ' '){
-        e.preventDefault();
-        selected = (selected === id) ? null : id;
-        if (selected) show(id); else hide();
+    g.addEventListener('keydown', function(e){ if (e.key==='Enter'||e.key===' '){ e.preventDefault(); selected=(selected===id)?null:id; if (selected) show(id); else hide(); } });
+  });
+  svg.addEventListener('click', function(){ selected=null; hide(); });
+  window.addEventListener('resize', function(){ if (active) positionTip(active); });
+})();
+
+/* ----------------------- Tabs ----------------------- */
+(function(){
+  var tabs = { diagram:document.getElementById('tab-btn-diagram'), explainer:document.getElementById('tab-btn-explainer') };
+  var panels = { diagram:document.getElementById('panel-diagram'), explainer:document.getElementById('panel-explainer') };
+  function select(name){
+    for (var k in tabs){
+      var on = (k===name);
+      tabs[k].setAttribute('aria-selected', on?'true':'false');
+      panels[k].hidden = !on;
+    }
+    if (name==='explainer' && window.__exInit) window.__exInit();
+  }
+  tabs.diagram.addEventListener('click', function(){ select('diagram'); });
+  tabs.explainer.addEventListener('click', function(){ select('explainer'); });
+  var link = document.getElementById('to-diagram');
+  if (link) link.addEventListener('click', function(e){ e.preventDefault(); select('diagram'); window.scrollTo({top:0,behavior:'smooth'}); });
+})();
+
+/* ----------------------- Explainer (scrollytelling) ----------------------- */
+(function(){
+  var svg = document.getElementById('ex-svg');
+  var steps = Array.prototype.slice.call(document.querySelectorAll('#steps .step'));
+  var revs = Array.prototype.slice.call(svg.querySelectorAll('.rv'));
+  var pts  = {}; svg.querySelectorAll('.ex-pt').forEach(function(g){ pts[g.dataset.id]=g; });
+  var caption = document.getElementById('ex-caption');
+
+  // per-step: focus element(s), shade polygon, animation class, caption
+  var SHADE = {
+    pareto:  '492,260 712,260 712,40 492,40',
+    netgain: '272,40 712,40 712,480'
+  };
+  var STEPS = [
+    { focusLine:null,     focusPts:['s'], shade:null,            shadeKind:'',     anim:'hint',   cap:'Only s and the grey guides. Up/down = the poor; left/right = the rich.' },
+    { focusLine:'ex-eq',  focusPts:[],    shade:null,            shadeKind:'',     anim:'anim-eq',cap:'The equality line: rich = poor. Slide along it and both change equally.' },
+    { focusLine:null,     focusPts:[],    shade:'pareto',        shadeKind:'pos',  anim:'',       cap:'The upper-right box: both better off than s — a Pareto improvement.' },
+    { focusLine:'ex-iso', focusPts:['a'], shade:'pareto',        shadeKind:'pos',  anim:'',       cap:'a: both gain, the gap unchanged — it sits on the constant-inequality line.' },
+    { focusLine:null,     focusPts:['b'], shade:'pareto',        shadeKind:'pos',  anim:'',       cap:'b: both gain, but the gap narrows — it lifts toward the equality line.' },
+    { focusLine:'ex-net', focusPts:[],    shade:null,            shadeKind:'',     anim:'anim-net',cap:'The zero-net line: same total welfare as s. Above-right raises the total.' },
+    { focusLine:null,     focusPts:['c'], shade:'netgain',       shadeKind:'pos',  anim:'',       cap:'c: redistribution where the poor’s gain beats the rich’s loss — total rises.' },
+    { focusLine:null,     focusPts:['d'], shade:null,            shadeKind:'',     anim:'',       cap:'d: redistribution where the rich’s loss beats the poor’s gain — total falls.' },
+    { focusLine:null,     focusPts:['e'], shade:null,            shadeKind:'',     anim:'',       cap:'e: both worse off, but more equal — leveling down.' },
+    { focusLine:null,     focusPts:[],    shade:null,            shadeKind:'',     anim:'',       cap:'The finished figure: Robin Hood (c,d,e) vs the piggy bank (a,b).' }
+  ];
+  var exShade = document.getElementById('ex-shade');
+  var current = -1;
+
+  function setStep(n){
+    if (n===current) return; current = n;
+    var cfg = STEPS[n] || STEPS[0];
+    // reveal everything up to this step
+    revs.forEach(function(el){ el.classList.toggle('in', (+el.dataset.rv) <= n); });
+    // line focus
+    ['ex-eq','ex-iso','ex-net'].forEach(function(id){
+      var el = document.getElementById(id); if (el) el.classList.toggle('focus', cfg.focusLine===id);
+    });
+    // point focus
+    for (var id in pts){ pts[id].classList.toggle('focus', cfg.focusPts.indexOf(id) >= 0); }
+    // shade
+    if (cfg.shade){ exShade.setAttribute('points', SHADE[cfg.shade]); exShade.setAttribute('class','ex-shade on '+cfg.shadeKind); }
+    else exShade.setAttribute('class','ex-shade');
+    // animation classes
+    svg.classList.toggle('hint', cfg.anim==='hint');
+    svg.classList.toggle('anim-eq', cfg.anim==='anim-eq');
+    svg.classList.toggle('anim-net', cfg.anim==='anim-net');
+    // caption
+    if (caption) caption.textContent = cfg.cap;
+  }
+
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if (en.isIntersecting){
+        var s = en.target;
+        steps.forEach(function(x){ x.classList.toggle('active', x===s); });
+        setStep(+s.dataset.step);
       }
     });
-  });
+  }, { rootMargin:'-45% 0px -45% 0px', threshold:0 });
 
-  // tap / click empty space dismisses
-  svg.addEventListener('click', function(){ selected = null; hide(); });
-  window.addEventListener('resize', function(){ if (active) positionTip(active); });
+  var initialized = false;
+  window.__exInit = function(){
+    if (initialized) return; initialized = true;
+    steps.forEach(function(s){ io.observe(s); });
+    setStep(0);
+    steps[0].classList.add('active');
+  };
 })();
 </script>
 </body>
