@@ -149,9 +149,11 @@
         <line class="frame" x1="140" y1="480" x2="712" y2="480"/>
         <line class="frame" x1="140" y1="480" x2="140" y2="40"/>
 
-        <!-- faint guides through s: rich unchanged (vertical), poor unchanged (horizontal) -->
+        <!-- faint guides through s: rich unchanged (vertical), poor unchanged (horizontal).
+             Horizontal guide runs to the right edge so the upper-right Pareto-improvement
+             region (both better off than s) is fully bounded. -->
         <line class="guide" x1="492" y1="480" x2="492" y2="40"/>
-        <line class="guide" x1="140" y1="260" x2="548" y2="260"/>
+        <line class="guide" x1="140" y1="260" x2="712" y2="260"/>
 
         <!-- constant-inequality line through s and a (teal, dotted) -->
         <line id="line-iso" class="diag line-iso" x1="272" y1="480" x2="712" y2="40"/>
@@ -169,7 +171,7 @@
           <circle class="hit"  cx="492" cy="260" r="20"/>
           <circle class="ring" cx="492" cy="260" r="11"/>
           <circle class="dot"  cx="492" cy="260" r="7"/>
-          <text class="lab" x="500" y="280">s</text>
+          <text class="lab" x="485" y="288" text-anchor="middle">s</text>
         </g>
         <g class="pt" data-id="a" tabindex="0" role="button" aria-label="Point a: Pareto improvement, inequality unchanged">
           <circle class="hit"  cx="558" cy="194" r="20"/>
@@ -190,10 +192,10 @@
           <text class="lab" x="470" y="193" text-anchor="middle">c</text>
         </g>
         <g class="pt" data-id="d" tabindex="0" role="button" aria-label="Point d: non-welfare-maximizing redistribution">
-          <circle class="hit"  cx="417" cy="216" r="20"/>
-          <circle class="ring" cx="417" cy="216" r="11"/>
-          <circle class="dot"  cx="417" cy="216" r="7"/>
-          <text class="lab" x="431" y="222">d</text>
+          <circle class="hit"  cx="421" cy="221" r="20"/>
+          <circle class="ring" cx="421" cy="221" r="11"/>
+          <circle class="dot"  cx="421" cy="221" r="7"/>
+          <text class="lab" x="435" y="227">d</text>
         </g>
         <g class="pt" data-id="e" tabindex="0" role="button" aria-label="Point e: leveling down">
           <circle class="hit"  cx="373" cy="295" r="20"/>
