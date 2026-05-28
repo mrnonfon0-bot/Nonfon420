@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Piketty, Saez & Zucman (2018) — Total Tax Rates by Income Group</title>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+<style>
+  :root { --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; --bg:#f1f5f9; --card:#ffffff; --accent:#2563eb; }
+  *{box-sizing:border-box;} html,body{margin:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55;padding:clamp(12px,3vw,30px);}
+  .wrap{max-width:1100px;margin:0 auto;}
+  header{margin-bottom:14px;}
+  h1{font-size:clamp(1.4rem,3.2vw,2.05rem);margin:0 0 .25em;letter-spacing:-.01em;}
+  .subtitle{margin:0;color:var(--muted);font-size:clamp(.95rem,2vw,1.05rem);}
+  .intro{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:14px 0;font-size:.95rem;}
+  .intro p{margin:.35em 0;} .intro b{color:var(--ink);}
+  .scope-callout{background:#fef3c7;border:1px solid #fcd34d;border-radius:10px;padding:10px 14px;margin:14px 0;font-size:.9rem;}
+  .scope-callout b{color:#92400e;}
+  .chart-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:18px 0;box-shadow:0 1px 3px rgba(15,23,42,.06);}
+  #chart{width:100%;height:580px;}
+  .controls{display:flex;gap:8px;flex-wrap:wrap;margin:0 4px 10px;padding-bottom:8px;border-bottom:1px solid var(--line);}
+  .controls button{background:var(--card);border:1px solid var(--line);color:var(--ink);padding:6px 14px;border-radius:8px;cursor:pointer;font-family:inherit;font-size:.9rem;transition:background .15s,border-color .15s;}
+  .controls button:hover{background:#f8fafc;}
+  .controls button.active{background:var(--accent);border-color:var(--accent);color:white;}
+  .controls .label{font-size:.85rem;color:var(--muted);padding:7px 4px 7px 0;}
+  .legend-note{color:var(--muted);font-size:.85rem;margin:6px 4px 0;}
+  .sources{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:18px 0;font-size:.92rem;}
+  .sources h2{font-size:1.05rem;margin:0 0 .6em;color:var(--ink);}
+  .sources ul{margin:0;padding-left:18px;} .sources li{margin-bottom:.55em;}
+  .sources a{color:var(--accent);text-decoration:none;} .sources a:hover{text-decoration:underline;}
+  .sources .src-label{display:inline-block;min-width:9em;font-weight:600;color:var(--ink);}
+  .processed{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:14px 0;font-size:.88rem;color:var(--muted);}
+  .processed b{color:var(--ink);} .processed details{margin-top:.4em;}
+  .processed summary{cursor:pointer;color:var(--accent);font-weight:600;}
+  .processed ul{margin:.4em 0 0 0;padding-left:20px;color:var(--ink);}
+  footer{margin-top:30px;padding-top:14px;border-top:1px solid var(--line);font-size:.85rem;color:var(--muted);}
+  footer a{color:var(--accent);text-decoration:none;} footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Total effective tax rate by income group — Piketty, Saez & Zucman (2018)</h1>
+  <p class="subtitle">All US taxes — federal + state + local + corporate + property — by income group, 1962 / 2010 / 2014</p>
+</header>
+
+<div class="intro">
+  <p>This chart recreates the income-group-level effective-tax-rate data from <b>Piketty, Saez & Zucman's 2018 Distributional National Accounts</b>. The bars show total taxes paid as a fraction of pre-tax national income for each income group, broken into six tax types (sales, residential property, payroll, income, corporate & business property, and estate).</p>
+  <p>Toggle between 1962, 2010, and 2014. The change in overall progressivity, the rising share of payroll taxes at the bottom, and the fall in the estate tax at the top are all visible from the same data.</p>
+</div>
+
+<div class="scope-callout">
+  <b>Read this before comparing to other dashboard charts.</b> PSZ uses an <b>all-government, all-tax</b> measure — federal + state + local, income + payroll + sales + property + corporate + estate. This is broader than Splinter, CBO, TPC, and Auten-Splinter, who publish federal-only rates. The PSZ levels will look higher than the federal-only series for that reason. Compare like-for-like before drawing conclusions.
+</div>
+
+<div class="chart-card">
+  <div class="controls">
+    <span class="label">Year:</span>
+    <button id="btn-1962" onclick="setYear(1962)">1962</button>
+    <button id="btn-2010" onclick="setYear(2010)">2010</button>
+    <button id="btn-2014" class="active" onclick="setYear(2014)">2014</button>
+  </div>
+  <div id="chart"></div>
+  <p class="legend-note">Each bar segment is a tax type. Total bar height = total effective tax rate. Hover for exact numbers. Click a tax type in the legend to toggle it.</p>
+</div>
+
+<div class="sources">
+  <h2>Sources — every bar segment on this chart, with exact citation</h2>
+  <ul>
+    <li><span class="src-label">PSZ 2018:</span> Piketty, Saez & Zucman (2018), "Distributional National Accounts: Methods and Estimates for the United States," <i>Quarterly Journal of Economics</i> 133(2), 553–609. <a href="https://eml.berkeley.edu/~saez/PSZ2018QJE.pdf" target="_blank" rel="noopener">Paper PDF</a>.</li>
+    <li><span class="src-label">Data sheet:</span> <code>PSZ2018MainData.xlsx</code>, sheet <code>TS6</code> — "Taxes paid by pre-tax income group." Three year-panels (1962 starting row 4, 2010 starting row 14, 2014 starting row 24). Available from PSZ's project page: <a href="https://gabriel-zucman.eu/usdina/" target="_blank" rel="noopener">gabriel-zucman.eu/usdina</a>. <a href="https://gabriel-zucman.eu/files/PSZ2018QJEAppendix.pdf" target="_blank" rel="noopener">Data appendix PDF</a>.</li>
+    <li><span class="src-label">Methodology:</span> Tax incidence assumptions (employer-side payroll borne by workers, corporate tax incidence per PSZ assumptions, etc.) are documented in PSZ 2018 §IV and the data appendix §A.4. Differences in these assumptions are what drive disagreements with Splinter/Auten-Splinter.</li>
+  </ul>
+</div>
+
+<div class="processed">
+  <b>How this chart was produced.</b> Values read programmatically from the <code>TS6</code> sheet of PSZ's published <code>PSZ2018MainData.xlsx</code> — no pixel tracing.
+  <details>
+    <summary>Show transformation steps</summary>
+    <ul>
+      <li>Read <code>.raw/psz-2018/PSZ2018MainData.xlsx</code>, sheet <code>TS6</code>, using <code>openpyxl</code>.</li>
+      <li>Pivoted three year-panels (1962, 2010, 2014) from wide to tidy long format (year, income_group, tax_type, rate).</li>
+      <li>Decimal fractions converted to percentages for display (×100).</li>
+      <li>Output: <code>data/psz-2018/taxes-by-income-group-and-type.csv</code> + <code>metadata.json</code>.</li>
+    </ul>
+  </details>
+</div>
+
+<footer>
+  <a href="./">← Back to gallery</a> &nbsp;·&nbsp;
+  Data read from the published <a href="https://gabriel-zucman.eu/usdina/" target="_blank" rel="noopener">PSZ 2018 master data file</a>.
+</footer>
+</div>
+
+<script>
+// Values read from PSZ2018MainData.xlsx sheet TS6 via scripts/build-psz-2018.py.
+// Decimals converted to percentages (×100) for display.
+const DATA = {
+  1962: {
+    "P0-50":      {sales:5.71,resi_prop:1.53,payroll:5.05,income:5.11,corporate:1.80,estate:0.00},
+    "P50-P90":    {sales:6.49,resi_prop:1.65,payroll:4.69,income:10.16,corporate:2.95,estate:0.02},
+    "Top 10%":    {sales:5.39,resi_prop:1.65,payroll:1.39,income:11.40,corporate:12.02,estate:1.32},
+    "Top 1%":     {sales:4.95,resi_prop:1.28,payroll:0.30,income:13.21,corporate:16.32,estate:3.19},
+    "Top 0.1%":   {sales:4.91,resi_prop:0.83,payroll:0.10,income:13.56,corporate:19.03,estate:5.14},
+    "Top 0.01%":  {sales:4.96,resi_prop:0.48,payroll:0.03,income:12.92,corporate:19.99,estate:5.73},
+  },
+  2010: {
+    "P0-50":      {sales:4.68,resi_prop:1.36,payroll:11.28,income:5.72,corporate:0.55,estate:0.00},
+    "P50-P90":    {sales:5.12,resi_prop:1.37,payroll:10.19,income:7.13,corporate:3.08,estate:0.00},
+    "Top 10%":    {sales:4.33,resi_prop:1.10,payroll:4.49,income:13.21,corporate:7.21,estate:0.33},
+    "Top 1%":     {sales:3.97,resi_prop:0.65,payroll:1.73,income:14.65,corporate:9.58,estate:0.70},
+    "Top 0.1%":   {sales:3.98,resi_prop:0.38,payroll:0.87,income:14.79,corporate:11.40,estate:0.96},
+    "Top 0.01%":  {sales:3.95,resi_prop:0.21,payroll:0.48,income:13.51,corporate:12.88,estate:0.93},
+  },
+  2014: {
+    "P0-50":      {sales:4.97,resi_prop:1.05,payroll:11.40,income:6.37,corporate:0.62,estate:0.00},
+    "P50-P90":    {sales:5.34,resi_prop:1.20,payroll:10.18,income:8.58,corporate:3.27,estate:0.00},
+    "Top 10%":    {sales:4.42,resi_prop:1.02,payroll:4.41,income:16.00,corporate:7.74,estate:0.34},
+    "Top 1%":     {sales:4.00,resi_prop:0.64,payroll:1.73,income:18.86,corporate:10.37,estate:0.77},
+    "Top 0.1%":   {sales:3.98,resi_prop:0.40,payroll:0.94,income:20.71,corporate:12.52,estate:1.24},
+    "Top 0.01%":  {sales:3.91,resi_prop:0.26,payroll:0.56,income:20.34,corporate:14.44,estate:1.28},
+  },
+};
+
+const GROUPS = ["P0-50","P50-P90","Top 10%","Top 1%","Top 0.1%","Top 0.01%"];
+const TAX_TYPES = [
+  {key:"sales",      label:"Sales tax",                       color:"#94a3b8"},
+  {key:"resi_prop",  label:"Residential property tax",        color:"#cbd5e1"},
+  {key:"payroll",    label:"Payroll tax",                     color:"#f59e0b"},
+  {key:"income",     label:"Income tax (fed + state + local)", color:"#2563eb"},
+  {key:"corporate",  label:"Corporate (& business property)",  color:"#16a34a"},
+  {key:"estate",     label:"Estate tax",                      color:"#dc2626"},
+];
+
+function buildTraces(year) {
+  const d = DATA[year];
+  return TAX_TYPES.map(t => ({
+    name: t.label,
+    type: "bar",
+    x: GROUPS,
+    y: GROUPS.map(g => d[g][t.key]),
+    marker: { color: t.color, line: { color: "white", width: 1 } },
+    hovertemplate: `<b>%{x}</b><br>${t.label}: %{y:.2f}%<extra></extra>`,
+  }));
+}
+
+function buildLayout(year) {
+  // Annotation of total ETR atop each stack
+  const d = DATA[year];
+  const totals = GROUPS.map(g => {
+    return TAX_TYPES.reduce((s, t) => s + d[g][t.key], 0);
+  });
+  const annotations = GROUPS.map((g, i) => ({
+    x: g, y: totals[i] + 1.5,
+    text: `<b>${totals[i].toFixed(1)}%</b>`,
+    showarrow: false,
+    font: { size: 12, color: "#0f172a" },
+  }));
+  return {
+    barmode: "stack",
+    margin: { l: 60, r: 24, t: 24, b: 90 },
+    xaxis: { title: { text: "Income group (pre-tax national income)", standoff: 14 },
+             gridcolor: "#f1f5f9", type: "category" },
+    yaxis: { title: { text: "Effective tax rate (% of pre-tax income)", standoff: 8 },
+             ticksuffix: "%", gridcolor: "#e2e8f0", range: [0, 50] },
+    hovermode: "x unified",
+    legend: { orientation: "h", y: -0.20, x: 0.5, xanchor: "center",
+              bgcolor: "rgba(255,255,255,0.9)", bordercolor: "#e2e8f0", borderwidth: 1 },
+    plot_bgcolor: "white", paper_bgcolor: "white",
+    font: { family: "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif", color: "#0f172a" },
+    annotations,
+    title: { text: `<b>${year}</b>`, font: { size: 14, color: "#64748b" }, x: 0.02, xanchor: "left", y: 0.98 },
+  };
+}
+
+const config = {
+  responsive: true, displaylogo: false,
+  modeBarButtonsToRemove: ["select2d","lasso2d","autoScale2d"],
+  toImageButtonOptions: { filename: "psz-2018-tax-rates-by-income-group" },
+};
+
+function setYear(yr) {
+  for (const y of [1962, 2010, 2014]) {
+    document.getElementById(`btn-${y}`).classList.toggle("active", y === yr);
+  }
+  Plotly.react("chart", buildTraces(yr), buildLayout(yr), config);
+}
+
+Plotly.newPlot("chart", buildTraces(2014), buildLayout(2014), config);
+</script>
+</body>
+</html>
