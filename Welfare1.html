@@ -679,18 +679,23 @@
   var ghostNet = document.getElementById('ex-net-ghost');
   var exShade = document.getElementById('ex-shade');
 
-  var SHADE = { pareto:'492,260 712,260 712,40 492,40', netgain:'272,40 712,40 712,480' };
+  var SHADE = {
+    pareto:  '492,260 712,260 712,40 492,40',     // upper-right of s: both gain
+    netgain: '272,40 712,40 712,480',             // above the zero-net line: total rises
+    netloss: '272,40 712,480 140,480 140,40',     // below the zero-net line: total falls
+    loselose:'140,260 492,260 492,480 140,480'    // down-left of s: both worse off
+  };
   var STEPS = [
-    { line:null,     pts:['s'], shade:null,      kind:'',    cap:'Only s and the grey guides. Up/down = the poor; left/right = the rich.' },
-    { line:'ex-eq',  pts:[],    shade:null,      kind:'',    cap:'Slide along the equality line: both change together, so the Total grows or shrinks while the gap stays zero.' },
-    { line:null,     pts:[],    shade:'pareto',  kind:'pos', cap:'The upper-right box: both better off than s — a Pareto improvement.' },
-    { line:'ex-iso', pts:['a'], shade:'pareto',  kind:'pos', cap:'a: both gain, the gap unchanged — it sits on the constant-inequality line.' },
-    { line:null,     pts:['b'], shade:'pareto',  kind:'pos', cap:'b: both gain, but the gap narrows — it lifts toward the equality line.' },
-    { line:'ex-net', pts:[],    shade:null,      kind:'',    cap:'Slide along the zero-net line: the Poor and Rich bars trade off, but the Total never moves.' },
-    { line:null,     pts:['c'], shade:'netgain', kind:'pos', cap:'c: redistribution where the poor’s gain beats the rich’s loss — total rises.' },
-    { line:null,     pts:['d'], shade:null,      kind:'',    cap:'d: redistribution where the rich’s loss beats the poor’s gain — total falls.' },
-    { line:null,     pts:['e'], shade:null,      kind:'',    cap:'e: both worse off, but more equal — leveling down.' },
-    { line:null,     pts:[],    shade:null,      kind:'',    cap:'The finished figure: Robin Hood (c,d,e) vs the piggy bank (a,b).' }
+    { line:null,     pts:['s'], shade:null,       kind:'',    cap:'Only s and the grey guides. Up/down = the poor; left/right = the rich.' },
+    { line:'ex-eq',  pts:[],    shade:null,       kind:'',    cap:'Slide along the equality line: both change together, so the Total grows or shrinks while the gap stays zero.' },
+    { line:null,     pts:[],    shade:'pareto',   kind:'pos', cap:'The upper-right box: both better off than s — a Pareto improvement.' },
+    { line:'ex-iso', pts:['a'], shade:'pareto',   kind:'pos', cap:'a: both gain, the gap unchanged — it sits on the constant-inequality line.' },
+    { line:null,     pts:['b'], shade:'pareto',   kind:'pos', cap:'b: both gain, but the gap narrows — it lifts toward the equality line.' },
+    { line:'ex-net', pts:[],    shade:null,       kind:'',    cap:'Slide along the zero-net line: the Poor and Rich bars trade off, but the Total never moves.' },
+    { line:null,     pts:['c'], shade:'netgain',  kind:'pos', cap:'c: redistribution where the poor’s gain beats the rich’s loss — total rises (green = net gain).' },
+    { line:null,     pts:['d'], shade:'netloss',  kind:'neg', cap:'d: redistribution where the rich’s loss beats the poor’s gain — total falls (red = net loss).' },
+    { line:null,     pts:['e'], shade:'loselose', kind:'neg', cap:'e: both worse off than s (red = lose–lose), but more equal — leveling down.' },
+    { line:null,     pts:[],    shade:null,       kind:'',    cap:'The finished figure: Robin Hood (c,d,e) vs the piggy bank (a,b).' }
   ];
   var current = -1;
 
@@ -705,16 +710,23 @@
   }
   var mHint = document.getElementById('m-hint');
 
-  /* ----- ghost animation loop ----- */
-  var mode = null, raf = null, reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* ----- ghost animation loop -----
+     Runs unconditionally: a single dot sliding along a line (plus the
+     meter bars) is mild, essential, explanatory motion. Decorative
+     motion (hint pulse, card fades) still respects prefers-reduced-motion
+     via CSS. */
+  var mode = null, raf = null;
   function loop(ts){
-    var k = Math.sin(ts/950);                 // -1 .. 1
+    var k = Math.sin(ts/950);                 // -1 .. 1, smooth ping-pong
     if (mode==='eq'){
       var o = k*66; ghostEq.setAttribute('transform','translate('+o+','+(-o)+')'); updateMeter(360+o, 260-o);
+      raf = requestAnimationFrame(loop);
     } else if (mode==='net'){
       var n = k*58; ghostNet.setAttribute('transform','translate('+n+','+n+')'); updateMeter(400+n, 168+n);
+      raf = requestAnimationFrame(loop);
+    } else {
+      raf = null;                              // no active mode: stop the loop
     }
-    raf = requestAnimationFrame(loop);
   }
   function setMode(m){
     mode = m;
@@ -726,15 +738,8 @@
       mHint.textContent = (m==='eq')
         ? 'Both bars move together → Total changes, gap stays 0.'
         : 'Bars trade off → Total stays fixed (a pure transfer).';
-      if (reduce){ // static snapshot for reduced-motion
-        if (m==='eq'){ ghostEq.setAttribute('transform','translate(40,-40)'); updateMeter(400,220); }
-        else { ghostNet.setAttribute('transform','translate(0,0)'); updateMeter(400,168); }
-      }
     }
-    if (!reduce){
-      if (mode && !raf) raf = requestAnimationFrame(loop);
-      if (!mode && raf){ cancelAnimationFrame(raf); raf = null; }
-    }
+    if (mode && raf===null) raf = requestAnimationFrame(loop);   // (re)start if needed
   }
 
   function setStep(n){
