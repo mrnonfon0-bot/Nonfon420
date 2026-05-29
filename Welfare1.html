@@ -179,7 +179,7 @@
   .ex-shade{opacity:0;transition:opacity .45s;pointer-events:none}
   .ex-shade.on{opacity:.16}
   .ex-shade.pos{fill:#16a34a}.ex-shade.neg{fill:#dc2626}
-  #ex-eq-ghost,#ex-net-ghost{opacity:0;transition:opacity .35s}
+  #ex-eq-ghost,#ex-net-ghost,#ex-iso-ghost{opacity:0;transition:opacity .35s}
 
   /* axis-hint arrows (step 0) */
   #ex-axis-hint{opacity:0;transition:opacity .5s}
@@ -197,7 +197,7 @@
   .m-row.total{font-weight:700;color:#0f172a;border-top:1px solid #e2e8f0;padding-top:7px;margin-top:1px}
   .m-track{height:11px;background:#eef2f7;border-radius:6px;overflow:hidden}
   .m-seg{display:block;height:100%;border-radius:6px;width:0;transition:width .08s linear}
-  .m-seg.poor{background:#2563eb}.m-seg.rich{background:#0d9488}.m-seg.tot{background:#0f172a}
+  .m-seg.poor{background:#2563eb}.m-seg.rich{background:#0d9488}.m-seg.gap{background:#94a3b8}.m-seg.tot{background:#0f172a}
   .m-row b{text-align:right;font-variant-numeric:tabular-nums}
   .m-hint{font-size:.8rem;color:var(--muted);margin:2px 6px 0;font-style:italic}
 
@@ -359,8 +359,8 @@
             <line class="guide rv" data-rv="0" x1="140" y1="260" x2="712" y2="260"/>
 
             <line id="ex-eq"  class="diag line-eq  rv" data-rv="1" x1="140" y1="480" x2="580" y2="40"/>
-            <line id="ex-iso" class="diag line-iso rv" data-rv="3" x1="272" y1="480" x2="712" y2="40"/>
-            <line id="ex-net" class="diag line-net rv" data-rv="5" x1="272" y1="40"  x2="712" y2="480"/>
+            <line id="ex-iso" class="diag line-iso rv" data-rv="2" x1="272" y1="480" x2="712" y2="40"/>
+            <line id="ex-net" class="diag line-net rv" data-rv="6" x1="272" y1="40"  x2="712" y2="480"/>
 
             <text class="axis-title" x="96"  y="250" text-anchor="middle">Poor</text>
             <text class="axis-title" x="426" y="514" text-anchor="middle">Rich</text>
@@ -380,29 +380,30 @@
             <!-- ghost sliders (JS-driven) -->
             <g id="ex-eq-ghost"><circle cx="360" cy="260" r="7" fill="#0d9488" stroke="#fff" stroke-width="2"/></g>
             <g id="ex-net-ghost"><circle cx="400" cy="168" r="7" fill="#ea580c" stroke="#fff" stroke-width="2"/></g>
+            <g id="ex-iso-ghost"><circle cx="440" cy="312" r="7" fill="#0d9488" stroke="#fff" stroke-width="2"/></g>
 
             <!-- points -->
             <g class="ex-pt rv" data-rv="0" data-id="s">
               <circle class="ex-dot" cx="492" cy="260" r="7"/>
               <text class="ex-lab" x="485" y="288" text-anchor="middle">s</text>
             </g>
-            <g class="ex-pt rv" data-rv="3" data-id="a">
+            <g class="ex-pt rv" data-rv="4" data-id="a">
               <circle class="ex-dot" cx="558" cy="194" r="7"/>
               <text class="ex-lab" x="576" y="200">a</text>
             </g>
-            <g class="ex-pt rv" data-rv="4" data-id="b">
+            <g class="ex-pt rv" data-rv="5" data-id="b">
               <circle class="ex-dot" cx="527" cy="172" r="7"/>
               <text class="ex-lab" x="541" y="165">b</text>
             </g>
-            <g class="ex-pt rv" data-rv="6" data-id="c">
+            <g class="ex-pt rv" data-rv="7" data-id="c">
               <circle class="ex-dot" cx="470" cy="172" r="7"/>
               <text class="ex-lab" x="470" y="193" text-anchor="middle">c</text>
             </g>
-            <g class="ex-pt rv" data-rv="7" data-id="d">
+            <g class="ex-pt rv" data-rv="8" data-id="d">
               <circle class="ex-dot" cx="421" cy="221" r="7"/>
               <text class="ex-lab" x="421" y="243" text-anchor="middle">d</text>
             </g>
-            <g class="ex-pt rv" data-rv="8" data-id="e">
+            <g class="ex-pt rv" data-rv="9" data-id="e">
               <circle class="ex-dot" cx="373" cy="295" r="7"/>
               <text class="ex-lab" x="373" y="317" text-anchor="middle">e</text>
             </g>
@@ -413,6 +414,7 @@
           <div class="ex-meter" id="ex-meter" hidden>
             <div class="m-row"><span class="m-lab">Poor</span><div class="m-track"><i class="m-seg poor" id="m-poor"></i></div><b id="m-poor-v">0</b></div>
             <div class="m-row"><span class="m-lab">Rich</span><div class="m-track"><i class="m-seg rich" id="m-rich"></i></div><b id="m-rich-v">0</b></div>
+            <div class="m-row"><span class="m-lab">Gap</span><div class="m-track"><i class="m-seg gap" id="m-gap"></i></div><b id="m-gap-v">0</b></div>
             <div class="m-row total"><span class="m-lab">Total</span><div class="m-track"><i class="m-seg tot" id="m-tot"></i></div><b id="m-tot-v">0</b></div>
             <p class="m-hint" id="m-hint"></p>
           </div>
@@ -442,18 +444,27 @@
 
         <div class="step" data-step="2">
           <div class="step-card">
-            <span class="step-num">Step 3 &middot; Helping everyone</span>
+            <span class="step-num">Step 3 &middot; The constant-inequality line</span>
+            <h3>Holding inequality fixed</h3>
+            <p>The dotted line is the equality line&rsquo;s twin: it runs parallel to it, but passes through <i>s</i>. Every point on it describes a society with the <b>same rich&ndash;poor gap as s</b> &mdash; the same level of inequality, just a bigger or smaller pie.</p>
+            <p><b>Watch the dot slide along it</b> &mdash; both bars rise and fall <i>together</i>, so the <b>Gap bar stays fixed</b> while the Total changes. Where the equality line pins the gap at zero, this one pins it at exactly the market&rsquo;s level &mdash; the benchmark for &ldquo;grew the pie without touching inequality.&rdquo;</p>
+          </div>
+        </div>
+
+        <div class="step" data-step="3">
+          <div class="step-card">
+            <span class="step-num">Step 4 &middot; Helping everyone</span>
             <h3>The Pareto region</h3>
             <p>Use the two grey guides through <i>s</i>. Anything in the shaded <b>upper-right box</b> makes <b>both</b> people better off than they were at <i>s</i> &mdash; the rich gain (rightward) <i>and</i> the poor gain (upward). Economists call a move that helps someone while harming no one a <b>Pareto improvement</b>.</p>
             <p>This box is the heart of the &ldquo;public-economics&rdquo; reading of the welfare state: much of what it does isn&rsquo;t taking from one to give to another &mdash; it&rsquo;s finding moves that leave <i>everyone</i> ahead.</p>
           </div>
         </div>
 
-        <div class="step" data-step="3">
+        <div class="step" data-step="4">
           <div class="step-card">
-            <span class="step-num">Step 4 &middot; Point a</span>
+            <span class="step-num">Step 5 &middot; Point a</span>
             <h3>A pure efficiency gain</h3>
-            <p>The dotted line through <i>s</i> is the <b>constant-inequality line</b>: every point on it keeps the rich&ndash;poor gap exactly as it is at <i>s</i>. Point <i>a</i> sits on that line, up and to the right &mdash; both gain, and the gap is unchanged. A &ldquo;win-win that doesn&rsquo;t touch inequality.&rdquo;</p>
+            <p>Point <i>a</i> sits right on that <b>constant-inequality line</b>, up and to the right of <i>s</i> &mdash; so both gain and the rich&ndash;poor gap is unchanged. A &ldquo;win-win that doesn&rsquo;t touch inequality.&rdquo;</p>
             <span class="pill good">Both gain</span><span class="pill eq">Gap unchanged</span>
             <div class="example">
               <div class="ex-h">Policy example</div>
@@ -463,9 +474,9 @@
           </div>
         </div>
 
-        <div class="step" data-step="4">
+        <div class="step" data-step="5">
           <div class="step-card">
-            <span class="step-num">Step 5 &middot; Point b</span>
+            <span class="step-num">Step 6 &middot; Point b</span>
             <h3>A win-win that also narrows the gap</h3>
             <p>Point <i>b</i> is still in the Pareto box &mdash; both gain &mdash; but it sits <b>above</b> the dotted line, closer to the equality line. The poor gain proportionally more, so inequality <b>falls</b> at the same time as everyone wins.</p>
             <span class="pill good">Both gain</span><span class="pill eq">More equal</span>
@@ -477,18 +488,18 @@
           </div>
         </div>
 
-        <div class="step" data-step="5">
+        <div class="step" data-step="6">
           <div class="step-card">
-            <span class="step-num">Step 6 &middot; The zero-net-welfare line</span>
+            <span class="step-num">Step 7 &middot; The zero-net-welfare line</span>
             <h3>When does <i>total</i> welfare rise?</h3>
             <p>Add up the two people&rsquo;s welfare and you get <b>total</b> welfare. The dashed orange line collects every society with the <b>same total as s</b>: it slopes down at 45&deg;, because one unit gained by the poor is exactly cancelled by one unit lost to the rich.</p>
             <p><b>Watch the orange dot slide along it</b> &mdash; the poor&rsquo;s bar and the rich&rsquo;s bar trade off, but the <b>Total bar never moves</b>. Cross to the <b>upper-right</b> of the line and total welfare <b>rises</b>; fall to the lower-left and it <b>drops</b>. This is the test for the redistributions that follow.</p>
           </div>
         </div>
 
-        <div class="step" data-step="6">
+        <div class="step" data-step="7">
           <div class="step-card">
-            <span class="step-num">Step 7 &middot; Point c</span>
+            <span class="step-num">Step 8 &middot; Point c</span>
             <h3>Redistribution that grows the pie</h3>
             <p>Now we leave the Pareto box. Point <i>c</i> is up and to the <b>left</b> of <i>s</i>: the poor gain, but the rich <b>lose</b> &mdash; genuine redistribution. Yet <i>c</i> sits on the <b>net-gain</b> side of the orange line, so the poor&rsquo;s gain outweighs the rich&rsquo;s loss and <b>total welfare still rises</b>.</p>
             <span class="pill neutral">Redistributive</span><span class="pill eq">More equal</span><span class="pill good">Welfare-maximizing</span>
@@ -500,9 +511,9 @@
           </div>
         </div>
 
-        <div class="step" data-step="7">
+        <div class="step" data-step="8">
           <div class="step-card">
-            <span class="step-num">Step 8 &middot; Point d</span>
+            <span class="step-num">Step 9 &middot; Point d</span>
             <h3>Redistribution that shrinks the pie</h3>
             <p>Point <i>d</i> is also redistributive &mdash; poor up, rich down &mdash; and also more equal than <i>s</i>. The difference is that <i>d</i> falls on the <b>net-loss</b> side of the orange line: the rich lose <b>more</b> than the poor gain, so <b>total welfare drops</b> even as the gap narrows.</p>
             <span class="pill neutral">Redistributive</span><span class="pill eq">More equal</span><span class="pill bad">Net loss</span>
@@ -514,9 +525,9 @@
           </div>
         </div>
 
-        <div class="step" data-step="8">
+        <div class="step" data-step="9">
           <div class="step-card">
-            <span class="step-num">Step 9 &middot; Point e</span>
+            <span class="step-num">Step 10 &middot; Point e</span>
             <h3>Leveling down</h3>
             <p>Point <i>e</i> sits <b>down and to the left</b> of <i>s</i>: <b>both</b> people are worse off. It is more equal &mdash; closer to the equality line &mdash; but it got there by dragging everyone down. A move that harms everyone is <b>Pareto-inferior</b>; pursuing equality this way is called <b>leveling down</b>.</p>
             <span class="pill bad">Both worse off</span><span class="pill eq">More equal</span><span class="pill bad">Net loss</span>
@@ -528,9 +539,9 @@
           </div>
         </div>
 
-        <div class="step" data-step="9">
+        <div class="step" data-step="10">
           <div class="step-card">
-            <span class="step-num">Step 10 &middot; Two readings of the welfare state</span>
+            <span class="step-num">Step 11 &middot; Two readings of the welfare state</span>
             <h3>Robin Hood vs. the piggy bank</h3>
             <p>The whole figure is now in front of you. Heath&rsquo;s argument is about <i>which direction</i> the welfare state actually moves society from <i>s</i>.</p>
             <p>The <b>egalitarian model</b> &mdash; Barr&rsquo;s &ldquo;Robin Hood&rdquo; function &mdash; pictures the state pushing <i>s</i> toward <i>c</i>, <i>d</i>, even <i>e</i>: taking from the rich to give to the poor, with equality as the goal.</p>
@@ -677,6 +688,7 @@
   var meter = document.getElementById('ex-meter');
   var ghostEq = document.getElementById('ex-eq-ghost');
   var ghostNet = document.getElementById('ex-net-ghost');
+  var ghostIso = document.getElementById('ex-iso-ghost');
   var exShade = document.getElementById('ex-shade');
 
   var SHADE = {
@@ -687,7 +699,8 @@
   };
   var STEPS = [
     { line:null,     pts:['s'], shade:null,       kind:'',    cap:'Only s and the grey guides. Up/down = the poor; left/right = the rich.' },
-    { line:'ex-eq',  pts:[],    shade:null,       kind:'',    cap:'Slide along the equality line: both change together, so the Total grows or shrinks while the gap stays zero.' },
+    { line:'ex-eq',  pts:[],    shade:null,       kind:'',    cap:'Slide along the equality line: both rise together, so the Total changes while the Gap stays at zero.' },
+    { line:'ex-iso', pts:[],    shade:null,       kind:'',    cap:'Slide along the constant-inequality line: both rise together, so the Total changes while the Gap stays fixed at s’s level.' },
     { line:null,     pts:[],    shade:'pareto',   kind:'pos', cap:'The upper-right box: both better off than s — a Pareto improvement.' },
     { line:'ex-iso', pts:['a'], shade:'pareto',   kind:'pos', cap:'a: both gain, the gap unchanged — it sits on the constant-inequality line.' },
     { line:null,     pts:['b'], shade:'pareto',   kind:'pos', cap:'b: both gain, but the gap narrows — it lifts toward the equality line.' },
@@ -703,9 +716,10 @@
   function setW(id, frac){ document.getElementById(id).style.width = Math.max(0,Math.min(1,frac))*100 + '%'; }
   function setV(id, v){ document.getElementById(id).textContent = v.toFixed(1); }
   function updateMeter(x, y){
-    var rich=(x-140)/40, poor=(480-y)/40, tot=rich+poor;
+    var rich=(x-140)/40, poor=(480-y)/40, gap=rich-poor, tot=rich+poor;
     setW('m-poor', poor/10); setV('m-poor-v', poor);
     setW('m-rich', rich/10); setV('m-rich-v', rich);
+    setW('m-gap',  gap/5);   setV('m-gap-v',  gap);
     setW('m-tot',  tot/16);  setV('m-tot-v',  tot);
   }
   var mHint = document.getElementById('m-hint');
@@ -721,6 +735,9 @@
     if (mode==='eq'){
       var o = k*66; ghostEq.setAttribute('transform','translate('+o+','+(-o)+')'); updateMeter(360+o, 260-o);
       raf = requestAnimationFrame(loop);
+    } else if (mode==='iso'){
+      var i2 = k*66; ghostIso.setAttribute('transform','translate('+i2+','+(-i2)+')'); updateMeter(440+i2, 312-i2);
+      raf = requestAnimationFrame(loop);
     } else if (mode==='net'){
       var n = k*58; ghostNet.setAttribute('transform','translate('+n+','+n+')'); updateMeter(400+n, 168+n);
       raf = requestAnimationFrame(loop);
@@ -731,13 +748,14 @@
   function setMode(m){
     mode = m;
     ghostEq.style.opacity  = (m==='eq')  ? 1 : 0;
+    ghostIso.style.opacity = (m==='iso') ? 1 : 0;
     ghostNet.style.opacity = (m==='net') ? 1 : 0;
-    var showMeter = (m==='eq' || m==='net');
+    var showMeter = (m==='eq' || m==='iso' || m==='net');
     meter.hidden = !showMeter;
     if (showMeter){
-      mHint.textContent = (m==='eq')
-        ? 'Both bars move together → Total changes, gap stays 0.'
-        : 'Bars trade off → Total stays fixed (a pure transfer).';
+      mHint.textContent = (m==='eq')  ? 'Both bars rise together → Gap stays 0, Total changes.'
+                        : (m==='iso') ? 'Both bars rise together → Gap stays fixed, Total changes.'
+                        :               'Bars trade off → Gap changes, Total stays fixed.';
     }
     if (mode && raf===null) raf = requestAnimationFrame(loop);   // (re)start if needed
   }
@@ -753,7 +771,7 @@
     if (cfg.shade){ exShade.setAttribute('points', SHADE[cfg.shade]); exShade.setAttribute('class','ex-shade on '+cfg.kind); }
     else exShade.setAttribute('class','ex-shade');
     svg.classList.toggle('hint', n===0);
-    setMode(n===1 ? 'eq' : (n===5 ? 'net' : null));
+    setMode(n===1 ? 'eq' : (n===2 ? 'iso' : (n===6 ? 'net' : null)));
     if (caption) caption.textContent = cfg.cap;
   }
 
