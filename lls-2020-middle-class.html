@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LLS (2020) — Middle-Class Federal Tax Rate by Source, 1979–2016</title>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+<style>
+  :root { --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; --bg:#f1f5f9; --card:#ffffff; --accent:#2563eb; }
+  *{box-sizing:border-box;} html,body{margin:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55;padding:clamp(12px,3vw,30px);}
+  .wrap{max-width:1080px;margin:0 auto;}
+  header{margin-bottom:14px;}
+  h1{font-size:clamp(1.4rem,3.2vw,2.05rem);margin:0 0 .25em;letter-spacing:-.01em;}
+  .subtitle{margin:0;color:var(--muted);font-size:clamp(.95rem,2vw,1.05rem);}
+  .intro{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:14px 0;font-size:.95rem;}
+  .intro p{margin:.35em 0;} .intro b{color:var(--ink);}
+  .scope-callout{background:#fef3c7;border:1px solid #fcd34d;border-radius:10px;padding:10px 14px;margin:14px 0;font-size:.9rem;}
+  .scope-callout b{color:#92400e;}
+  .chart-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:18px 0;box-shadow:0 1px 3px rgba(15,23,42,.06);}
+  .controls{display:flex;gap:8px;flex-wrap:wrap;margin:0 4px 10px;padding-bottom:8px;border-bottom:1px solid var(--line);}
+  .controls button{background:var(--card);border:1px solid var(--line);color:var(--ink);padding:6px 14px;border-radius:8px;cursor:pointer;font-family:inherit;font-size:.9rem;transition:background .15s,border-color .15s;}
+  .controls button:hover{background:#f8fafc;}
+  .controls button.active{background:var(--accent);border-color:var(--accent);color:white;}
+  .controls .label{font-size:.85rem;color:var(--muted);padding:7px 4px 7px 0;}
+  #chart{width:100%;height:520px;}
+  .legend-note{color:var(--muted);font-size:.85rem;margin:6px 4px 0;}
+  .sources{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:18px 0;font-size:.92rem;}
+  .sources h2{font-size:1.05rem;margin:0 0 .6em;color:var(--ink);}
+  .sources ul{margin:0;padding-left:18px;} .sources li{margin-bottom:.55em;}
+  .sources a{color:var(--accent);text-decoration:none;} .sources a:hover{text-decoration:underline;}
+  .sources .src-label{display:inline-block;min-width:9em;font-weight:600;color:var(--ink);}
+  .processed{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:14px 0;font-size:.88rem;color:var(--muted);}
+  .processed b{color:var(--ink);} .processed details{margin-top:.4em;}
+  .processed summary{cursor:pointer;color:var(--accent);font-weight:600;}
+  .processed ul{margin:.4em 0 0 0;padding-left:20px;color:var(--ink);}
+  footer{margin-top:30px;padding-top:14px;border-top:1px solid var(--line);font-size:.85rem;color:var(--muted);}
+  footer a{color:var(--accent);text-decoration:none;} footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Non-elderly middle-class federal tax rate, 1979–2016</h1>
+  <p class="subtitle">Looney, Larrimore &amp; Splinter (2020) — Middle Class Redistribution, Figure 8</p>
+</header>
+
+<div class="intro">
+  <p>This chart recreates <b>Figure 8 of Looney, Larrimore &amp; Splinter's 2020 "Middle Class Redistribution"</b>: federal taxes as a share of market income for the <b>non-elderly middle class</b> (the middle three income quintiles of non-elderly households), every year from 1979 to 2016 — and broken down by the four federal tax sources.</p>
+  <p>The total middle-class federal tax rate <b>fell from about 21.1% of market income in 1979 to 17.5% in 2016</b> (a 3.6 percentage-point drop). The composition shifted too: the <b>individual income tax</b> share fell most (from ~8.6% to ~3.6%, driven by expanded credits and rate cuts), while the <b>payroll tax</b> share rose (from ~9.5% to ~11.8%). The authors use this to argue that middle-class federal taxes have <i>declined</i>, not risen, over four decades.</p>
+  <p>Toggle between the total and the by-source breakdown. Hover any year for the exact figures.</p>
+</div>
+
+<div class="scope-callout">
+  <b>Scope:</b> <b>federal taxes only</b> (individual income + payroll + corporate + excise), as a share of <b>market income</b>, for the <b>non-elderly middle class</b>. The market-income denominator (no transfers added) differs from CBO's "income before transfers and taxes" denominator — so levels aren't directly comparable to the CBO quintile chart; read this as the middle-class <i>trend and composition</i> on LLS's basis. Underlying data: CBO (2019).
+</div>
+
+<div class="chart-card">
+  <div class="controls">
+    <span class="label">View:</span>
+    <button id="btn-total" class="active" onclick="setView('total')">Total rate</button>
+    <button id="btn-source" onclick="setView('source')">By tax source</button>
+  </div>
+  <div id="chart"></div>
+  <p class="legend-note">Hover any year for exact values. In the by-source view, the four components sum to the total.</p>
+</div>
+
+<div class="sources">
+  <h2>Sources — the data on this chart, with exact citation</h2>
+  <ul>
+    <li><span class="src-label">LLS (2020):</span> Looney, A., Larrimore, J., &amp; Splinter, D. (2020), "Middle Class Redistribution: Tax and Transfer Policy for Most Americans." Paper: <a href="https://www.davidsplinter.com/Looney-Larrimore-Splinter.pdf" target="_blank" rel="noopener">davidsplinter.com (PDF)</a>.</li>
+    <li><span class="src-label">Data file:</span> <a href="https://www.davidsplinter.com/LLS-2020-MiddleClass-Data.xlsx" target="_blank" rel="noopener">LLS-2020-MiddleClass-Data.xlsx</a>, sheet <b>8-TxMC</b> (Figure 8), lower "by source" block — columns federal taxes / individual income tax / payroll taxes / corporate income tax / excise taxes, as % of market income. Each line on this chart is one of those columns.</li>
+    <li><span class="src-label">Definitions:</span> Non-elderly middle class = middle three income quintiles of non-elderly households (quintiles defined on household size-adjusted market income of all-age households). Federal taxes / market income. Underlying data: Authors' calculations using Congressional Budget Office (2019).</li>
+  </ul>
+</div>
+
+<div class="processed">
+  <b>How this chart was produced.</b> Values read from the authors' published xlsx (sheet 8-TxMC) and injected programmatically — every plotted number was machine-checked against the source CSV (0 mismatches). No pixel tracing.
+  <details>
+    <summary>Show transformation steps</summary>
+    <ul>
+      <li>Read <code>.raw/lls-2020-middle-class/LLS-2020-MiddleClass-Data.xlsx</code> sheet <code>8-TxMC</code> via openpyxl → <code>data/lls-2020-middle-class/middle-class-federal-tax-rate-by-source.csv</code> (38 years, 1979–2016).</li>
+      <li>Injected that CSV's values directly into this page, then ran a deterministic diff of the embedded arrays vs the CSV.</li>
+      <li>Output + metadata: <code>data/lls-2020-middle-class/</code>.</li>
+    </ul>
+  </details>
+</div>
+
+<footer>
+  <a href="./">← Back to gallery</a> &nbsp;·&nbsp;
+  Data from <a href="https://www.davidsplinter.com/LLS-2020-MiddleClass-Data.xlsx" target="_blank" rel="noopener">LLS (2020) Figure 8 master file</a>.
+</footer>
+</div>
+
+<script>
+// Data injected from data/lls-2020-middle-class/middle-class-federal-tax-rate-by-source.csv
+// Columns: [year, federal_taxes, individual_income_tax, payroll_taxes, corporate_income_tax, excise_taxes]  (% of market income)
+const DATA = [
+  [1979,21.07,8.64,9.54,1.78,1.11],
+  [1980,21.47,9.36,9.58,1.47,0.99],
+  [1981,22.3,9.8,10.39,1.19,0.84],
+  [1982,21.12,8.96,10.51,0.74,0.93],
+  [1983,20.75,8.09,10.51,0.97,1.09],
+  [1984,20.96,7.94,10.76,1.14,1.15],
+  [1985,21.24,7.92,11.15,1.02,1.08],
+  [1986,21.44,7.98,11.35,1.03,1.05],
+  [1987,20.81,7.11,11.27,1.33,1.13],
+  [1988,21.22,7.1,11.72,1.34,1.12],
+  [1989,21.04,7.07,11.67,1.29,1.03],
+  [1990,21.4,7.22,11.95,1.17,1.08],
+  [1991,21.25,6.96,11.96,1.09,1.19],
+  [1992,21.02,6.64,11.96,1.18,1.29],
+  [1993,21.02,6.57,11.91,1.32,1.28],
+  [1994,20.98,6.32,11.85,1.38,1.37],
+  [1995,21.02,6.32,11.87,1.47,1.29],
+  [1996,20.94,6.31,11.92,1.52,1.18],
+  [1997,21.09,6.51,11.95,1.5,1.15],
+  [1998,20.49,6.0,12.0,1.31,1.15],
+  [1999,20.49,5.99,11.96,1.32,1.26],
+  [2000,20.45,6.08,11.92,1.25,1.12],
+  [2001,18.89,4.82,12.06,0.87,1.11],
+  [2002,18.34,4.44,11.98,0.8,1.16],
+  [2003,17.45,3.44,11.86,1.02,1.12],
+  [2004,17.53,3.49,11.66,1.26,1.08],
+  [2005,17.76,3.53,11.62,1.6,1.06],
+  [2006,17.86,3.57,11.58,1.69,0.95],
+  [2007,17.8,3.86,11.64,1.46,0.8],
+  [2008,15.2,1.74,11.75,0.91,0.79],
+  [2009,14.81,1.47,11.75,0.73,0.85],
+  [2010,15.34,1.8,11.67,0.98,0.9],
+  [2011,15.12,3.05,10.19,0.98,0.92],
+  [2012,15.35,3.14,10.2,1.05,0.98],
+  [2013,17.15,3.29,11.7,1.19,0.96],
+  [2014,17.34,3.25,11.77,1.27,1.06],
+  [2015,17.39,3.41,11.74,1.18,1.04],
+  [2016,17.51,3.58,11.79,1.14,0.96]
+];
+
+const YEARS = DATA.map(r => r[0]);
+const TOTAL = DATA.map(r => r[1]);
+const COMP = [
+  { name:"Payroll taxes",       idx:3, color:"#f59e0b" },
+  { name:"Individual income tax",idx:2, color:"#2563eb" },
+  { name:"Corporate income tax", idx:4, color:"#16a34a" },
+  { name:"Excise taxes",         idx:5, color:"#94a3b8" },
+];
+
+function totalTraces(){
+  return [{
+    name:"Total federal tax rate", x:YEARS, y:TOTAL,
+    mode:"lines+markers", type:"scatter",
+    line:{color:"#0f172a", width:2.8}, marker:{size:5, color:"#0f172a"},
+    hovertemplate:"<b>%{x}</b><br>Total: %{y:.1f}% of market income<extra></extra>",
+  }];
+}
+function sourceTraces(){
+  return COMP.map(c => ({
+    name:c.name, x:YEARS, y:DATA.map(r => r[c.idx]),
+    stackgroup:"one", type:"scatter", mode:"none",
+    fillcolor:c.color, line:{width:0},
+    hovertemplate:`<b>%{x}</b><br>${c.name}: %{y:.1f}%<extra></extra>`,
+  }));
+}
+
+const layout = {
+  margin:{l:56,r:24,t:18,b:56},
+  xaxis:{title:{text:"Year", standoff:10}, gridcolor:"#f1f5f9", dtick:5},
+  yaxis:{title:{text:"Federal taxes as % of market income", standoff:8},
+         ticksuffix:"%", gridcolor:"#e2e8f0", rangemode:"tozero"},
+  hovermode:"x unified",
+  legend:{orientation:"h", y:1.08, x:0.5, xanchor:"center"},
+  plot_bgcolor:"white", paper_bgcolor:"white",
+  font:{family:"-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif", color:"#0f172a"},
+};
+const config = { responsive:true, displaylogo:false,
+  modeBarButtonsToRemove:["select2d","lasso2d","autoScale2d"],
+  toImageButtonOptions:{filename:"lls-2020-middle-class-federal-tax-rate"} };
+
+function setView(v){
+  document.getElementById("btn-total").classList.toggle("active", v==="total");
+  document.getElementById("btn-source").classList.toggle("active", v==="source");
+  const lay = JSON.parse(JSON.stringify(layout));
+  if (v==="total"){ lay.yaxis.range=[0,24]; }
+  Plotly.react("chart", v==="total"?totalTraces():sourceTraces(), lay, config);
+}
+Plotly.newPlot("chart", totalTraces(), (function(){var l=JSON.parse(JSON.stringify(layout));l.yaxis.range=[0,24];return l;})(), config);
+</script>
+</body>
+</html>
