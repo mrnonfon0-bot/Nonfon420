@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saez-Zucman (2016) — US wealth shares, 1913-2012</title>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+<style>
+  :root { --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; --bg:#f1f5f9; --card:#ffffff; --accent:#2563eb; }
+  *{box-sizing:border-box;} html,body{margin:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55;padding:clamp(12px,3vw,30px);}
+  .wrap{max-width:1080px;margin:0 auto;}
+  header{margin-bottom:14px;}
+  h1{font-size:clamp(1.4rem,3.2vw,2.05rem);margin:0 0 .25em;letter-spacing:-.01em;}
+  .subtitle{margin:0;color:var(--muted);font-size:clamp(.95rem,2vw,1.05rem);}
+  .intro{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:14px 0;font-size:.95rem;}
+  .intro p{margin:.35em 0;} .intro b{color:var(--ink);}
+  .note{background:#fffbeb;border:1px solid #fde68a;border-left:4px solid #f59e0b;border-radius:8px;padding:10px 14px;margin:10px 0;font-size:.9rem;color:#7c5e10;}
+  .chart-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:14px 0;box-shadow:0 1px 3px rgba(15,23,42,.06);}
+  #chart{width:100%;height:560px;}
+  .legend-note{color:var(--muted);font-size:.85rem;margin:6px 4px 0;}
+  .sources{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:18px 0;font-size:.92rem;}
+  .sources h2{font-size:1.05rem;margin:0 0 .6em;color:var(--ink);}
+  .sources ul{margin:0;padding-left:18px;} .sources li{margin-bottom:.55em;}
+  .sources a{color:var(--accent);text-decoration:none;} .sources a:hover{text-decoration:underline;}
+  .sources .src-label{display:inline-block;min-width:9em;font-weight:600;color:var(--ink);}
+  .processed{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:14px 0;font-size:.88rem;color:var(--muted);}
+  .processed b{color:var(--ink);} .processed details{margin-top:.4em;}
+  .processed summary{cursor:pointer;color:var(--accent);font-weight:600;}
+  .processed ul{margin:.4em 0 0 0;padding-left:20px;color:var(--ink);}
+  footer{margin-top:30px;padding-top:14px;border-top:1px solid var(--line);font-size:.85rem;color:var(--muted);}
+  footer a{color:var(--accent);text-decoration:none;} footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>US wealth shares, 1913&ndash;2012 — Saez &amp; Zucman (capitalization method)</h1>
+  <p class="subtitle">Top 0.1% / 1% / 10% and bottom 90% shares of total household wealth</p>
+</header>
+<div class="intro">
+<p>Saez &amp; Zucman's landmark estimate of US wealth concentration, 1913&ndash;2012, built with the <b>capitalization method</b>: they take the capital income (dividends, interest, rents, business profits) reported on income-tax returns and capitalize it into the underlying wealth stocks. It is the most-cited &mdash; and most-debated &mdash; long-run US wealth series.</p><p>The headline is a <b>U-shape</b>: the <b>top 0.1%</b> wealth share fell from a ~25% peak around 1929 to about 7% by 1978, then climbed back to <b>22%</b> by 2012 &mdash; nearly its pre-Depression high. The mirror image is the <b>bottom 90%</b>, whose share rose to ~36% in the mid-1980s before falling to 23% by 2012.</p><p>Click any series in the legend to isolate it. This is the SZ <i>capitalization</i> series; compare it with the WID and RealTime Inequality wealth charts in this gallery, which use related but distinct methods (levels differ).</p>
+<div class="note">Net household wealth, tax units. SZ 2016 capitalization estimates &mdash; later work (Smith&ndash;Zidar&ndash;Zwick 2021; Auten/Splinter) revises the very top shares somewhat downward by changing how fixed-income and business wealth are capitalized; this chart is SZ&rsquo;s original series.</div>
+</div>
+<div class="chart-card">
+  <div id="chart"></div>
+  <p class="legend-note">Hover any point for the exact year and share. Toggle series in the legend.</p>
+</div>
+<div class="sources">
+  <h2>Sources — every series, with exact citation</h2>
+  <ul>
+    <li><span class="src-label">Paper:</span> Saez, Emmanuel &amp; Gabriel Zucman (2016). "Wealth Inequality in the United States since 1913: Evidence from Capitalized Income Tax Data," <i>Quarterly Journal of Economics</i> 131(2): 519&ndash;578.</li>
+    <li><span class="src-label">Data file:</span> <a href="https://gabriel-zucman.eu/files/SaezZucman2015MainData.xlsx" target="_blank" rel="noopener">SaezZucman2015MainData.xlsx</a>, sheet <b>DataFig1-6-7b</b> ("Top wealth shares, % of total household wealth"). Each line = one column of that table.</li>
+    <li><span class="src-label">Project page:</span> <a href="https://gabriel-zucman.eu/uswealth/" target="_blank" rel="noopener">gabriel-zucman.eu/uswealth</a>.</li>
+    <li><span class="src-label">Method:</span> Capitalization &mdash; capital income flows from income-tax data are capitalized into wealth stocks; tax units.</li>
+  </ul>
+</div>
+<div class="processed">
+  <b>How this chart was produced.</b> Read directly from SZ's published main-data workbook (sheet DataFig1-6-7b) via <code>scripts/build-saez-zucman-2016.py</code>; the extraction was validated against SZ's published anchors (top 0.1% &asymp;22.0% in 2012, &asymp;7.1% in 1978; top 1% &asymp;41.8% in 2012; top 10% &asymp;77.2% in 2012) before charting. The intro figures are computed from the data. No pixel tracing.
+  <details><summary>Show transformation steps</summary><ul>
+    <li>Downloaded <code>SaezZucman2015MainData.xlsx</code> from gabriel-zucman.eu; read sheet <code>DataFig1-6-7b</code>.</li>
+    <li>Mapped the header labels (Bottom 90% / Top 10% / 5% / 1% / 0.5% / 0.1% / 0.01%) to columns; year in column 0; converted decimals to percent.</li>
+    <li>Validated series against published anchors; output <code>data/saez-zucman-2016/wealth-shares.csv</code> + <code>metadata.json</code>.</li>
+  </ul></details>
+</div>
+<footer>
+  <a href="./">&larr; Back to gallery</a> &nbsp;&middot;&nbsp; Data: <code>data/saez-zucman-2016/wealth-shares.csv</code> (from the SZ 2016 QJE main-data workbook).
+</footer>
+</div>
+<script>
+const DATA = {"years": [1913, 1914, 1915, 1916, 1917, 1918, 1919, 1920, 1921, 1922, 1923, 1924, 1925, 1926, 1927, 1928, 1929, 1930, 1931, 1932, 1933, 1934, 1935, 1936, 1937, 1938, 1939, 1940, 1941, 1942, 1943, 1944, 1945, 1946, 1947, 1948, 1949, 1950, 1951, 1952, 1953, 1954, 1955, 1956, 1957, 1958, 1959, 1960, 1961, 1962, 1963, 1964, 1965, 1966, 1967, 1968, 1969, 1970, 1971, 1972, 1973, 1974, 1975, 1976, 1977, 1978, 1979, 1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012], "top10": [null, null, null, null, 79.5124, 77.7644, 79.3659, 77.2594, 77.4101, 78.6078, 79.2533, 80.684, 82.2988, 83.0224, 83.8933, 84.4378, 84.2579, 83.6188, 83.5705, 83.9855, 84.1441, 82.5318, 81.162, 81.5687, 79.8955, 79.6971, 80.065, 77.574, 76.1763, 74.6767, 75.1821, 74.8621, 75.2308, 74.5905, 72.998, 71.8656, 71.1216, 71.5658, 71.4366, 71.1308, 70.3164, 70.5533, 70.9674, 71.3063, 71.8045, 71.76, 72.465, 72.6801, 72.9255, 73.625, 73.1375, 72.65, 72.1595, 71.669, 70.8033, 70.471, 70.11, 70.0025, 69.8903, 69.6558, 69.0655, 68.5238, 68.2078, 67.7095, 67.1848, 66.777, 67.419, 67.13, 66.953, 65.913, 65.004, 64.382, 63.684, 63.614, 64.254, 65.338, 65.233, 65.734, 65.498, 67.095, 67.458, 67.376, 67.608, 68.032, 68.606, 69.168, 69.518, 69.847, 69.203, 69.02, 69.271, 69.972, 69.941, 70.661, 71.641, 74.629, 75.076, 75.737, 75.977, 77.24], "top1": [44.0214, 44.0617, 43.7756, 42.6839, 41.0817, 37.3897, 39.9732, 35.5994, 35.9489, 39.094, 34.746, 36.7926, 43.0548, 45.1256, 49.4608, 51.4098, 50.5533, 48.9513, 47.9657, 47.0349, 47.0753, 47.2146, 45.2748, 45.1933, 45.3154, 40.6661, 41.9464, 37.9293, 35.0356, 34.6029, 35.053, 34.4632, 34.3978, 31.831, 30.2311, 29.9211, 29.0558, 30.5304, 30.0094, 29.7002, 28.3303, 28.8183, 29.0641, 29.4183, 29.1765, 28.8535, 29.4097, 29.3768, 29.4463, 29.621, 29.0845, 28.548, 28.4475, 28.347, 27.79, 28.639, 27.878, 27.554, 26.989, 26.495, 24.857, 24.876, 24.714, 23.46, 23.906, 22.941, 24.36, 24.341, 25.288, 25.663, 24.722, 24.809, 25.073, 25.108, 26.159, 27.934, 27.807, 28.127, 27.616, 29.193, 29.46, 29.167, 29.465, 30.275, 31.237, 32.29, 33.301, 34.149, 33.237, 32.023, 32.296, 33.536, 33.977, 34.898, 35.951, 38.133, 37.847, 39.523, 39.801, 41.824], "top0.1": [22.5318, 22.1877, 23.3136, 24.7654, 22.0017, 17.6361, 18.4814, 14.9546, 15.0795, 17.1719, 14.9111, 16.009, 18.6408, 20.2699, 22.6412, 24.6173, 24.79, 22.9722, 21.6201, 22.4172, 22.1878, 21.7793, 20.7663, 19.9684, 19.7377, 16.7916, 17.4325, 15.3354, 13.3927, 12.986, 12.6679, 12.173, 11.8695, 10.9119, 10.4771, 10.3223, 9.9952, 10.5869, 10.1307, 9.9455, 9.4439, 9.5057, 9.7436, 9.962, 9.9103, 9.724, 9.827, 10.0913, 10.0132, 10.095, 9.9115, 9.728, 9.8875, 10.047, 9.403, 9.996, 9.98, 9.465, 9.223, 8.723, 7.969, 7.953, 7.597, 7.187, 7.332, 7.072, 7.89, 8.019, 8.765, 9.416, 8.938, 9.307, 9.66, 9.293, 10.15, 11.631, 11.501, 11.69, 11.177, 12.195, 12.464, 12.1, 12.345, 13.157, 13.94, 14.519, 15.03, 15.99, 15.71, 14.547, 14.672, 15.621, 16.297, 16.768, 17.671, 18.975, 18.869, 20.708, 20.335, 22.008], "bottom90": [null, null, null, null, 20.4876, 22.2356, 20.6341, 22.7406, 22.5899, 21.3922, 20.7467, 19.316, 17.7012, 16.9776, 16.1067, 15.5622, 15.7421, 16.3812, 16.4295, 16.0145, 15.8559, 17.4682, 18.838, 18.4313, 20.1045, 20.3029, 19.935, 22.426, 23.8237, 25.3233, 24.8179, 25.1379, 24.7692, 25.4095, 27.002, 28.1344, 28.8784, 28.4342, 28.5634, 28.8692, 29.6836, 29.4467, 29.0326, 28.6937, 28.1955, 28.24, 27.535, 27.3199, 27.0745, 26.375, 26.8625, 27.35, 27.8405, 28.331, 29.1967, 29.529, 29.89, 29.9975, 30.1097, 30.3442, 30.9345, 31.4762, 31.7922, 32.2905, 32.8152, 33.223, 32.581, 32.87, 33.047, 34.087, 34.996, 35.618, 36.316, 36.386, 35.746, 34.662, 34.767, 34.266, 34.502, 32.905, 32.542, 32.624, 32.392, 31.968, 31.394, 30.832, 30.482, 30.153, 30.797, 30.98, 30.729, 30.028, 30.059, 29.339, 28.359, 25.371, 24.924, 24.263, 24.023, 22.76]};
+const CFG = {"series": [{"key": "top10", "name": "Top 10%", "color": "#2563eb"}, {"key": "top1", "name": "Top 1%", "color": "#db2777"}, {"key": "top0.1", "name": "Top 0.1%", "color": "#f59e0b"}, {"key": "bottom90", "name": "Bottom 90%", "color": "#059669"}]};
+const traces = CFG.series.map(function(s){
+  return {x: DATA.years, y: DATA[s.key], name: s.name, mode:'lines',
+    line:{color:s.color, width:2.4}, connectgaps:false,
+    hovertemplate: s.name+': %{y:.1f}% (%{x})<extra></extra>'};
+});
+const layout = {
+  paper_bgcolor:'#ffffff', plot_bgcolor:'#ffffff', font:{color:'#0f172a', size:13},
+  margin:{l:58,r:18,t:12,b:48},
+  xaxis:{title:{text:'Year'}, gridcolor:'#e2e8f0', zeroline:false, dtick:10},
+  yaxis:{title:{text:'Share of total household wealth'}, ticksuffix:'%', gridcolor:'#e2e8f0', rangemode:'tozero'},
+  legend:{orientation:'h', y:-0.16, font:{size:12}}, hovermode:'x unified'
+};
+Plotly.newPlot('chart', traces, layout, {responsive:true, displayModeBar:false});
+</script>
+</body>
+</html>
