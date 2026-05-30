@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pre-industrial inequality: observed Gini vs the maximum feasible (Milanovic-Lindert-Williamson)</title>
+<title>Inequality vs the maximum feasible: pre-industrial societies & modern counterparts (Milanovic-Lindert-Williamson)</title>
 <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
 <style>
   :root { --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; --bg:#f1f5f9; --card:#ffffff; --accent:#2563eb; }
@@ -17,7 +17,7 @@
   .intro p{margin:.35em 0;} .intro b{color:var(--ink);}
   .note{background:#fffbeb;border:1px solid #fde68a;border-left:4px solid #f59e0b;border-radius:8px;padding:10px 14px;margin:10px 0;font-size:.9rem;color:#7c5e10;}
   .chart-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:14px 0;box-shadow:0 1px 3px rgba(15,23,42,.06);}
-  #chart{width:100%;height:600px;}
+  #chart{width:100%;height:620px;}
   .legend-note{color:var(--muted);font-size:.85rem;margin:6px 4px 0;}
   .sources{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:18px 0;font-size:.92rem;}
   .sources h2{font-size:1.05rem;margin:0 0 .6em;color:var(--ink);}
@@ -36,35 +36,36 @@
 <div class="wrap">
 <header>
   <h1>How much inequality could a society sustain?</h1>
-  <p class="subtitle">Observed Gini vs the maximum feasible Gini, pre-industrial societies and their modern counterparts — Milanovic, Lindert &amp; Williamson (2011)</p>
+  <p class="subtitle">Observed Gini vs the maximum feasible Gini — 28 pre-industrial societies (Rome 14 AD onward) and their modern counterparts — Milanovic, Lindert &amp; Williamson (2011)</p>
 </header>
 
 <div class="intro">
-  <p>Many pre-industrial societies had income Ginis in the 40s&ndash;50s, similar to a developing country today. But a near-subsistence economy <b>cannot sustain</b> as much inequality: if the average person lives close to survival, there is only so much surplus an elite can take. The authors formalise this ceiling as the <b>Inequality Possibility Frontier (IPF)</b> &mdash; the maximum feasible Gini at a given average income.</p>
-  <p>Each dot is one society: the <b>x-axis</b> is average income as a multiple of subsistence, the <b>y-axis</b> is the observed Gini. The dashed line is the <b>maximum feasible Gini (IPF)</b>. <b>Historical societies</b> (blue) cluster up near the ceiling &mdash; they extracted most of the inequality their economies could bear. <b>Modern counterparts</b> (orange), far richer, sit well below it. The vertical gap to the line is "unused" inequality; the <b>extraction ratio</b> (hover) is how close to the ceiling each society reached.</p>
+  <p>Many pre-industrial societies had income Ginis in the 40s&ndash;60s, comparable to a developing country today. But a near-subsistence economy <b>cannot sustain</b> as much inequality: if the average person lives close to survival, there is only so much surplus an elite can take. The authors formalise this ceiling as the <b>Inequality Possibility Frontier (IPF)</b> &mdash; the maximum feasible Gini at a given average income.</p>
+  <p>Each dot is one society: the <b>x-axis</b> is average income as a multiple of subsistence (log scale); the <b>y-axis</b> is the observed Gini; the dashed line is the maximum feasible Gini. <b>Pre-industrial societies</b> (blue) hug the ceiling &mdash; they extracted roughly three-quarters of the inequality their economies could bear (mean extraction ratio ~77%). <b>Modern counterparts</b> (orange), far richer, sit well below their much higher ceiling (e.g. the US in 2000: a Gini of ~40 is only ~40% of the feasible maximum).</p>
+  <p>The point: the same raw Gini means something very different rich vs poor. A modest Gini in a subsistence economy can be <b>near-total extraction</b>; a similar Gini today leaves most feasible inequality "unused." Hover any dot for its extraction ratio.</p>
 </div>
 
 <div class="chart-card">
   <div id="chart"></div>
-  <p class="legend-note">Hover any point for the society, observed Gini, feasible-maximum Gini, and extraction ratio. Income is on a log scale (multiple of subsistence minimum).</p>
+  <p class="legend-note">Income on a log scale (multiple of the $PPP-300 subsistence minimum). Pre-industrial dots cluster near the dashed IPF ceiling; modern dots fall far below it.</p>
 </div>
 
-<div class="note">Table 2 covers ~28 pre-industrial social tables (Rome 14 AD onward) plus modern counterpart countries (c. 1998&ndash;2004). All plotted rows were validated against the definitional identity extraction&nbsp;ratio = Gini / IPF.</div>
+<div class="note">Table 2 lists 28 pre-industrial "social tables" (Rome 14 AD &rarr; British India 1947) and 24 modern counterpart/contemporary countries (c. 1998&ndash;2004). Every plotted row was validated against the definitional identity extraction&nbsp;ratio = Gini / IPF; the "Average" summary rows are excluded. A few colonial cases (Moghul India 1750, Nueva Espa&ntilde;a 1790) exceed 100% — the authors attribute this to measurement error / temporary below-subsistence living.</div>
 
 <div class="sources">
   <h2>Sources — with exact citation</h2>
   <ul>
     <li><span class="src-label">Paper:</span> Milanovic, Branko, Peter H. Lindert &amp; Jeffrey G. Williamson (2011). "Pre-Industrial Inequality," <i>The Economic Journal</i> 121(551): 255–272. <a href="https://doi.org/10.1111/j.1468-0297.2010.02403.x" target="_blank" rel="noopener">doi:10.1111/j.1468-0297.2010.02403.x</a>.</li>
-    <li><span class="src-label">Data:</span> <b>Table 2</b> — observed Gini, average income (multiple of subsistence), maximum feasible (IPF) Gini, and inequality extraction ratio, for pre-industrial societies and modern counterparts.</li>
-    <li><span class="src-label">Underlying data:</span> historical social tables compiled by the authors (Global Price and Income History Group, gpih.ucdavis.edu).</li>
+    <li><span class="src-label">Data:</span> <b>Table 2</b> (pp.263–264), "Inequality Measures" — observed Gini (Gini2), mean income (multiple of subsistence), maximum feasible Gini (IPF), and inequality extraction ratio, for pre-industrial societies and modern counterparts.</li>
+    <li><span class="src-label">Underlying data:</span> historical social tables compiled by the authors; modern Ginis from Luxembourg Income Study / World Income Distribution (benchmark 2002). See gpih.ucdavis.edu.</li>
   </ul>
 </div>
 
 <div class="processed">
-  <b>How this chart was produced.</b> Parsed from Table 2 text via <code>scripts/build-milanovic.py</code>. Every plotted row was kept only if it satisfied the definitional identity <b>extraction ratio = Gini / IPF</b> (tolerance 1.5), which both filters noise and confirms the columns were read correctly. No pixel tracing.
+  <b>How this chart was produced.</b> Parsed from Table 2 (pp.263–264) text via <code>scripts/build-milanovic.py</code>. The first token of each row holds the glued name+year; the last four numbers are Gini2 / mean income / IPF / extraction ratio. Every row was validated against the definitional identity <b>extraction ratio = Gini / IPF</b> (all 52 pass within rounding), which both selects real data rows and confirms the columns were read correctly. No pixel tracing.
   <details><summary>Show transformation steps</summary><ul>
-    <li>Extracted Table 2 rows: society + [year, Gini, mean income, IPF Gini, extraction ratio].</li>
-    <li>Kept rows passing extraction ratio = Gini / IPF * 100; split historical (&lt;1990) vs modern (&ge;1990) by year.</li>
+    <li>Collected Table 2 across both pages; split the trailing year off the name token; took the last 4 numeric columns.</li>
+    <li>Kept rows passing extraction ratio = Gini / IPF * 100 (tol 1.0); flagged era pre-industrial (&lt;1990) vs modern (&ge;1990); excluded the "Average" summary rows.</li>
     <li>Output: <code>data/milanovic-preindustrial/preindustrial-inequality.csv</code> + <code>metadata.json</code>.</li>
   </ul></details>
 </div>
@@ -75,25 +76,27 @@
 </div>
 
 <script>
-const P = {"hist": {"society": ["RomanEmpire14 (36)", "Byzantium1000 (41)", "England&Wales1290 (35)", "England&Wales1688 (44)", "Holland1732 (61)", "MoghulIndia1750 (38)", "OldCastille1752 (52)", "Eng1and&Wales1759 (45)", "France1788 (54)", "England&Wales1801 (51)", "Bihar(India)1807 (32)", "Netherlands1808 (56)", "Naples1811 (28)", "Chile1861 (63)", "Brazil1872 (38)", "Peru1876 (41)", "Java1880 (38)", "China1880 (23)", "Maghreb1880 (57)", "Kenya1914 (33)", "Java1924 (31)", "Kenya1927 (41)", "Siam1929 (48)", "BritishIndia1947 (48)"], "income": [2.1, 1.8, 2.1, 4.7, 6.8, 1.8, 2.5, 5.9, 3.8, 6.7, 1.8, 6.0, 2.2, 4.3, 2.4, 2.2, 2.2, 1.8, 2.3, 1.5, 3.0, 1.9, 2.6, 2.1], "gini": [39.4, 41.1, 36.7, 45.0, 61.1, 48.9, 52.5, 45.9, 55.9, 51.5, 33.5, 57.0, 28.4, 63.7, 43.3, 42.2, 39.7, 24.5, 57.1, 33.2, 32.1, 46.2, 48.5, 49.7], "ipf": [52.6, 43.7, 53.0, 78.8, 85.2, 43.4, 59.7, 82.9, 73.5, 85.0, 43.7, 83.3, 52.9, 76.8, 58.3, 54.0, 54.6, 44.4, 56.7, 34.2, 66.9, 46.2, 62.1, 51.3], "ratio": [75.0, 94.1, 69.2, 57.1, 71.7, 112.8, 88.0, 55.4, 76.1, 60.6, 76.7, 68.5, 53.7, 83.0, 74.2, 78.1, 72.8, 55.2, 100.6, 96.8, 48.0, 100.0, 78.1, 96.8]}, "modern": {"society": [], "income": [], "gini": [], "ipf": [], "ratio": []}, "ipf_x": [1.5, 1.8, 1.8, 1.8, 1.8, 1.9, 2.1, 2.1, 2.1, 2.2, 2.2, 2.2, 2.3, 2.4, 2.5, 2.6, 3.0, 3.8, 4.3, 4.7, 5.9, 6.0, 6.7, 6.8], "ipf_y": [34.2, 43.7, 43.4, 43.7, 44.4, 46.2, 52.6, 53.0, 51.3, 52.9, 54.0, 54.6, 56.7, 58.3, 59.7, 62.1, 66.9, 73.5, 76.8, 78.8, 82.9, 83.3, 85.0, 85.2]};
-function sc(g){ return {
-  x:g.income, y:g.gini, text:g.society, customdata:g.society.map(function(s,i){return [g.ipf[i],g.ratio[i]];}),
-  mode:'markers', type:'scatter',
+const P = {"pre": {"society": ["Kenya 1914", "Byzantium 1000", "Moghul India 1750", "Bihar (India) 1807", "China 1880", "Kenya 1927", "Roman Empire 14", "England & Wales 1290", "British India 1947", "Naples 1811", "Peru 1876", "Java 1880", "Maghreb 1880", "Brazil 1872", "Old Castille 1752", "Nueva Espana 1790", "Siam 1929", "Java 1924", "Japan 1886", "Tuscany 1427", "Holland 1561", "France 1788", "Chile 1861", "England & Wales 1688", "England & Wales 1759", "Netherlands 1808", "England & Wales 1801", "Holland 1732"], "income": [1.5, 1.8, 1.8, 1.8, 1.8, 1.9, 2.1, 2.1, 2.1, 2.2, 2.2, 2.2, 2.3, 2.4, 2.5, 2.5, 2.6, 3.0, 3.1, 3.3, 3.8, 3.8, 4.3, 4.7, 5.9, 6.0, 6.7, 6.8], "gini": [33.2, 41.1, 48.9, 33.5, 24.5, 46.2, 39.4, 36.7, 49.7, 28.4, 42.2, 39.7, 57.1, 43.3, 52.5, 63.5, 48.5, 32.1, 39.5, 46.1, 56.0, 55.9, 63.7, 45.0, 45.9, 57.0, 51.5, 61.1], "ipf": [34.2, 43.7, 43.4, 43.7, 44.4, 46.2, 52.6, 53.0, 51.3, 52.9, 54.0, 54.6, 56.7, 58.3, 59.7, 60.2, 62.1, 66.9, 67.2, 69.3, 73.4, 73.5, 76.8, 78.8, 82.9, 83.3, 85.0, 85.2], "ratio": [96.8, 94.1, 112.8, 76.7, 55.2, 100.0, 75.0, 69.2, 96.8, 53.7, 78.1, 72.8, 100.6, 74.2, 88.0, 105.5, 78.1, 48.0, 58.8, 66.6, 76.3, 76.1, 83.0, 57.1, 55.4, 68.5, 60.6, 71.7]}, "modern": {"society": ["Congo,D.R. 2004", "Tanzania 2000", "Nigeria 2003", "Kenya 1998", "India 2004", "Indonesia 2002", "China 2001", "Peru 2002", "Brazil 2002", "South Africa 2000", "Thailand 2002", "Turkey 2003", "Mexico 2000", "Malaysia 2001", "Chile 2003", "Spain 2000", "Sweden 2000", "Germany 2000", "Italy 2000", "United Kingdom 1999", "France 2000", "Japan 2002", "Netherlands 1999", "United States 2000"], "income": [1.5, 1.8, 3.0, 4.5, 6.4, 10.7, 11.5, 12.3, 13.9, 14.7, 21.3, 22.0, 24.1, 26.0, 33.7, 50.9, 52.2, 62.0, 62.5, 66.1, 69.4, 70.2, 72.0, 77.7], "gini": [41.0, 34.6, 42.1, 44.4, 32.6, 34.3, 41.6, 52.0, 58.8, 57.3, 50.9, 43.6, 53.8, 47.9, 54.6, 33.0, 27.3, 30.3, 35.9, 37.4, 31.2, 26.0, 28.1, 39.9], "ipf": [33.3, 44.4, 66.7, 77.6, 84.2, 90.5, 91.2, 91.8, 92.7, 93.1, 95.2, 95.4, 95.7, 96.1, 96.6, 97.9, 98.0, 98.3, 98.3, 98.4, 98.4, 98.5, 98.5, 98.6], "ratio": [123.1, 77.9, 63.1, 57.2, 38.7, 37.9, 45.6, 56.7, 63.4, 61.6, 53.5, 45.7, 56.2, 49.9, 56.4, 33.7, 27.9, 30.8, 36.5, 38.0, 31.7, 26.4, 28.5, 40.5]}, "ipf_x": [1.5, 1.5, 1.8, 1.8, 1.8, 1.8, 1.8, 1.9, 2.1, 2.1, 2.1, 2.2, 2.2, 2.2, 2.3, 2.4, 2.5, 2.5, 2.6, 3.0, 3.0, 3.1, 3.3, 3.8, 3.8, 4.3, 4.5, 4.7, 5.9, 6.0, 6.4, 6.7, 6.8, 10.7, 11.5, 12.3, 13.9, 14.7, 21.3, 22.0, 24.1, 26.0, 33.7, 50.9, 52.2, 62.0, 62.5, 66.1, 69.4, 70.2, 72.0, 77.7], "ipf_y": [34.2, 33.3, 43.7, 43.4, 43.7, 44.4, 44.4, 46.2, 52.6, 53.0, 51.3, 52.9, 54.0, 54.6, 56.7, 58.3, 59.7, 60.2, 62.1, 66.9, 66.7, 67.2, 69.3, 73.4, 73.5, 76.8, 77.6, 78.8, 82.9, 83.3, 84.2, 85.0, 85.2, 90.5, 91.2, 91.8, 92.7, 93.1, 95.2, 95.4, 95.7, 96.1, 96.6, 97.9, 98.0, 98.3, 98.3, 98.4, 98.4, 98.5, 98.5, 98.6]};
+function sc(g, name, color, symbol){ return {
+  x:g.income, y:g.gini, text:g.society,
+  customdata:g.society.map(function(s,i){return [g.ipf[i], g.ratio[i]];}),
+  mode:'markers', type:'scatter', name:name,
+  marker:{color:color, size:10, opacity:0.85, symbol:symbol, line:{color:'#334155', width:0.8}},
   hovertemplate:'%{text}<br>Observed Gini: %{y:.1f}<br>Max feasible (IPF): %{customdata[0]:.1f}<br>Extraction ratio: %{customdata[1]:.1f}%<extra></extra>'
 };}
-const hist = Object.assign(sc(P.hist), {name:'Historical societies', marker:{color:'#2563eb', size:9, opacity:0.85}});
-const modern = Object.assign(sc(P.modern), {name:'Modern counterparts', marker:{color:'#ea580c', size:9, opacity:0.85, symbol:'diamond'}});
+const pre = sc(P.pre, 'Pre-industrial societies', '#2563eb', 'circle');
+const modern = sc(P.modern, 'Modern counterparts', '#ea580c', 'diamond');
 const ipf = {x:P.ipf_x, y:P.ipf_y, name:'Maximum feasible Gini (IPF)', mode:'lines',
   line:{color:'#64748b', width:2, dash:'dash'}, hoverinfo:'skip'};
 const layout = {
   paper_bgcolor:'#ffffff', plot_bgcolor:'#ffffff', font:{color:'#0f172a', size:13},
   margin:{l:58,r:18,t:14,b:54},
-  xaxis:{title:{text:'Average income (multiple of subsistence)'}, type:'log', gridcolor:'#e2e8f0'},
+  xaxis:{title:{text:'Average income (multiple of subsistence, log scale)'}, type:'log', gridcolor:'#e2e8f0'},
   yaxis:{title:{text:'Gini coefficient (x100)'}, gridcolor:'#e2e8f0', range:[0,100]},
   legend:{orientation:'h', y:1.06, x:0.5, xanchor:'center'},
   hovermode:'closest'
 };
-Plotly.newPlot('chart', [ipf, hist, modern], layout, {responsive:true, displayModeBar:false});
+Plotly.newPlot('chart', [ipf, pre, modern], layout, {responsive:true, displayModeBar:false});
 </script>
 </body>
 </html>
