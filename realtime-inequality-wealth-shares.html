@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RealTime Inequality — US Wealth Shares (1976–2024)</title>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+<style>
+  :root { --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; --bg:#f1f5f9; --card:#ffffff; --accent:#2563eb; }
+  *{box-sizing:border-box;} html,body{margin:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55;padding:clamp(12px,3vw,30px);}
+  .wrap{max-width:1080px;margin:0 auto;}
+  header{margin-bottom:14px;}
+  h1{font-size:clamp(1.4rem,3.2vw,2.05rem);margin:0 0 .25em;letter-spacing:-.01em;}
+  .subtitle{margin:0;color:var(--muted);font-size:clamp(.95rem,2vw,1.05rem);}
+  .intro{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:14px 0;font-size:.95rem;}
+  .intro p{margin:.35em 0;} .intro b{color:var(--ink);}
+  .note{background:#fffbeb;border:1px solid #fde68a;border-left:4px solid #f59e0b;border-radius:8px;padding:10px 14px;margin:10px 0;font-size:.9rem;color:#7c5e10;}
+  .chart-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:18px 0;box-shadow:0 1px 3px rgba(15,23,42,.06);}
+  #chart{width:100%;height:560px;}
+  .legend-note{color:var(--muted);font-size:.85rem;margin:6px 4px 0;}
+  .sources{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:18px 0;font-size:.92rem;}
+  .sources h2{font-size:1.05rem;margin:0 0 .6em;color:var(--ink);}
+  .sources ul{margin:0;padding-left:18px;} .sources li{margin-bottom:.55em;}
+  .sources a{color:var(--accent);text-decoration:none;} .sources a:hover{text-decoration:underline;}
+  .sources .src-label{display:inline-block;min-width:9em;font-weight:600;color:var(--ink);}
+  .processed{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:14px 0;font-size:.88rem;color:var(--muted);}
+  .processed b{color:var(--ink);} .processed details{margin-top:.4em;}
+  .processed summary{cursor:pointer;color:var(--accent);font-weight:600;}
+  .processed ul{margin:.4em 0 0 0;padding-left:20px;color:var(--ink);}
+  footer{margin-top:30px;padding-top:14px;border-top:1px solid var(--line);font-size:.85rem;color:var(--muted);}
+  footer a{color:var(--accent);text-decoration:none;} footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>US wealth shares: top 10%, 1%, 0.1%, bottom 50%</h1>
+  <p class="subtitle">RealTime Inequality (Blanchet, Saez & Zucman) — equal-split adults, year-end, 1976–2024</p>
+</header>
+<div class="intro">
+<p>US <b>wealth shares</b> from <b>RealTime Inequality</b> (Blanchet, Saez &amp; Zucman) &mdash; a monthly distributional national accounts series. Shown here as the December value of each year, 1976&ndash;2024, for equal-split adults.</p><p>This is an independent estimate of the same wealth concentration the WID chart shows; the top 1% wealth share here reaches about <b>37%</b> by 2019. Use the two side by side as a robustness check.</p>
+<div class="note">Source provenance: built from a user-supplied <code>Full Database.xlsx</code> whose structure (monthly DINA, equal-split adults, fine top groups, 1976&rarr;) is the RealTime Inequality database. Annual = December value; capped at 2024 to exclude the nowcast tail.</div>
+</div>
+<div class="chart-card">
+  <div id="chart"></div>
+  <p class="legend-note">Hover any point for the exact year and value. Click a legend entry to hide/show that series.</p>
+</div>
+<div class="sources">
+  <h2>Sources — every line, with exact citation</h2>
+  <ul>
+    <li><span class="src-label">Wealth shares:</span> RealTime Inequality, <code>wealth_share</code> by group (Top 0.1% / 1% / 10% / Bottom 50%), equal-split adults, December values. <a href="https://realtimeinequality.org/" target="_blank" rel="noopener">realtimeinequality.org</a>.</li>
+    <li><span class="src-label">Method:</span> Blanchet, Saez &amp; Zucman — monthly distributional national accounts for the United States.</li>
+  </ul>
+</div>
+<div class="processed">
+  <b>How this chart was produced.</b> Read from <code>Full Database.xlsx</code> sheet <code>income_wealth</code> via <code>scripts/build-realtime-inequality.py</code>: filtered to <code>unit=adult_equal_split</code>, <code>month=12</code>, year&le;2024; <code>wealth_share</code> converted to %. No pixel tracing.
+  <details><summary>Show transformation steps</summary><ul><li>Filtered the monthly RealTime Inequality table to year-end (December), equal-split adults.</li><li>Took <code>wealth_share</code> for groups Top 0.1% / Top 1% / Top 10% / Bottom 50%.</li><li>Output: <code>data/realtime-inequality/wealth-shares.csv</code> + <code>metadata.json</code>.</li></ul></details>
+</div>
+<footer>
+  <a href="./">&larr; Back to gallery</a> &nbsp;&middot;&nbsp; Data: <span><code>data/realtime-inequality/wealth-shares.csv</code> (from <code>.raw/Full Database.xlsx</code>)</span>
+</footer>
+</div>
+<script>
+const DATA = {"years": [1976, 1977, 1978, 1979, 1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024], "top10": [65.4356, 65.6961, 63.908, 65.3567, 64.9491, 64.2524, 63.298, 63.04, 62.8864, 62.9649, 63.1408, 63.2811, 64.7768, 64.7124, 65.0253, 65.122, 66.3916, 66.5446, 66.5225, 67.1576, 67.4279, 68.1495, 68.7774, 68.8177, 68.0639, 67.7663, 67.8349, 68.1675, 68.4318, 68.4064, 69.2091, 70.2068, 71.9459, 71.774, 72.8628, 73.5657, 74.04, 72.4066, 72.4644, 72.3007, 72.2117, 72.1362, 72.5549, 72.6796, 70.9655, 71.0035, 69.7481, 69.5351, 69.3676], "top1": [22.8636, 22.5486, 21.8823, 23.4669, 23.4844, 23.7805, 24.3245, 23.9366, 23.9073, 24.7097, 25.2049, 26.5775, 28.6745, 28.6042, 28.6494, 28.293, 29.3388, 29.1277, 28.8454, 29.0923, 29.7564, 30.7556, 31.8439, 32.2603, 31.6705, 31.7088, 30.9494, 31.1959, 31.6436, 32.246, 33.1848, 33.7271, 33.9592, 33.2398, 34.846, 35.3469, 36.5637, 35.1996, 35.5863, 35.9239, 36.2664, 36.7733, 36.9767, 37.3274, 36.8389, 37.8007, 36.6419, 37.0757, 36.562], "top01": [7.2991, 7.1604, 6.9734, 8.0547, 8.11, 8.5008, 9.0431, 9.1207, 9.1505, 9.8229, 9.8923, 10.8198, 12.3336, 12.112, 12.1076, 11.9401, 12.6931, 12.546, 12.4094, 12.81, 13.4161, 14.222, 15.1789, 15.745, 15.3326, 15.4201, 14.5852, 14.8489, 15.2702, 15.5364, 16.3009, 16.6428, 16.9097, 16.4515, 17.6122, 17.9164, 19.0227, 18.5333, 18.6809, 19.1584, 19.5899, 19.7334, 19.7406, 19.9481, 20.2639, 21.3198, 20.9162, 21.5375, 20.8171], "bottom50": [1.0018, 0.982, 0.7207, 0.9341, 1.1349, 1.3084, 1.7376, 1.7401, 1.4836, 1.5568, 1.6061, 1.9347, 1.8185, 1.874, 1.6059, 1.6773, 1.3919, 1.3495, 1.1012, 0.9135, 0.7576, 0.5855, 0.5638, 0.6479, 0.6451, 0.6535, 0.5118, 0.44, 0.5145, 0.5488, 0.0493, -0.6405, -1.9769, -1.8116, -1.6012, -1.744, -1.2857, -0.7468, -0.3144, -0.0885, 0.0831, 0.2632, -0.0626, -0.0018, 0.6142, 0.7938, 0.7785, 0.9579, 1.0852]};
+const CFG = {"series": [{"name": "Top 10%", "key": "top10", "color": "#2563eb"}, {"name": "Top 1%", "key": "top1", "color": "#db2777"}, {"name": "Top 0.1%", "key": "top01", "color": "#f59e0b"}, {"name": "Bottom 50%", "key": "bottom50", "color": "#059669"}], "ylabel": "Share of household wealth", "ysuffix": "%", "hov": "%{y:.1f}%", "xdtick": 5};
+const traces = CFG.series.map(function(s){
+  return {x: DATA.years, y: DATA[s.key], name: s.name, mode:'lines',
+    line:{color:s.color, width:2.3, dash:s.dash||'solid'}, connectgaps:false,
+    hovertemplate: s.name+': '+CFG.hov+'<extra></extra>'};
+});
+const layout = {
+  paper_bgcolor:'#ffffff', plot_bgcolor:'#ffffff', font:{color:'#0f172a', size:13},
+  margin:{l:62,r:18,t:12,b:54},
+  xaxis:{gridcolor:'#e2e8f0', zeroline:false, dtick:CFG.xdtick||10, title:{text:'Year'}},
+  yaxis:{title:{text:CFG.ylabel}, gridcolor:'#e2e8f0', zeroline:true, zerolinecolor:'#cbd5e1',
+         ticksuffix:CFG.ysuffix||'', range:CFG.yrange||null},
+  legend:{orientation:'h', y:-0.16, font:{size:12}}, hovermode:'x unified'
+};
+Plotly.newPlot('chart', traces, layout, {responsive:true, displayModeBar:false});
+</script>
+</body>
+</html>
