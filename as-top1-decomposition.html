@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Why top-1% income-share estimates differ — Auten-Splinter vs CBO</title>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+<style>
+  :root { --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; --bg:#f1f5f9; --card:#ffffff; --accent:#2563eb; }
+  *{box-sizing:border-box;} html,body{margin:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55;padding:clamp(12px,3vw,30px);}
+  .wrap{max-width:1080px;margin:0 auto;}
+  header{margin-bottom:14px;}
+  h1{font-size:clamp(1.4rem,3.2vw,2.05rem);margin:0 0 .25em;letter-spacing:-.01em;}
+  .subtitle{margin:0;color:var(--muted);font-size:clamp(.95rem,2vw,1.05rem);}
+  .intro{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:14px 0;font-size:.95rem;}
+  .intro p{margin:.35em 0;} .intro b{color:var(--ink);}
+  .note{background:#fffbeb;border:1px solid #fde68a;border-left:4px solid #f59e0b;border-radius:8px;padding:10px 14px;margin:10px 0;font-size:.9rem;color:#7c5e10;}
+  .controls{display:flex;gap:8px;align-items:center;margin:6px 2px 0;flex-wrap:wrap;}
+  .controls button{font:inherit;font-size:.9rem;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:6px 14px;cursor:pointer;}
+  .controls button.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+  .anchors{display:flex;gap:18px;flex-wrap:wrap;margin:10px 2px 0;font-size:.9rem;color:var(--muted);}
+  .anchors b{color:var(--ink);}
+  .chart-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:14px 0;box-shadow:0 1px 3px rgba(15,23,42,.06);}
+  #chart{width:100%;height:560px;}
+  .legend-note{color:var(--muted);font-size:.85rem;margin:6px 4px 0;}
+  .sources{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:18px 0;font-size:.92rem;}
+  .sources h2{font-size:1.05rem;margin:0 0 .6em;color:var(--ink);}
+  .sources ul{margin:0;padding-left:18px;} .sources li{margin-bottom:.55em;}
+  .sources a{color:var(--accent);text-decoration:none;} .sources a:hover{text-decoration:underline;}
+  .sources .src-label{display:inline-block;min-width:9em;font-weight:600;color:var(--ink);}
+  .processed{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:14px 0;font-size:.88rem;color:var(--muted);}
+  .processed b{color:var(--ink);} .processed details{margin-top:.4em;}
+  .processed summary{cursor:pointer;color:var(--accent);font-weight:600;}
+  .processed ul{margin:.4em 0 0 0;padding-left:20px;color:var(--ink);}
+  footer{margin-top:30px;padding-top:14px;border-top:1px solid var(--line);font-size:.85rem;color:var(--muted);}
+  footer a{color:var(--accent);text-decoration:none;} footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Why do top-1% income-share estimates differ?</h1>
+  <p class="subtitle">From the same fiscal income to each definition of "expanded" income — Auten-Splinter vs CBO, adjustment by adjustment</p>
+</header>
+
+<div class="intro">
+  <p>Headline top-1% income-share numbers disagree because researchers <b>adjust raw tax (fiscal) income in different ways</b> to approximate a fuller measure of income. This chart breaks the disagreement down: both the Congressional Budget Office (CBO) and Auten-Splinter (AS) <b>start from the identical fiscal-income top-1% share</b> and apply a sequence of adjustments to reach their "expanded income" definition.</p>
+  <p>Each bar is one adjustment's effect on the top-1% share, in <b>percentage points</b> (negative = lowers the top-1% share). The story lives in the steps CBO leaves out: <b>underreported income, removing realized capital gains, and adding corporate retained earnings</b>. Applying those is most of why AS's top-1% share ends up below CBO's.</p>
+  <p>Toggle between <b>2014</b> and <b>1979</b>. The anchors below the buttons show where each path starts and ends.</p>
+</div>
+
+<div class="controls">
+  <span style="color:var(--muted);font-size:.9rem;">Year:</span>
+  <button id="btn-2014" class="active" onclick="setYear('2014')">2014</button>
+  <button id="btn-1979" onclick="setYear('1979')">1979</button>
+</div>
+<div class="anchors" id="anchors"></div>
+
+<div class="chart-card">
+  <div id="chart"></div>
+  <p class="legend-note">Bars are per-step changes (pp) to the top-1% pre-tax income share. "n/a" steps (e.g. underreported income for CBO) are adjustments that estimator does not separately apply.</p>
+</div>
+
+<div class="sources">
+  <h2>Sources — every series, with exact citation</h2>
+  <ul>
+    <li><span class="src-label">Paper:</span> Auten, Gerald &amp; David Splinter (2019). "Top 1 Percent Income Shares: Comparing Estimates Using Tax Data," <i>AEA Papers and Proceedings</i> 109: 307–311. <a href="https://doi.org/10.1257/pandp.20191038" target="_blank" rel="noopener">doi.org/10.1257/pandp.20191038</a>.</li>
+    <li><span class="src-label">Data file:</span> companion workbook <code>AutenSplinter-Top1percent-AEA.xlsx</code>, sheets <b>Decomp2014</b> and <b>Decomp1979</b> — Panel A (per-step changes, CBO &amp; AS columns) and Panel B (start/total/end anchors).</li>
+    <li><span class="src-label">Concept:</span> "Fiscal income" = income reported on tax returns; "expanded income" adds employer benefits, untaxed transfers, corporate retained earnings, etc. CBO and AS make different choices, especially on underreported income and capital-gains treatment.</li>
+  </ul>
+</div>
+
+<div class="processed">
+  <b>How this chart was produced.</b> Read directly from the AS companion workbook via <code>scripts/build-as-decomposition.py</code>; values are AS's own published decomposition. No pixel tracing.
+  <details><summary>Show transformation steps</summary><ul>
+    <li>Read sheets <code>Decomp2014</code> / <code>Decomp1979</code>: col 0 = step label, col 1 = CBO change, col 3 = AS change.</li>
+    <li>Captured Panel B anchors: fiscal-income start, total change, expanded-income end.</li>
+    <li>Internal check: start + sum(steps) = end for all four paths (CBO/AS x 1979/2014).</li>
+    <li>Output: <code>data/as-top1-decomposition/decomposition.csv</code> + <code>metadata.json</code>.</li>
+  </ul></details>
+</div>
+
+<footer>
+  <a href="./">&larr; Back to gallery</a> &nbsp;&middot;&nbsp; Data: <code>data/as-top1-decomposition/decomposition.csv</code> (from <code>.raw/AutenSplinter-Top1percent-AEA.xlsx</code>).
+</footer>
+</div>
+
+<script>
+const PAYLOAD = {"2014": {"labels": ["Unit of observation and sample", "Add social insurance benefits", "Add ESI", "Add corporate taxes", "Add excluded taxes", "Add private retirement income", "Other changes from fiscal inc", "Add underreported income", "Add imputed rent", "Remove realized capital gains", "Add retained earnings", "Residual"], "cbo": [-2.8399, -2.0081, -0.584, 0.8934, -0.4894, -0.2343, 0.1402, null, null, null, null, 0.0046], "as": [-2.1548, -2.3572, -0.9802, 0.1835, -0.949, -0.1399, 0.0081, -0.3259, -0.1177, -2.3624, 0.5311, -0.0163], "start_cbo": 21.8175, "start_as": 21.8175, "end_cbo": 16.7, "end_as": 13.1368}, "1979": {"labels": ["Unit of observation and sample", "Add social insurance benefits", "Add ESI", "Add corporate taxes", "Add excluded taxes", "Add private retirement income", "Other changes from fiscal inc", "Add underreported income", "Add imputed rent", "Remove realized capital gains", "Add retained earnings", "Residual"], "cbo": [-0.9196, -0.6431, -0.2715, 0.804, -0.2074, 0.0, 0.2569, null, null, null, null, 0.0312], "as": [-0.9209, -0.7393, -0.2624, 0.3709, -0.4266, -0.1044, 1.01, 0.8083, -0.1138, -1.2918, 1.1816, 0.0], "start_cbo": 9.9496, "start_as": 9.9496, "end_cbo": 9.0, "end_as": 9.4613}};
+let curYear = '2014';
+
+function fmt(v){ return v==null ? 'n/a' : (v>0?'+':'')+v.toFixed(2); }
+
+function draw(){
+  const d = PAYLOAD[curYear];
+  const cbo = {
+    type:'bar', name:'CBO', orientation:'h',
+    y: d.labels, x: d.cbo,
+    marker:{color:'#2563eb'},
+    hovertemplate:'CBO — %{y}: %{x:+.2f} pp<extra></extra>'
+  };
+  const as_ = {
+    type:'bar', name:'Auten-Splinter', orientation:'h',
+    y: d.labels, x: d.as,
+    marker:{color:'#db2777'},
+    hovertemplate:'AS — %{y}: %{x:+.2f} pp<extra></extra>'
+  };
+  const layout = {
+    barmode:'group',
+    paper_bgcolor:'#ffffff', plot_bgcolor:'#ffffff', font:{color:'#0f172a', size:12.5},
+    margin:{l:200,r:24,t:10,b:46},
+    xaxis:{title:{text:'Change in top-1% share (percentage points)'}, gridcolor:'#e2e8f0', zeroline:true, zerolinecolor:'#94a3b8', zerolinewidth:1.5, ticksuffix:' pp'},
+    yaxis:{autorange:'reversed', gridcolor:'#f1f5f9'},
+    legend:{orientation:'h', y:1.04, x:0.5, xanchor:'center'},
+    hovermode:'closest'
+  };
+  Plotly.react('chart', [cbo, as_], layout, {responsive:true, displayModeBar:false});
+  const a = document.getElementById('anchors');
+  a.innerHTML =
+    'Start (fiscal income, both): <b>'+d.start_cbo.toFixed(1)+'%</b>'+
+    ' &nbsp;&rarr;&nbsp; End (expanded): CBO <b>'+d.end_cbo.toFixed(1)+'%</b>, AS <b>'+d.end_as.toFixed(1)+'%</b>'+
+    ' &nbsp;|&nbsp; net: CBO '+fmt(d.end_cbo-d.start_cbo)+' pp, AS '+fmt(d.end_as-d.start_as)+' pp';
+}
+function setYear(y){
+  curYear = y;
+  document.getElementById('btn-2014').classList.toggle('active', y==='2014');
+  document.getElementById('btn-1979').classList.toggle('active', y==='1979');
+  draw();
+}
+draw();
+</script>
+</body>
+</html>
