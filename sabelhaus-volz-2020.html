@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sabelhaus-Volz (2020) — top wealth shares with vs without Social Security</title>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+<style>
+  :root { --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; --bg:#f1f5f9; --card:#ffffff; --accent:#2563eb; }
+  *{box-sizing:border-box;} html,body{margin:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55;padding:clamp(12px,3vw,30px);}
+  .wrap{max-width:1080px;margin:0 auto;}
+  header{margin-bottom:14px;}
+  h1{font-size:clamp(1.4rem,3.2vw,2.05rem);margin:0 0 .25em;letter-spacing:-.01em;}
+  .subtitle{margin:0;color:var(--muted);font-size:clamp(.95rem,2vw,1.05rem);}
+  .intro{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:14px 0;font-size:.95rem;}
+  .intro p{margin:.35em 0;} .intro b{color:var(--ink);}
+  .note{background:#fffbeb;border:1px solid #fde68a;border-left:4px solid #f59e0b;border-radius:8px;padding:10px 14px;margin:10px 0;font-size:.9rem;color:#7c5e10;}
+  .chart-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:14px 0;box-shadow:0 1px 3px rgba(15,23,42,.06);}
+  #chart{width:100%;height:560px;}
+  .legend-note{color:var(--muted);font-size:.85rem;margin:6px 4px 0;}
+  .sources{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:18px 0;font-size:.92rem;}
+  .sources h2{font-size:1.05rem;margin:0 0 .6em;color:var(--ink);}
+  .sources ul{margin:0;padding-left:18px;} .sources li{margin-bottom:.55em;}
+  .sources a{color:var(--accent);text-decoration:none;} .sources a:hover{text-decoration:underline;}
+  .sources .src-label{display:inline-block;min-width:9em;font-weight:600;color:var(--ink);}
+  .processed{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:14px 0;font-size:.88rem;color:var(--muted);}
+  .processed b{color:var(--ink);} .processed details{margin-top:.4em;}
+  .processed summary{cursor:pointer;color:var(--accent);font-weight:600;}
+  .processed ul{margin:.4em 0 0 0;padding-left:20px;color:var(--ink);}
+  footer{margin-top:30px;padding-top:14px;border-top:1px solid var(--line);font-size:.85rem;color:var(--muted);}
+  footer a{color:var(--accent);text-decoration:none;} footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Does counting Social Security change US wealth concentration?</h1>
+  <p class="subtitle">Top 10% and top 1% wealth shares, with vs without Social Security wealth, 1995&ndash;2016 &mdash; Sabelhaus &amp; Volz (2020)</p>
+</header>
+<div class="intro">
+<p>Standard wealth statistics leave out the biggest asset most families have: their future <b>Social Security</b> benefits. Sabelhaus &amp; Volz estimate <b>Social Security Wealth (SSW)</b> &mdash; the present value of future benefits net of future taxes &mdash; for households in the Survey of Consumer Finances, and ask how counting it changes measured wealth concentration, 1995&ndash;2016.</p><p><b>Solid</b> lines are wealth without Social Security (SCF net worth plus private DB pensions); <b>dotted</b> lines add SSW. Counting Social Security <b>lowers the level</b> of every top share &mdash; in 2016 it cuts the top 10% share by about <b>9 points</b> (63% &rarr; 54%) &mdash; but the lines stay <b>parallel</b>: the top 10% comprehensive-wealth share still climbs from 45% in 1995 to 54% in 2016. Social Security makes the distribution look less unequal, but it does <i>not</i> reverse the rising trend.</p><p>Shown for the authors' <b>preferred</b> measure (person-weighted, sorted within age groups), which strips out lifecycle and marriage-pattern effects. Toggle series in the legend.</p>
+<div class="note">SCF micro-data; SSW uses a 2.8% real discount rate. "Household wealth" = SCF net worth + private defined-benefit pension wealth. This is the <b>person-weighted within-age-group</b> sorting; other sortings in the paper shift levels but not trends (all 16 rows are in the underlying CSV). Compare with the Rettenmaier&ndash;Jansen Social Security &amp; wealth chart, which makes the same point at two endpoints.</div>
+</div>
+<div class="chart-card">
+  <div id="chart"></div>
+  <p class="legend-note">Solid = household wealth (SCF net worth + DB pensions); dotted = same plus Social Security wealth. Hover any point for the exact year and share.</p>
+</div>
+<div class="sources">
+  <h2>Sources — every series, with exact citation</h2>
+  <ul>
+    <li><span class="src-label">Paper:</span> Sabelhaus, John &amp; Alice Henriques Volz (2020). "Social Security Wealth, Inequality, and Lifecycle Saving," <i>NBER Working Paper No. 27110</i>. <a href="https://www.nber.org/papers/w27110" target="_blank" rel="noopener">nber.org/papers/w27110</a>.</li>
+    <li><span class="src-label">Data:</span> <b>Table 2</b> ("Estimated Top Wealth Shares"), p.26 &mdash; top 1% and top 10% wealth shares, 1995&ndash;2016, under the person-weighted within-age-group sorting, for household wealth and household wealth + SSW. (All sortings/concepts are in the underlying CSV.)</li>
+    <li><span class="src-label">Underlying data:</span> Survey of Consumer Finances; SSW = present value of future Social Security benefits net of future taxes (2.8% real discount rate).</li>
+  </ul>
+</div>
+<div class="processed">
+  <b>How this chart was produced.</b> Values parsed directly from the paper's Table 2 text via <code>scripts/build-sabelhaus-volz.py</code>; the extraction was validated against the paper's own prose anchors (e.g. top 10% comprehensive wealth "about 45 percent in 1995 to about 54 percent in 2016") before charting. No pixel tracing.
+  <details><summary>Show transformation steps</summary><ul>
+    <li>Located Table 2 (p.26); tracked the Top 1% / Top 10% panels and the SCF-published / household / household+SSW concept blocks.</li>
+    <li>Each data row = label + eight percentages (1995&ndash;2016); charted the person-weighted within-age-group rows.</li>
+    <li>Output: <code>data/sabelhaus-volz-2020/wealth-shares-ssw.csv</code> + <code>metadata.json</code>.</li>
+  </ul></details>
+</div>
+<footer>
+  <a href="./">&larr; Back to gallery</a> &nbsp;&middot;&nbsp; Data: <code>data/sabelhaus-volz-2020/wealth-shares-ssw.csv</code> (from <code>.raw/w27110.pdf</code> Table 2).
+</footer>
+</div>
+<script>
+const DATA = {"years": [1995, 1998, 2001, 2004, 2007, 2010, 2013, 2016], "t10_hh": [52.7, 55.4, 56.4, 56.0, 59.8, 59.2, 59.5, 62.9], "t10_ssw": [44.9, 47.8, 49.6, 48.8, 52.3, 50.5, 50.5, 54.3], "t1_hh": [23.6, 23.4, 22.5, 23.3, 23.9, 22.7, 23.9, 26.8], "t1_ssw": [19.2, 19.4, 19.0, 19.7, 20.2, 18.6, 19.4, 22.4]};
+const CFG = {"series": [{"key": "t10_hh", "name": "Top 10% \u2014 household wealth", "color": "#2563eb", "dash": "solid"}, {"key": "t10_ssw", "name": "Top 10% \u2014 + Social Security", "color": "#2563eb", "dash": "dot"}, {"key": "t1_hh", "name": "Top 1% \u2014 household wealth", "color": "#db2777", "dash": "solid"}, {"key": "t1_ssw", "name": "Top 1% \u2014 + Social Security", "color": "#db2777", "dash": "dot"}]};
+const traces = CFG.series.map(function(s){
+  return {x: DATA.years, y: DATA[s.key], name: s.name, mode:'lines+markers',
+    line:{color:s.color, width:2.4, dash:s.dash}, marker:{size:5, color:s.color}, connectgaps:false,
+    hovertemplate: s.name+': %{y:.1f}% (%{x})<extra></extra>'};
+});
+const layout = {
+  paper_bgcolor:'#ffffff', plot_bgcolor:'#ffffff', font:{color:'#0f172a', size:13},
+  margin:{l:58,r:18,t:12,b:48},
+  xaxis:{title:{text:'Year (SCF wave)'}, gridcolor:'#e2e8f0', zeroline:false, dtick:3},
+  yaxis:{title:{text:'Share of total wealth'}, ticksuffix:'%', gridcolor:'#e2e8f0', rangemode:'tozero'},
+  legend:{orientation:'h', y:-0.16, font:{size:12}}, hovermode:'x unified'
+};
+Plotly.newPlot('chart', traces, layout, {responsive:true, displayModeBar:false});
+</script>
+</body>
+</html>
