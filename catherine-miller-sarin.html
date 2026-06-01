@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catherine-Miller-Sarin (2025) — top wealth shares with vs without Social Security</title>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+<style>
+  :root { --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; --bg:#f1f5f9; --card:#ffffff; --accent:#2563eb; }
+  *{box-sizing:border-box;} html,body{margin:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55;padding:clamp(12px,3vw,30px);}
+  .wrap{max-width:1080px;margin:0 auto;}
+  header{margin-bottom:14px;}
+  h1{font-size:clamp(1.4rem,3.2vw,2.05rem);margin:0 0 .25em;letter-spacing:-.01em;}
+  .subtitle{margin:0;color:var(--muted);font-size:clamp(.95rem,2vw,1.05rem);}
+  .intro{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:14px 0;font-size:.95rem;}
+  .intro p{margin:.35em 0;} .intro b{color:var(--ink);}
+  .note{background:#fffbeb;border:1px solid #fde68a;border-left:4px solid #f59e0b;border-radius:8px;padding:10px 14px;margin:10px 0;font-size:.9rem;color:#7c5e10;}
+  .controls{display:flex;gap:8px;align-items:center;margin:6px 2px 0;flex-wrap:wrap;}
+  .controls button{font:inherit;font-size:.9rem;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:6px 14px;cursor:pointer;}
+  .controls button.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+  .chart-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:14px 0;box-shadow:0 1px 3px rgba(15,23,42,.06);}
+  #chart{width:100%;height:430px;}
+  .legend-note{color:var(--muted);font-size:.85rem;margin:6px 4px 0;}
+  .sources{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:18px 0;font-size:.92rem;}
+  .sources h2{font-size:1.05rem;margin:0 0 .6em;color:var(--ink);}
+  .sources ul{margin:0;padding-left:18px;} .sources li{margin-bottom:.55em;}
+  .sources a{color:var(--accent);text-decoration:none;} .sources a:hover{text-decoration:underline;}
+  .sources .src-label{display:inline-block;min-width:9em;font-weight:600;color:var(--ink);}
+  .processed{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:14px 0;font-size:.88rem;color:var(--muted);}
+  .processed b{color:var(--ink);} .processed details{margin-top:.4em;}
+  .processed summary{cursor:pointer;color:var(--accent);font-weight:600;}
+  .processed ul{margin:.4em 0 0 0;padding-left:20px;color:var(--ink);}
+  footer{margin-top:30px;padding-top:14px;border-top:1px solid var(--line);font-size:.85rem;color:var(--muted);}
+  footer a{color:var(--accent);text-decoration:none;} footer a:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Does Social Security erase the rise in wealth inequality?</h1>
+  <p class="subtitle">Top wealth share in 1989 vs 2019 — marketable wealth alone vs including Social Security — Catherine, Miller &amp; Sarin (2025, <i>Journal of Finance</i>)</p>
+</header>
+<div class="intro">
+<p>Catherine, Miller &amp; Sarin take the famous finding that US wealth has become much more concentrated since the 1980s &mdash; and ask what happens once you count the wealth most families actually rely on: their future <b>Social Security</b> benefits. They value accrued benefits with market yield curves in the Survey of Consumer Finances.</p><p>By the standard <b>marketable-wealth</b> measure (red &mdash; essentially the Saez&ndash;Zucman concept), the top 10% share climbed <b>62.0% &rarr; 71.5% (+9.5 pp)</b> from 1989 to 2019. Once Social Security wealth is included (blue), the same share barely moves &mdash; <b>55.7% &rarr; 57.4% (+1.7 pp)</b>. The steep red slope flattens out.</p><p>Their conclusion: conventional measures, by excluding the safety net, <b>overstate the rise</b> in wealth concentration. This is the direct counterpoint to the <b>Saez&ndash;Zucman</b> wealth chart in this gallery &mdash; same starting data, opposite headline once entitlements are counted. Toggle between the top 10% and top 1%.</p>
+<div class="note">SCF micro-data; Social Security wealth = present value of accrued benefits (risk-free and risk-adjusted market valuations). The paper shows the attenuation is robust across 14 specifications (funding-gap benefit cuts, tax hikes, liquidity premia, heterogeneous discount rates) &mdash; all in the underlying CSV. Compare with the Rettenmaier&ndash;Jansen and Sabelhaus&ndash;Volz charts in this group.</div>
+</div>
+<div class="controls">
+  <span style="color:var(--muted);font-size:.9rem;">Group:</span>
+  <button id="btn-top10" class="active" onclick="setGroup('top10')">Top 10%</button>
+  <button id="btn-top1" onclick="setGroup('top1')">Top 1%</button>
+</div>
+<div class="chart-card">
+  <div id="chart"></div>
+  <p class="legend-note">Each line connects a measure's 1989 share to its 2019 share. A steep upward slope = inequality rising fast; a flat line = barely changed. The number at the right is the 1989&ndash;2019 change in percentage points.</p>
+</div>
+<div class="sources">
+  <h2>Sources — with exact citation</h2>
+  <ul>
+    <li><span class="src-label">Paper:</span> Catherine, Sylvain, Max Miller &amp; Natasha Sarin (2025). "Social Security and Trends in Wealth Inequality," <i>The Journal of Finance</i> 80(2). <a href="https://onlinelibrary.wiley.com/doi/10.1111/jofi.13440" target="_blank" rel="noopener">doi:10.1111/jofi.13440</a> (open access).</li>
+    <li><span class="src-label">Data:</span> <b>Table III</b> (Robustness Checks), p.22, Panel A &mdash; top 10% and top 1% wealth shares in 1989 and 2019, for marketable wealth and for two valuations of Social Security wealth. (Panels B&ndash;C funding-gap/robustness rows are in the underlying CSV.)</li>
+    <li><span class="src-label">Underlying data:</span> Survey of Consumer Finances; Social Security wealth = present value of accrued benefits valued with market yield curves.</li>
+  </ul>
+</div>
+<div class="processed">
+  <b>How this chart was produced.</b> Values parsed directly from the paper's Table III text via <code>scripts/build-catherine-miller-sarin.py</code>; the extraction was validated against the paper's stated headline (marketable top-10% +9.5pp; risk-adjusted +1.7pp) before charting. No pixel tracing.
+  <details><summary>Show transformation steps</summary><ul>
+    <li>Located Table III (p.22); parsed each spec row = label + six numbers (Top 10% and Top 1%, each 1989 / 2019 / change).</li>
+    <li>Charted Panel A's three baseline specifications; all 14 specs are in the CSV.</li>
+    <li>Output: <code>data/catherine-miller-sarin/top-wealth-shares-ss.csv</code> + <code>metadata.json</code>.</li>
+  </ul></details>
+</div>
+<footer>
+  <a href="./">&larr; Back to gallery</a> &nbsp;&middot;&nbsp; Data: <code>data/catherine-miller-sarin/top-wealth-shares-ss.csv</code> (from <code>.raw/CMS_JF.pdf</code> Table III).
+</footer>
+</div>
+<script>
+const P = {"top10": [{"name": "Marketable wealth (excl. Social Security)", "color": "#dc2626", "v1989": 62.0, "v2019": 71.5, "chg": 9.5}, {"name": "+ Social Security (risk-free)", "color": "#f59e0b", "v1989": 54.9, "v2019": 55.9, "chg": 1.0}, {"name": "+ Social Security (risk-adjusted)", "color": "#2563eb", "v1989": 55.7, "v2019": 57.4, "chg": 1.7}], "top1": [{"name": "Marketable wealth (excl. Social Security)", "color": "#dc2626", "v1989": 25.3, "v2019": 31.7, "chg": 6.4}, {"name": "+ Social Security (risk-free)", "color": "#f59e0b", "v1989": 21.7, "v2019": 23.2, "chg": 1.5}, {"name": "+ Social Security (risk-adjusted)", "color": "#2563eb", "v1989": 22.0, "v2019": 23.9, "chg": 1.9}]};
+let cur = 'top10';
+function draw(){
+  const items = P[cur];
+  const traces = [];
+  items.forEach(function(it){
+    traces.push({
+      x:[1989, 2019], y:[it.v1989, it.v2019], name:it.name, mode:'lines+markers+text',
+      line:{color:it.color, width:3}, marker:{size:9, color:it.color},
+      text:['', (it.chg>=0?'+':'')+it.chg.toFixed(1)+' pp'], textposition:'middle right',
+      textfont:{color:it.color, size:12},
+      hovertemplate:it.name+'<br>%{x}: %{y:.1f}%<extra></extra>'
+    });
+  });
+  const layout = {
+    paper_bgcolor:'#ffffff', plot_bgcolor:'#ffffff', font:{color:'#0f172a', size:13},
+    margin:{l:56,r:150,t:14,b:44},
+    xaxis:{tickvals:[1989,2019], range:[1986,2027], gridcolor:'#e2e8f0', zeroline:false},
+    yaxis:{title:{text:(cur==='top10'?'Top 10%':'Top 1%')+' share of total wealth'}, ticksuffix:'%', gridcolor:'#e2e8f0', rangemode:'tozero'},
+    legend:{orientation:'h', y:-0.18, font:{size:11.5}}, hovermode:'closest', showlegend:true
+  };
+  Plotly.react('chart', traces, layout, {responsive:true, displayModeBar:false});
+}
+function setGroup(g){
+  cur=g;
+  document.getElementById('btn-top10').classList.toggle('active', g==='top10');
+  document.getElementById('btn-top1').classList.toggle('active', g==='top1');
+  draw();
+}
+draw();
+</script>
+</body>
+</html>
