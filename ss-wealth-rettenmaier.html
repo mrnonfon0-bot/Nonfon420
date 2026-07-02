@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>US top-10% wealth share: with vs without counting Social Security (Rettenmaier-Jansen)</title>
+<title>US top wealth share: with vs without counting Social Security, 1989–2019 (Rettenmaier-Jansen)</title>
 <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
 <style>
   :root { --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; --bg:#f1f5f9; --card:#ffffff; --accent:#2563eb; }
@@ -16,8 +16,11 @@
   .intro{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:14px 0;font-size:.95rem;}
   .intro p{margin:.35em 0;} .intro b{color:var(--ink);}
   .note{background:#fffbeb;border:1px solid #fde68a;border-left:4px solid #f59e0b;border-radius:8px;padding:10px 14px;margin:10px 0;font-size:.9rem;color:#7c5e10;}
+  .controls{display:flex;gap:8px;align-items:center;margin:6px 2px 0;flex-wrap:wrap;}
+  .controls button{font:inherit;font-size:.9rem;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:6px 14px;cursor:pointer;}
+  .controls button.active{background:var(--accent);color:#fff;border-color:var(--accent);}
   .chart-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:14px 0;box-shadow:0 1px 3px rgba(15,23,42,.06);}
-  #chart{width:100%;height:520px;}
+  #chart{width:100%;height:460px;}
   .legend-note{color:var(--muted);font-size:.85rem;margin:6px 4px 0;}
   .sources{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:18px 0;font-size:.92rem;}
   .sources h2{font-size:1.05rem;margin:0 0 .6em;color:var(--ink);}
@@ -36,66 +39,100 @@
 <div class="wrap">
 <header>
   <h1>Does counting Social Security change the wealth-inequality story?</h1>
-  <p class="subtitle">Top-10% share of US wealth, conventional net worth vs. a measure that includes accrued Social Security — Rettenmaier &amp; Jansen (2022)</p>
+  <p class="subtitle">Top-10% / top-5% share of US wealth by SCF wave, 1989&ndash;2019 — conventional net worth vs. a measure that includes accrued Social Security — Rettenmaier &amp; Jansen (2022)</p>
 </header>
 
 <div class="intro">
   <p>Standard wealth statistics count only <b>marketable net worth</b> and exclude the value of future <b>Social Security</b> benefits — on the logic that workers have no legal claim to them. But accrued benefits are large (~$41 trillion in 2019) and, because they matter proportionally far more to lower- and middle-wealth families, leaving them out makes wealth look more concentrated and rising faster.</p>
-  <p>Rettenmaier &amp; Jansen recompute the top-10% wealth share treating accrued Social Security as wealth. The top 10% hold a <b>roughly stable ~17.8%</b> of Social Security benefits but a much larger share of marketable wealth. The result: on conventional net worth the top-10% share rose <b>63.1% &rarr; 70.8%</b> (1989&ndash;2019), but counting Social Security it rose only <b>54.0% &rarr; 57.3%</b> &mdash; <b>cutting the measured increase by more than half</b> (+7.7pp &rarr; +3.3pp).</p>
+  <p>Rettenmaier &amp; Jansen recompute top wealth shares treating accrued Social Security as wealth, for every Survey of Consumer Finances wave. The top 10% hold a <b>roughly stable ~17.8%</b> of Social Security benefits but a much larger share of marketable wealth. The result: on conventional net worth the top-10% share rose <b>63.1% &rarr; 70.8%</b> (1989&ndash;2019), but counting Social Security it rose only <b>54.0% &rarr; 57.3%</b> &mdash; <b>cutting the measured increase by more than half</b> (+7.7pp &rarr; +3.3pp). For the top 5% the increase falls from +8.6pp to +4.0pp.</p>
+</div>
+
+<div class="note">"Net worth" here already includes accrued defined-benefit pensions; Social Security wealth = present value of accrued benefits discounted at the 20-year forward TIPS rate. Families sorted by net worth in both series. The paper's Table 3 also breaks these series out by age group (25&ndash;54, 55&ndash;64, 65&ndash;74, 75+) — all in the underlying CSV. Compare with the Catherine&ndash;Miller&ndash;Sarin and Sabelhaus&ndash;Volz charts in this group.</div>
+
+<div class="controls">
+  <span style="color:var(--muted);font-size:.9rem;">Group:</span>
+  <button id="btn-top10" class="active" onclick="setGroup('top10')">Top 10%</button>
+  <button id="btn-top5" onclick="setGroup('top5')">Top 5%</button>
 </div>
 
 <div class="chart-card">
   <div id="chart"></div>
-  <p class="legend-note">Share of total US wealth held by the top 10% of families (SCF), benchmark years 1989 and 2019. The amber bars (including Social Security) are both lower and rise less steeply than the red bars (conventional).</p>
+  <p class="legend-note">One point per triennial Survey of Consumer Finances wave (11 waves, 1989&ndash;2019), families headed by someone 25+. The number at the right of each line is its 1989&ndash;2019 change in percentage points.</p>
 </div>
-
-<div class="note">Two-point comparison (1989 vs 2019) using the figures stated in the paper's abstract. The paper's Table 3 also reports the top-5% series and all eleven SCF waves 1989&ndash;2019; those are not charted here.</div>
 
 <div class="sources">
   <h2>Sources — with exact citation</h2>
   <ul>
-    <li><span class="src-label">Paper:</span> Rettenmaier, Andrew J. &amp; Dennis W. Jansen (2022). "Elderly Entitlements and Wealth Inequality," Private Enterprise Research Center (PERC) Working Paper 2205, Texas A&amp;M University.</li>
-    <li><span class="src-label">Conventional:</span> Abstract (p.1): "their share of conventionally measured net worth grow from <b>63.1% to 70.8%</b>" (1989&ndash;2019). Restated p.4.</li>
-    <li><span class="src-label">Including SS:</span> Abstract (p.1): "the share of total wealth held by the top 10% was <b>54.0% in 1989 and 57.3% in 2019</b>." Restated p.4 ("54% in 1989 to 57.3% in 2019").</li>
-    <li><span class="src-label">Underlying data:</span> Survey of Consumer Finances; Social Security wealth = present value of accrued benefits (market-yield discounting).</li>
+    <li><span class="src-label">Paper:</span> Rettenmaier, Andrew J. &amp; Dennis W. Jansen (2022). "Elderly Entitlements and Wealth Inequality," Private Enterprise Research Center (PERC) Working Paper 2205, Texas A&amp;M University. <a href="https://hdl.handle.net/1969.1/199376" target="_blank" rel="noopener">hdl:1969.1/199376</a> (OakTrust, Texas A&amp;M repository).</li>
+    <li><span class="src-label">Series data:</span> <b>Table 3</b> (p.&nbsp;25): "Top 10% and Top 5% of Net Worth and Total Wealth, Households sorted by Net Worth" — all 11 SCF waves 1989&ndash;2019, five age groups &times; {net worth, total wealth}. This chart plots the all-families (25+) columns.</li>
+    <li><span class="src-label">Cross-check:</span> parsed values verified against the table's own &Delta;&nbsp;1989&ndash;2019 rows (20/20 columns) and against the abstract's stated endpoints (8/8).</li>
+    <li><span class="src-label">Underlying data:</span> Survey of Consumer Finances; Social Security wealth = present value of accrued benefits (20-year forward TIPS discounting).</li>
   </ul>
 </div>
 
 <div class="processed">
-  <b>How this chart was produced.</b> The four endpoints were parsed from the paper's abstract via <code>scripts/build-ss-wealth.py</code> and self-checked: the parsed endpoints reproduce the abstract's stated changes (+7.7pp conventional, +3.3pp including Social Security). No pixel tracing.
+  <b>How this chart was produced.</b> All 220 Table-3 values were parsed from the PDF's text layer via <code>scripts/build-ss-wealth-rettenmaier.py</code> — no pixel tracing — and double-validated before charting.
   <details><summary>Show transformation steps</summary><ul>
-    <li>Extracted the top-10% endpoints (1989, 2019) for both measures from the abstract (stable page-1 text).</li>
-    <li>Validated parsed deltas against the abstract's stated percentage-point changes.</li>
-    <li>Output: <code>data/ss-wealth-rettenmaier/top10-wealth-share-ss.csv</code> + <code>metadata.json</code>.</li>
+    <li>Located Table 3 (p.25); parsed each panel (Top 10% / Top 5%) row = year + 10 numbers (5 age groups &times; net worth / total wealth).</li>
+    <li>Validated every column's computed 2019&minus;1989 change against the table's printed &Delta; row (20/20) and the all-families endpoints against the abstract (8/8).</li>
+    <li>Charted the all-families (25+) columns; age-group series are in the CSV.</li>
+    <li>Output: <code>data/ss-wealth-rettenmaier/table3-top-wealth-shares.csv</code> + <code>metadata.json</code>.</li>
   </ul></details>
 </div>
 
 <footer>
-  <a href="./">&larr; Back to gallery</a> &nbsp;&middot;&nbsp; Data: <code>data/ss-wealth-rettenmaier/top10-wealth-share-ss.csv</code> (from <code>.raw/wp_2205.pdf</code>).
+  <a href="./">&larr; Back to gallery</a> &nbsp;&middot;&nbsp; Data: <code>data/ss-wealth-rettenmaier/table3-top-wealth-shares.csv</code> (from <code>.raw/wp_2205.pdf</code> Table 3, <a href="https://hdl.handle.net/1969.1/199376" target="_blank" rel="noopener">hdl:1969.1/199376</a>).
 </footer>
 </div>
 
 <script>
-const P = {"years": [1989, 2019], "conventional": [63.1, 70.8], "incl_ss": [54.0, 57.3], "d_conv": 7.7, "d_ss": 3.3};
-const conv = {type:'bar', name:'Conventional net worth', x:P.years.map(String), y:P.conventional,
-  marker:{color:'#dc2626'}, text:P.conventional.map(function(v){return v.toFixed(1)+'%';}), textposition:'outside',
-  hovertemplate:'Conventional — %{x}: %{y:.1f}%<extra></extra>'};
-const ss = {type:'bar', name:'Including Social Security', x:P.years.map(String), y:P.incl_ss,
-  marker:{color:'#f59e0b'}, text:P.incl_ss.map(function(v){return v.toFixed(1)+'%';}), textposition:'outside',
-  hovertemplate:'Including Social Security — %{x}: %{y:.1f}%<extra></extra>'};
-const layout = {
-  barmode:'group',
-  paper_bgcolor:'#ffffff', plot_bgcolor:'#ffffff', font:{color:'#0f172a', size:13},
-  margin:{l:56,r:18,t:20,b:46},
-  xaxis:{title:{text:'Year (SCF benchmark)'}, type:'category', gridcolor:'#f1f5f9'},
-  yaxis:{title:{text:'Top 10% share of total wealth'}, ticksuffix:'%', gridcolor:'#e2e8f0', range:[0,80]},
-  legend:{orientation:'h', y:1.08, x:0.5, xanchor:'center'},
-  annotations:[
-    {x:'2019', y:P.conventional[1]+5, text:'+'+P.d_conv+' pp since 1989', showarrow:false, font:{color:'#dc2626', size:12}},
-    {x:'2019', y:P.incl_ss[1]+5, xshift:0, text:'+'+P.d_ss+' pp since 1989', showarrow:false, font:{color:'#b45309', size:12}}
+const YEARS = [1989,1992,1995,1998,2001,2004,2007,2010,2013,2016,2019];
+const P = {
+  "top10": [
+    {"name":"Conventional net worth (excl. Social Security)","color":"#dc2626",
+     "y":[63.1,62.6,63.2,63.9,64.9,64.4,66.8,68.7,68.3,70.8,70.8]},
+    {"name":"Total wealth (incl. accrued Social Security)","color":"#2563eb",
+     "y":[54.0,52.6,52.9,53.5,55.1,54.3,55.8,55.5,54.1,56.9,57.3]}
+  ],
+  "top5": [
+    {"name":"Conventional net worth (excl. Social Security)","color":"#dc2626",
+     "y":[49.8,49.4,50.8,52.1,52.6,52.1,55.1,54.9,55.3,58.3,58.4]},
+    {"name":"Total wealth (incl. accrued Social Security)","color":"#2563eb",
+     "y":[41.7,40.4,41.3,42.4,43.6,42.7,44.9,43.1,42.3,45.4,45.7]}
   ]
 };
-Plotly.newPlot('chart', [conv, ss], layout, {responsive:true, displayModeBar:false});
+const RANGE = { "top10": [45, 78], "top5": [35, 65] };
+let cur = 'top10';
+function draw(){
+  const items = P[cur];
+  const traces = items.map(function(it){
+    const chg = it.y[it.y.length-1] - it.y[0];
+    const text = it.y.map(function(v,i){ return i===it.y.length-1 ? (chg>=0?'+':'')+chg.toFixed(1)+' pp' : ''; });
+    return {
+      x:YEARS, y:it.y, name:it.name, mode:'lines+markers+text',
+      line:{color:it.color, width:3}, marker:{size:7, color:it.color},
+      text:text, textposition:'middle right', textfont:{color:it.color, size:12},
+      cliponaxis:false,
+      hovertemplate:it.name+'<br>%{x}: %{y:.1f}%<extra></extra>'
+    };
+  });
+  const layout = {
+    paper_bgcolor:'#ffffff', plot_bgcolor:'#ffffff', font:{color:'#0f172a', size:13},
+    margin:{l:56,r:90,t:14,b:44},
+    xaxis:{tickvals:YEARS, tickangle:-45, range:[1987.5,2023.5], gridcolor:'#e2e8f0', zeroline:false},
+    yaxis:{title:{text:(cur==='top10'?'Top 10%':'Top 5%')+' share of total wealth'}, ticksuffix:'%',
+           gridcolor:'#e2e8f0', range:RANGE[cur]},
+    legend:{orientation:'h', y:-0.25, font:{size:11.5}}, hovermode:'closest', showlegend:true
+  };
+  Plotly.react('chart', traces, layout, {responsive:true, displayModeBar:false});
+}
+function setGroup(g){
+  cur=g;
+  document.getElementById('btn-top10').classList.toggle('active', g==='top10');
+  document.getElementById('btn-top5').classList.toggle('active', g==='top5');
+  draw();
+}
+draw();
 </script>
 </body>
 </html>
